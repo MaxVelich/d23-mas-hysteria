@@ -1,21 +1,21 @@
 
-from model import MoneyModel
+from src.model import MoneyModel
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 def main():
-    all_wealth = []
-    #This runs the model 100 times, each model executing 10 steps.
-    for j in range(100):
-        # Run the model
-        model = MoneyModel(10)
-        for i in range(10):
-            model.step()
+    model = MoneyModel(50, 10, 10)
+    for i in range(20):
+        model.step()
 
-        # Store the results
-        for agent in model.schedule.agents:
-            all_wealth.append(agent.wealth)
-
-    plt.hist(all_wealth, bins=range(max(all_wealth)+1))
+    agent_counts = np.zeros((model.grid.width, model.grid.height))
+    for cell in model.grid.coord_iter():
+        cell_content, x, y = cell
+        agent_count = len(cell_content)
+        agent_counts[x][y] = agent_count
+    plt.imshow(agent_counts, interpolation='nearest')
+    plt.colorbar()
     plt.show()
 
 if __name__ == "__main__":
