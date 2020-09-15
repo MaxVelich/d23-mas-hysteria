@@ -1,10 +1,13 @@
 
 from mesa import Agent
+import random
+
 
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
+        self.panic = random.randint(1, 3)
         self.wealth = 1
 
     def step(self):
