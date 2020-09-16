@@ -4,6 +4,7 @@ from src.model import MoneyModel
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def main():
     model = MoneyModel(50, 10, 10)
     for i in range(20):
@@ -17,6 +18,7 @@ def main():
     plt.imshow(agent_counts, interpolation='nearest')
     plt.colorbar()
     plt.show()
+
 
 if __name__ == "__main__":
     main()
