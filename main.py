@@ -4,11 +4,8 @@ from src.model import compute_gini
 import matplotlib.pyplot as plt
 import numpy as np
 
-<<<<<<< HEAD
-=======
 from mesa.batchrunner import BatchRunner
 
->>>>>>> d8fe8bdc87cef6c089f59b60877d828d066004e6
 
 def main():
 
@@ -32,7 +29,6 @@ def main():
     # plt.imshow(agent_counts, interpolation='nearest')
     # plt.colorbar()
     # plt.show()
-
 
 
 if __name__ == "__main__":

@@ -33,11 +33,11 @@ def agent_portrayal(agent):
     return portrayal
 
 
-grid = CanvasGrid(agent_portrayal, 10, 10, 500, 500)
+grid = CanvasGrid(agent_portrayal, 20, 20, 500, 500)
 server = ModularServer(MoneyModel,
                        [grid],
-                       "Money Model",
-                       {"N": 100, "width": 10, "height": 10})
+                       "Evacuation Model",
+                       {"N": 100, "width": 20, "height": 20})
 server.port = 8521  # The default
 server.launch()
 
