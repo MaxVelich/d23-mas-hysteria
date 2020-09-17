@@ -5,12 +5,12 @@ from mesa.visualization.ModularVisualization import VisualizationElement
 
 
 class SimpleCanvas(VisualizationElement):
-    local_includes = ["visualization.js"]
+    local_includes = ["src/visualization.js"]
     portrayal_method = None
     canvas_height = 500
     canvas_width = 500
 
-    #TODO: Having multiple portrayals like this is awful
+    # TODO: Having multiple portrayals like this is awful
     #           need to come up with a dynamic way of doing this for any object
     def __init__(self, agent_portrayal_method, exit_portrayal_method, canvas_height=500, canvas_width=500):
         '''

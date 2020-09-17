@@ -1,15 +1,17 @@
 from mesa.visualization.ModularVisualization import ModularServer
 
-from agent import *
-from model import *
-from visualization import *
+from src.agent import *
+from src.model import *
+from src.visualization import *
 
 width = 500
 height = 500
 N = 20
 agentradius = 6
 
-
+#TODO: Completely rework SimpleCanvas so its a viewclass for model
+#                               DrawModel(model) 
+# completely independant model and drawing
 def AgentPortrayal(agent):
     portrayal = {"Shape": "circle",
                  "Color": "blue",

@@ -1,5 +1,5 @@
 from mesa import Model
-from agent import PersonAgent
+from src.agent import PersonAgent
 
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
@@ -13,6 +13,7 @@ def compute_gini(model):
     N = model.num_agents
     B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
     return 1 + (1 / N) - 2 * B
+
 
 # TODO: modify so its not toroidal. Restrict agents to inbounds
 class EvacuationModel(Model):
