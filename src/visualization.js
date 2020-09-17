@@ -14,7 +14,7 @@ var ContinuousVisualization = function(height, width, context) {
 			if (p.Shape == "circle")
 				this.drawCircle(p.x, p.y, p.r, p.Color, p.Filled);
 		};
-
+		this.drawCircle(50, 50, 2000, '#FF0000', true);
 	};
 
 	this.drawCircle = function(x, y, radius, color, fill) {
@@ -62,15 +62,18 @@ var ContinuousVisualization = function(height, width, context) {
 var Simple_Continuous_Module = function(canvas_width, canvas_height) {
 	// Create the element
 	// ------------------
-
+	
 	// Create the tag:
 	
 	var canvas_tag = 	"<canvas width='" + canvas_width
 					 	+ "' height='" + canvas_height 
-						+ "' style='border:3px dotted'></canvas>";
-	var div_canvas = "<div>" + canvas_tag + "</div>";
+						+ "' style='border:1px dotted'></canvas>";
+						
+	// Create the tag:
+	/*var canvas_tag = "<center><canvas width='" + canvas_width + "' height='" + canvas_height + "' ";
+	canvas_tag += "style='border:1px dotted'></canvas></center>";*/
 	// Append it to body:
-	var canvas = $(div_canvas)[0];
+	var canvas = $(canvas_tag)[0];
 	$("body").append(canvas);
 
 	// Create the context and the drawing controller:
