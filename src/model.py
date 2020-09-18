@@ -1,10 +1,10 @@
 from mesa import Model
-from src.agent import PersonAgent
-
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
-
 from mesa.datacollection import DataCollector
+
+from src.agent import PersonAgent
+from src.exit import Exit
 
 
 def compute_gini(model):
@@ -27,6 +27,7 @@ class EvacuationModel(Model):
 
         # Create agents
         self.create_agent()
+        # Create exits
         self.create_exit()
         # self.datacollector = DataCollector(
         #model_reporters={"Gini": compute_gini},
@@ -49,14 +50,3 @@ class EvacuationModel(Model):
     def step(self):
         # self.datacollector.collect(self)
         self.schedule.step()
-
-class Exit():
-
-    def __init__(self, x=0, y=0, avail=False):
-        self.x = x
-        self.y = y
-        self.pos = (x, y)
-        self.avail = avail
-
-    def isVisible(frompos, distance=100):
-        return True

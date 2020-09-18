@@ -24,7 +24,7 @@ class PersonAgent(Agent):
             self.panic = 2
 
     # TODO: Implement decision making. / going towards exits
-
+    # TODO: Implement utils file for "pos" tuple? so its not a pain in the ass to compare pos
     def move(self):
         # speed. to be removed? maybe randomized within a range
         speed = 0.7

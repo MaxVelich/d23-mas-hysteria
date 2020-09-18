@@ -1,6 +1,7 @@
 /*
 https://github.com/projectmesa/mesa-examples/blob/master/examples/Flockers/flockers/simple_continuous_canvas.js
 */
+// Modified by D23 
 var ContinuousVisualization = function(height, width, context) {
 	var height = height;
 	var width = width;
