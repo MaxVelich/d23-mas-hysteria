@@ -24,7 +24,7 @@ class Portrayals:
         return portrayal
 
     def get_Exit_Portrayal(self):
-        
+
         portrayal = {"Shape": "rect",
                         "Color": "green",
                         "Filled": "true",
