@@ -1,7 +1,7 @@
 
 from mesa.visualization.ModularVisualization import ModularServer
 
-from src.Model_Controller import Model_Controller
+from src.model.Model_Controller import Model_Controller
 from src.view.Canvas_Controller import Canvas_Controller
 
 width = 500
