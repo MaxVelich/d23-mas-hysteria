@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 from src.model import MoneyModel
 from src.model import compute_gini
+=======
 
-import matplotlib.pyplot as plt
-import numpy as np
+from mesa.visualization.ModularVisualization import ModularServer
+>>>>>>> Max
 
+from src.model.Model_Controller import Model_Controller
+from src.view.Canvas_Controller import Canvas_Controller
+
+<<<<<<< HEAD
 from mesa.batchrunner import BatchRunner
 
 
@@ -33,3 +39,17 @@ def main():
 
 if __name__ == "__main__":
     main()
+=======
+width = 500
+height = 500
+N = 1
+
+server = ModularServer(
+        Model_Controller, 
+        [Canvas_Controller()], 
+        "Evacuation", 
+        {"width": width, "height": height, "N": N}
+    )
+
+server.launch()
+>>>>>>> Max
