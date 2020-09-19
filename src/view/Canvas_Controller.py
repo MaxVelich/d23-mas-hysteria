@@ -1,9 +1,9 @@
+
 from mesa.visualization.ModularVisualization import VisualizationElement
 
-
-class ModelCanvas(VisualizationElement):
+class Canvas_Controller(VisualizationElement):
     # Used within Mesa, source of the visualization js script
-    local_includes = ["src/visualization.js"]
+    local_includes = ["src/view/visualization.js"]
 
     # TODO: Having multiple portrayals like this is awful
     #           need to come up with a dynamic way of doing this for any object

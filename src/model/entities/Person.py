@@ -1,13 +1,11 @@
+
 from mesa import Agent
 import random
 
-
-class PersonAgent(Agent):
-    """ An agent with fixed initial wealth."""
+class Person(Agent):
 
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        #self.panic = random.randint(1, 3)
         self.panic = 0
 
     def step(self):
@@ -16,18 +14,15 @@ class PersonAgent(Agent):
             self.model.schedule.remove(self)
 
         neighbourRadius = 40
-        nearbyAgents = self.model.space.get_neighbors(
-            self.pos, neighbourRadius)
+        nearbyAgents = self.model.space.get_neighbors(self.pos, neighbourRadius)
+
         if len(nearbyAgents) > 3:
             self.panic = 1
         if len(nearbyAgents) > 7:
             self.panic = 2
 
-    # TODO: Implement decision making. / going towards exits
-    # TODO: Implement utils file for "pos" tuple? so its not a pain in the ass to compare pos
     def move(self):
-        # speed. to be removed? maybe randomized within a range
-        speed = 0.7
+        speed = 1
 
         if self.pos[0] < self.model.space.width / 2:
             self.model.space.move_agent(
@@ -49,3 +44,6 @@ class PersonAgent(Agent):
                 if exit.avail:
                     return True
         return False
+
+    def check_if_move_possible(in_direction):
+        return True
