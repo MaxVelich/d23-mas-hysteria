@@ -8,6 +8,11 @@ from mesa.visualization.ModularVisualization import ModularServer
 from src.model.Model_Controller import Model_Controller
 from src.view.Canvas_Controller import Canvas_Controller
 
+#Uncomment these 2 lines if you get a NotImplementedError for server.launch()
+#(Confirmed to work for windows 10)
+#import asyncio
+#asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 width = 500
 height = 500
 N = 100
