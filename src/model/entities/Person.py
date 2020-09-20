@@ -45,7 +45,7 @@ class Person(Agent):
         threshold = 4
         for exit in self.model.exits:
             if abs(self.pos[0] - exit.x) < threshold and abs(self.pos[1] - exit.y) < threshold:
-                if exit.avail:
+                if exit.available:
                     return True
         return False
 

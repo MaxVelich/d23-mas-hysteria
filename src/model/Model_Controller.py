@@ -29,7 +29,7 @@ class Model_Controller(Model):
 
     def create_exit(self):
         self.exits = {
-            Exit(self.space.width / 2+50, self.space.height / 2, True)
+            Exit(self.space.width / 2, self.space.height / 2, True)
         }
 
     def step(self):

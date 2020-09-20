@@ -10,7 +10,7 @@ from src.view.Canvas_Controller import Canvas_Controller
 
 width = 500
 height = 500
-N = 1
+N = 100
 
 server = ModularServer(
         Model_Controller, 
