@@ -1,4 +1,9 @@
 
+
+'''
+This class inherits from VisualizationElement provided by MESA. It's responsibility is to create and draw the environment.
+'''
+
 from mesa.visualization.ModularVisualization import VisualizationElement
 from src.view.Portrayals import Portrayals
 
@@ -11,8 +16,8 @@ class Canvas_Controller(VisualizationElement):
         self.canvas_height = canvas_height
         self.canvas_width = canvas_width
 
-        new_element = ("new Simple_Continuous_Module({}, {})".
-                       format(self.canvas_width, self.canvas_height))
+        new_element = ("new Simple_Continuous_Module({}, {})"
+                        .format(self.canvas_width, self.canvas_height))
 
         self.js_code = "elements.push(" + new_element + ");"
 
@@ -30,11 +35,11 @@ class Canvas_Controller(VisualizationElement):
         return space_state
 
     def getAgentPortrayal(self, space, agent):
-        portrayal = Portrayals().get_Agent_Portrayal(agent.panic)
+        portrayal = Portrayals.for_Agent(agent.panic)
         return self.placePortrayal(space, portrayal, agent)
 
     def getExitPortrayal(self, space, exit):
-        portrayal = Portrayals().get_Exit_Portrayal()
+        portrayal = Portrayals.for_Exit()
         return self.placePortrayal(space, portrayal, exit)
 
     def placePortrayal(self, space, portrayal, element):

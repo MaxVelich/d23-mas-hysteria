@@ -1,4 +1,8 @@
 
+'''
+This script serves as a temporary starting point for our development journey. Here we initialize the model, the canvas and start up the server.
+'''
+
 from mesa.visualization.ModularVisualization import ModularServer
 
 from src.model.Model_Controller import Model_Controller

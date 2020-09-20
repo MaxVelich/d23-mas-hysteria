@@ -1,4 +1,8 @@
 
+'''
+This class models the agents, or people in our case. This class is a decendent of the Agent class of MESA.
+'''
+
 from mesa import Agent
 import random
 

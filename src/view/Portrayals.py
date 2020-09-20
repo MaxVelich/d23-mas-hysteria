@@ -1,7 +1,12 @@
 
+'''
+This class provides the appearance of the entities in the environment via static methods.
+'''
+
 class Portrayals:
 
-    def get_Agent_Portrayal(self, state):
+    @staticmethod
+    def for_Agent(state):
 
         radius = 8
 
@@ -23,7 +28,8 @@ class Portrayals:
 
         return portrayal
 
-    def get_Exit_Portrayal(self):
+    @staticmethod
+    def for_Exit():
 
         portrayal = {"Shape": "rect",
                         "Color": "green",

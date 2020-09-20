@@ -1,18 +1,16 @@
 
+from src.model.entities.Person import Person
+from src.model.entities.Exit import Exit
+
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
-from mesa.datacollection import DataCollector
-
-from src.model.entities.Person import Person
-from src.model.entities.Exit import Exit
 
 class Model_Controller(Model):
 
     def __init__(self, N, width, height):
         self.num_agents = N
-        self.space = ContinuousSpace(
-            width, height, True)
+        self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
 
@@ -30,7 +28,9 @@ class Model_Controller(Model):
             self.schedule.add(a)
 
     def create_exit(self):
-        self.exits = {Exit(self.space.width / 2+50, self.space.height / 2, True)}
+        self.exits = {
+            Exit(self.space.width / 2+50, self.space.height / 2, True)
+        }
 
     def step(self):
         self.schedule.step()
