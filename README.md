@@ -16,3 +16,7 @@ Then, run:
 ```
 python main.py
 ```
+
+## Authors
+
+We are Prajakta Shouche, Kenneth Muller, Gabriel Pavon Barrero and Maximilian Velich. This is a project as part of the *Design of Multi-Agent Systems* course, in which we are group D23.
