@@ -34,8 +34,21 @@ class Portrayals:
         portrayal = {"Shape": "rect",
                         "Color": "green",
                         "Filled": "true",
-                        "Layer": 0,
+                        "Layer": 1,
                         "w": 0.025,
                         "h": 0.025}
+
+        return portrayal
+
+    @staticmethod
+    def for_Obstacle(width, height):
+
+        portrayal = {"Shape": "rect",
+                        "Color": "red",
+                        "Filled": "true",
+                        "Layer": 0,
+                        "w": width/500,
+                        "h": height/500
+                        }
 
         return portrayal

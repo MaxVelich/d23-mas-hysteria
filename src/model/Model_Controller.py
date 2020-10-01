@@ -1,6 +1,7 @@
 
 from src.model.entities.Person import Person
 from src.model.entities.Exit import Exit
+from src.model.entities.Obstacle import Obstacle
 
 from mesa import Model
 from mesa.time import RandomActivation
@@ -15,21 +16,27 @@ class Model_Controller(Model):
         self.running = True
 
         self.create_agent()
+        self.create_obstacles()
         self.create_exit()
 
     def create_agent(self):
         for i in range(self.num_agents):
             a = Person(i, self)
 
-            x = self.random.randrange(self.space.width)
-            y = self.random.randrange(self.space.height)
-            self.space.place_agent(a, (x, y))
+            self.space.place_agent(a, (20, 20))
 
             self.schedule.add(a)
 
     def create_exit(self):
         self.exits = {
-            Exit(self.space.width / 2, self.space.height / 2, True)
+            Exit(480, 480, True)
+        }
+
+    def create_obstacles(self):
+        self.obstacles = {
+            Obstacle((150,100), 150, 100),
+            Obstacle((350,200), 150, 100),
+            Obstacle((110,260), 100, 150)
         }
 
     def step(self):

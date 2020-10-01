@@ -5,5 +5,7 @@ This class is currently empty. It will provide a general implementation of an ob
 
 class Obstacle:
 
-    def __init__():
-        pass
+    def __init__(self, center, width, height):
+        self.pos = center
+        self.width = width
+        self.height = height
