@@ -7,6 +7,10 @@ from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.spatial import Delaunay
+
 class Model_Controller(Model):
 
     def __init__(self, N, width, height):
@@ -15,9 +19,25 @@ class Model_Controller(Model):
         self.schedule = RandomActivation(self)
         self.running = True
 
-        self.create_agent()
         self.create_obstacles()
         self.create_exit()
+        self.create_agent()
+
+        points = [
+            (0,0), (0, 99), (0, 199), (0, 299), (0, 399), (0, 499),
+            (99, 0), (199, 0), (299, 0), (399, 0), (499, 0),
+            (99, 499), (199, 499), (299, 499), (399, 499), (499, 499),
+            (499,0), (499, 99), (499, 199), (499, 299), (499, 399)
+        ]
+        for obstacle in self.obstacles:
+            points += obstacle.get_corner_points()
+
+        points = np.array(points)
+        tri = Delaunay(points) 
+        
+        plt.triplot(points[:,0], points[:,1], tri.simplices)
+        plt.plot(points[:,0], points[:,1], 'o')
+        plt.show()
 
     def create_agent(self):
         for i in range(self.num_agents):

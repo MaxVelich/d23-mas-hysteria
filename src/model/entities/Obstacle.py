@@ -9,3 +9,11 @@ class Obstacle:
         self.pos = center
         self.width = width
         self.height = height
+
+    def get_corner_points(self):
+        corners = []
+        corners += [(self.pos[0]-(self.width/2),self.pos[1]-(self.height/2))]
+        corners += [(self.pos[0]+(self.width/2),self.pos[1]-(self.height/2))]
+        corners += [(self.pos[0]-(self.width/2),self.pos[1]+(self.height/2))]
+        corners += [(self.pos[0]+(self.width/2),self.pos[1]+(self.height/2))]
+        return corners
