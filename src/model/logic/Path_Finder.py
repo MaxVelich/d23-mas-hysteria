@@ -20,22 +20,37 @@ class Path_Finder:
     def build_mesh(self):
 
         points = []
+
+        for x in range(0,20):
+            for y in range(0,20):
+                points += [(x * 25, y * 25)]
+
         for obstacle in self.obstacles:
             points += obstacle.get_corner_points()
 
         self.points = np.array(points)
         tri = Delaunay(points)
 
-        print(tri.simplices.shape)
+        self.walkable_space = self.filter_triangles_leaving_walkable_space(tri.simplices, self.obstacles)
+        self.path = self.a_star((20,20), (20, 480))
 
-        walkable_space = self.filter_triangles_leaving_walkable_space(tri.simplices, self.obstacles)
-    
-        print(walkable_space.shape)
-        print(walkable_space)
-
-        plt.triplot(self.points[:,0], self.points[:,1], walkable_space)
+        plt.triplot(self.points[:,0], self.points[:,1], self.walkable_space)
         plt.plot(self.points[:,0], self.points[:,1], 'o')
+        plt.plot(self.path[:,0], self.path[:,1], 'o', markersize=15)
+        
         plt.show()
+
+    def a_star(self, start, goal):
+        
+        edges = np.empty([0,4])
+        for triangle in self.walkable_space:
+            for i in range(0,3):
+                new_edge = np.array([ self.points[int(triangle[i])], self.points[int(triangle[(i+1) %3])] ])
+                edges = np.append(edges, new_edge.reshape(-1,4), axis = 0)
+
+        # STOPPED HERE; NEXT STEP: FILTER EDGES BIDIRECTIONAL EDGES
+
+        return np.array([start, goal])
 
     def filter_triangles_leaving_walkable_space(self, triangles, obstacles):
         
@@ -88,10 +103,8 @@ class Path_Finder:
         x = point[0]
         y = point[1]
 
-        if (x > bottom_left[0] and x < top_right[0] and y > bottom_left[1] and y < top_right[1]): 
+        if (x > bottom_left[0] and x < top_right[0] and y < bottom_left[1] and y > top_right[1]): 
             return True
-        else: 
-            return False
 
         return False
 

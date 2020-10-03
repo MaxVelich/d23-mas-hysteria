@@ -30,10 +30,13 @@ obstacles = [
         ]
 
 obstacles += [
-    Obstacle((250,250), 100, 100),
-    Obstacle((200, 400), 50, 200),
-    Obstacle((300, 100), 200, 80)
-]
+            Obstacle((80,350), 150, 40),
+            Obstacle((230,350), 150, 40),
+            Obstacle((420,250), 150, 40),
+            Obstacle((270,250), 150, 40),
+            Obstacle((80,150), 150, 40),
+            Obstacle((230,150), 150, 40)
+        ]
 
 # obstacles = {
 #     Obstacle((150,100), 300, 10),
