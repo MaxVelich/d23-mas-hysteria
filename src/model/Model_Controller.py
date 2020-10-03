@@ -36,10 +36,14 @@ class Model_Controller(Model):
         }
 
     def create_obstacles(self):
+        # self.obstacles = {
+        #     Obstacle((150,100), 300, 10),
+        #     Obstacle((300,245), 10, 300),
+        #     Obstacle((200,350), 10, 300)
+        # }
+
         self.obstacles = {
-            Obstacle((150,100), 300, 10),
-            Obstacle((300,245), 10, 300),
-            Obstacle((200,350), 10, 300)
+            Obstacle((250,250), 100, 100)
         }
 
     def step(self):
