@@ -1,14 +1,45 @@
 
 print("Test file")
 
-def get_line_parameters_through_points(point_1, point_2):
+from src.model.entities.Exit import Exit
+from src.model.entities.Obstacle import Obstacle
 
-    x_1, y_1 = point_1
-    x_2, y_2 = point_2
+from src.model.logic.Path_Finder import Path_Finder
 
-    k = (y_2 - y_1) / (x_2 - x_1)
-    d = y_1 - (k * x_1)
+obstacles = [
+            Obstacle((50,5), 100, 10),
+            Obstacle((150,5), 100, 10),
+            Obstacle((250,5), 100, 10),
+            Obstacle((350,5), 100, 10),
+            Obstacle((450,5), 100, 10),
+            Obstacle((50,495), 100, 10),
+            Obstacle((150,495), 100, 10),
+            Obstacle((250,495), 100, 10),
+            Obstacle((350,495), 100, 10),
+            Obstacle((450,495), 100, 10),
+            Obstacle((5,50), 10, 100),
+            Obstacle((5,150), 10, 100),
+            Obstacle((5,250), 10, 100),
+            Obstacle((5,350), 10, 100),
+            Obstacle((5,450), 10, 100),
+            Obstacle((495,50), 10, 100),
+            Obstacle((495,150), 10, 100),
+            Obstacle((495,250), 10, 100),
+            Obstacle((495,350), 10, 100),
+            Obstacle((495,450), 10, 100)
+        ]
 
-    return (k, d)
+obstacles += [
+    Obstacle((250,250), 100, 100),
+    Obstacle((200, 400), 50, 200),
+    Obstacle((300, 100), 200, 80)
+]
 
-print(get_line_parameters_through_points((1,1), (3, 2)))
+# obstacles = {
+#     Obstacle((150,100), 300, 10),
+#     Obstacle((300,245), 10, 300),
+#     Obstacle((200,350), 10, 300)
+# }
+
+path_finder = Path_Finder((500, 500), obstacles)
+path_finder.build_mesh()

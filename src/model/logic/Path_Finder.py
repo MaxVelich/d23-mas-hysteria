@@ -9,38 +9,29 @@ from scipy.spatial import Delaunay
 
 class Path_Finder:
 
-    def __init__(self, world_dim, obstacles, exits):
+    def __init__(self, world_dim, obstacles):
         self.world_dim = world_dim
         self.obstacles = obstacles
-        self.exits = exits
 
     def description(self):
         print("world_dim:", self.world_dim)
         print("obstacles:", self.obstacles)
-        print("exits:", self.exits)
 
     def build_mesh(self):
 
-        points = [
-            (0,0), (0, 99), (0, 199), (0, 299), (0, 399), (0, 499),
-            (99, 0), (199, 0), (299, 0), (399, 0), (499, 0),
-            (99, 499), (199, 499), (299, 499), (399, 499), (499, 499),
-            (499,0), (499, 99), (499, 199), (499, 299), (499, 399)
-        ]
-        # points = []
+        points = []
         for obstacle in self.obstacles:
             points += obstacle.get_corner_points()
 
         self.points = np.array(points)
         tri = Delaunay(points)
 
-        print(self.points.shape)
+        print(tri.simplices.shape)
 
         walkable_space = self.filter_triangles_leaving_walkable_space(tri.simplices, self.obstacles)
-        print(len(walkable_space))
-        
-        print(tri.simplices.shape)
+    
         print(walkable_space.shape)
+        print(walkable_space)
 
         plt.triplot(self.points[:,0], self.points[:,1], walkable_space)
         plt.plot(self.points[:,0], self.points[:,1], 'o')
@@ -50,13 +41,18 @@ class Path_Finder:
         
         filtered = np.empty([0,3])
         for triangle in triangles:
-            for obstacle in obstacles:
-                if not self.triangle_intersects_with_obstacle(triangle, obstacle):
-                    filtered = np.append(filtered, triangle.reshape((-1,3)), axis = 0)
-                else:
-                    break
-        
+            if not self.check_if_triangle_intersects_with_any_obstacle(triangle, obstacles):
+                filtered = np.append(filtered, triangle.reshape((-1,3)), axis = 0)
+
         return filtered
+
+    def check_if_triangle_intersects_with_any_obstacle(self, triangle, obstacles):
+
+        for obstacle in obstacles:
+            if self.triangle_intersects_with_obstacle(triangle, obstacle):
+                return True
+
+        return False
 
     def triangle_intersects_with_obstacle(self, triangle, obstacle):
 
@@ -135,8 +131,8 @@ class Path_Finder:
         ys = [y_1, y_2]
         ys.sort()
 
-        if point[0] >= xs[0] and point[0] <= xs[-1]:
-            if point[1] >= ys[0] and point[1] <= ys[-1]:
+        if point[0] > xs[0] and point[0] < xs[-1]:
+            if point[1] > ys[0] and point[1] < ys[-1]:
                 is_on_line = True
 
         return is_on_line
@@ -167,4 +163,3 @@ class Path_Finder:
         d = y_1 - (k * x_1)
 
         return (k, d)
-

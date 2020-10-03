@@ -21,7 +21,7 @@ class Model_Controller(Model):
         self.create_exit()
         self.create_agent()
 
-        self.path_finder = Path_Finder((width, height), self.obstacles, self.exits)
+        self.path_finder = Path_Finder((width, height), self.obstacles)
         self.path_finder.build_mesh()
 
     def create_agent(self):
@@ -36,15 +36,38 @@ class Model_Controller(Model):
         }
 
     def create_obstacles(self):
-        # self.obstacles = {
-        #     Obstacle((150,100), 300, 10),
-        #     Obstacle((300,245), 10, 300),
-        #     Obstacle((200,350), 10, 300)
-        # }
 
-        self.obstacles = {
-            Obstacle((250,250), 100, 100)
-        }
+        self.obstacles = [
+            Obstacle((50,5), 100, 10),
+            Obstacle((150,5), 100, 10),
+            Obstacle((250,5), 100, 10),
+            Obstacle((350,5), 100, 10),
+            Obstacle((450,5), 100, 10),
+            Obstacle((50,495), 100, 10),
+            Obstacle((150,495), 100, 10),
+            Obstacle((250,495), 100, 10),
+            Obstacle((350,495), 100, 10),
+            Obstacle((450,495), 100, 10),
+            Obstacle((5,50), 10, 100),
+            Obstacle((5,150), 10, 100),
+            Obstacle((5,250), 10, 100),
+            Obstacle((5,350), 10, 100),
+            Obstacle((5,450), 10, 100),
+            Obstacle((495,50), 10, 100),
+            Obstacle((495,150), 10, 100),
+            Obstacle((495,250), 10, 100),
+            Obstacle((495,350), 10, 100),
+            Obstacle((495,450), 10, 100)
+        ]
+
+        self.obstacles += [
+            Obstacle((80,350), 150, 40),
+            Obstacle((230,350), 150, 40),
+            Obstacle((420,250), 150, 40),
+            Obstacle((270,250), 150, 40),
+            Obstacle((80,150), 150, 40),
+            Obstacle((230,150), 150, 40)
+        ]
 
     def step(self):
         self.schedule.step()

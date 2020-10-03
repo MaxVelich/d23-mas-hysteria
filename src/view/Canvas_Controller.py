@@ -36,8 +36,6 @@ class Canvas_Controller(VisualizationElement):
             portrayal = self.getExitPortrayal(model.space, exit)
             space_state.append(portrayal)
 
-        
-
         return space_state
 
     def getAgentPortrayal(self, space, agent):
