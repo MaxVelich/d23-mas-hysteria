@@ -1,10 +1,12 @@
 
 from src.model.entities.Person import Person
 from src.model.entities.Exit import Exit
+from src.model.entities.Hazard import Hazard
 
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
+
 
 class Model_Controller(Model):
 
@@ -34,3 +36,7 @@ class Model_Controller(Model):
 
     def step(self):
         self.schedule.step()
+
+        # Stop the simulation once all agents have exited the building
+        if len(self.schedule.agents) == 0:
+            self.running = False
