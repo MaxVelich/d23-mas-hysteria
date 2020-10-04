@@ -8,7 +8,7 @@ https://leetcode.com/problems/shortest-path-in-binary-matrix/discuss/313347/a-se
 
 from queue import PriorityQueue
 
-from src.model.utils.Utilities import Utilities
+from src.model.utils.Geometry import Geometry
 
 class A_Star:
 
@@ -38,7 +38,7 @@ class A_Star:
             
             for successor in successors:
                 
-                priority = 1 + Utilities.euclidean_distance(successor, goal) + distance[node[1]]
+                priority = 1 + Geometry.euclidean_distance(successor, goal) + distance[node[1]]
                 frontier.put((priority, successor))
 
                 if (successor not in distance or distance[node[1]] + 1 < distance[successor]):

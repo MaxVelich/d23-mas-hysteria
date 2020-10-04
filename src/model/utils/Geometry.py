@@ -1,5 +1,17 @@
 
+'''
+This class is a static helper class for everything generally geometrical. The functions below should be self-explanatory. 
+'''
+
+import math
+
 class Geometry:
+
+    @staticmethod
+    def euclidean_distance(point_a, point_b):
+        delta_x = point_a[0] - point_b[0]
+        delta_y = point_a[1] - point_b[1]
+        return math.sqrt(delta_x * delta_x + delta_y * delta_y)
 
     @staticmethod
     def line_through_two_points(point_1, point_2):

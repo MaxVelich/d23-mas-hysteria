@@ -6,7 +6,6 @@ This class still has a long way to go! Currently, we recalculate the route for e
 '''
 
 from src.model.logic.A_star import A_Star
-from src.model.utils.Utilities import Utilities
 from src.model.utils.Geometry import Geometry
 
 import numpy as np
@@ -124,7 +123,7 @@ class Path_Finder:
 
         distances = []
         for p in self.nodes:
-            distance = Utilities.euclidean_distance(p, point)
+            distance = Geometry.euclidean_distance(p, point)
             distances += [distance]
 
         index_nearest_point = np.argmin(distances)
