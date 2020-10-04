@@ -5,7 +5,7 @@ This class is currently empty. Here we intend to provide the model for the Hazar
 
 class Hazard():
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x = 0, y = 0):
         self.x = x
         self.y = y
         self.pos = (x, y)

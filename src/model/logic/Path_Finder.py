@@ -1,6 +1,9 @@
 
 '''
-This class is currently empty. Here we intend to provide the logic for the agents to find a path towards an exit. We intend to not only provide algorithms for the nearest path, but also alternative routes. 
+TODO: independence from numpy
+TODO: dependency interjection
+TODO: Utils functions to streamline
+TODO: private functions
 '''
 
 import numpy as np
@@ -11,41 +14,37 @@ from src.model.logic.A_star import A_Star
 from src.model.utils.Utilities import Utilities
 from src.model.utils.Geometry import Geometry
 
-np.set_printoptions(threshold=sys.maxsize)
-
 class Path_Finder:
 
-    def __init__(self, world_dim, obstacles):
-        self.world_dim = world_dim
+    def __init__(self, obstacles, exits):
         self.obstacles = obstacles
-
-    def description(self):
-        print("world_dim:", self.world_dim)
-        print("obstacles:", self.obstacles)
+        self.exits = exits
 
     def build_mesh(self):
 
-        points = []
-
-        goal = (20, 480)
-        points += [goal]
-
-        for x in range(0,21):
-            for y in range(0,21):
-                points += [(x * 25, y * 25)]
-
-        for obstacle in self.obstacles:
-            points += obstacle.get_corner_points()
-
-        self.points = np.array(points)
-        tri = Delaunay(points)
+        self.points = np.array(self.prepare_nodes_of_graph())
+        tri = Delaunay(self.points)
 
         self.walkable_space = self.filter_triangles_leaving_walkable_space(tri.simplices, self.obstacles)
 
         # plt.triplot(self.points[:,0], self.points[:,1], self.walkable_space)
         # plt.plot(self.points[:,0], self.points[:,1], 'o')
-        # plt.plot(self.path[:,0], self.path[:,1], 'o', markersize=15)
         # plt.show()
+
+    def prepare_nodes_of_graph(self):
+        nodes = []
+
+        for x in range(0,21):
+            for y in range(0,21):
+                nodes += [(x * 25, y * 25)]
+
+        for obstacle in self.obstacles:
+            nodes += obstacle.get_corner_points()
+
+        for exit in self.exits:
+            nodes += [exit.pos]
+
+        return nodes
 
     def get_next_step(self, agent_position, goal = (20, 480)):
 

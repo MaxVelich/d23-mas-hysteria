@@ -5,11 +5,7 @@ This class models the Exit object. This is the objects agents want to rush to in
 
 class Exit:
 
-    def __init__(self, x = 0, y = 0, available = False):
+    def __init__(self, x = 0, y = 0):
         self.x = x
         self.y = y
         self.pos = (x, y)
-        self.available = available
-
-    def is_visible(from_position, distance = 100):
-        return True

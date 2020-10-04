@@ -23,7 +23,7 @@ class Model_Controller(Model):
         self.create_exit()
         self.create_agent()
 
-        self.path_finder = Path_Finder((width, height), self.obstacles)
+        self.path_finder = Path_Finder(self.obstacles, self.exits)
         self.path_finder.build_mesh()
 
     def create_agent(self):
@@ -34,18 +34,18 @@ class Model_Controller(Model):
 
     def create_exit(self):
         self.exits = {
-            Exit(40, 460, True)
+            Exit(20, 480)
         }
 
     def create_obstacles(self):
 
         self.obstacles = [
-            Obstacle((70,350), 150, 40),
-            Obstacle((220,350), 150, 40),
-            Obstacle((430,250), 150, 40),
-            Obstacle((280,250), 150, 40),
-            Obstacle((70,150), 150, 40),
-            Obstacle((220,150), 150, 40)
+            Obstacle((75,350), 150, 40),
+            Obstacle((225,350), 150, 40),
+            Obstacle((425,250), 150, 40),
+            Obstacle((275,250), 150, 40),
+            Obstacle((75,150), 150, 40),
+            Obstacle((225,150), 150, 40)
         ]
 
     def step(self):
