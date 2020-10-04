@@ -6,6 +6,10 @@ This class is currently empty. Here we intend to provide the logic for the agent
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import Delaunay
+from queue import PriorityQueue
+import math, sys
+
+np.set_printoptions(threshold=sys.maxsize)
 
 class Path_Finder:
 
@@ -21,6 +25,11 @@ class Path_Finder:
 
         points = []
 
+        start = (40, 40)
+        goal = (20, 480)
+        points += [start]
+        points += [goal]
+
         for x in range(0,20):
             for y in range(0,20):
                 points += [(x * 25, y * 25)]
@@ -32,25 +41,96 @@ class Path_Finder:
         tri = Delaunay(points)
 
         self.walkable_space = self.filter_triangles_leaving_walkable_space(tri.simplices, self.obstacles)
-        self.path = self.a_star((20,20), (20, 480))
+        self.path = self.a_star(start, goal)
+        print(self.path)
 
-        plt.triplot(self.points[:,0], self.points[:,1], self.walkable_space)
-        plt.plot(self.points[:,0], self.points[:,1], 'o')
-        plt.plot(self.path[:,0], self.path[:,1], 'o', markersize=15)
-        
-        plt.show()
+        # plt.triplot(self.points[:,0], self.points[:,1], self.walkable_space)
+        # plt.plot(self.points[:,0], self.points[:,1], 'o')
+        # plt.plot(self.path[:,0], self.path[:,1], 'o', markersize=15)
+        # plt.show()
 
     def a_star(self, start, goal):
         
+        edges = self.prepare_edges_for_path_finding()
+        
+        visited = set()
+        came_from = dict()
+        distance = { start: 0 }
+        frontier = PriorityQueue()
+        frontier.put((0, start))
+
+        while not frontier.empty():
+            
+            node = frontier.get()
+
+            if node[1] in visited:
+                continue
+            
+            if goal == node[1]:
+                return np.array(self.reconstruct_path(came_from, start, node[1]))
+
+            visited.add(node[1])
+            successors = self.get_successor(edges, node[1])
+            
+            for successor in successors:
+                
+                priority = 1 + self.heuristic(successor, goal) + distance[node[1]]
+                frontier.put((priority, successor))
+
+                if (successor not in distance or distance[node[1]] + 1 < distance[successor]):
+                    distance[successor] = distance[node[1]] + 1
+                    came_from[successor] = node[1]
+        
+        return np.array(list(visited))
+
+    def heuristic(self, node, goal):
+        delta_x = node[0] - goal[0]
+        delta_y = node[1] - goal[1]
+        return math.sqrt(delta_x * delta_x + delta_y * delta_y)
+
+    def get_successor(self, edges, node):
+
+        successors = []
+        for edge in edges:
+            if int(edge[0]) == int(node[0]) and int(edge[1]) == int(node[1]):
+                successors += [(int(edge[2]), int(edge[3]))]
+            elif int(edge[2]) == int(node[0]) and int(edge[3]) == int(node[1]):
+                successors += [(int(edge[0]), int(edge[1]))]
+
+        return successors
+
+    def reconstruct_path(self, came_from, start, end):
+        reverse_path = [end]
+        while end != start:
+            end = came_from[end]
+            reverse_path.append(end)
+        return list(reversed(reverse_path))
+
+    def prepare_edges_for_path_finding(self):
         edges = np.empty([0,4])
         for triangle in self.walkable_space:
             for i in range(0,3):
                 new_edge = np.array([ self.points[int(triangle[i])], self.points[int(triangle[(i+1) %3])] ])
                 edges = np.append(edges, new_edge.reshape(-1,4), axis = 0)
 
-        # STOPPED HERE; NEXT STEP: FILTER EDGES BIDIRECTIONAL EDGES
+        filtered = np.empty([0,4])
+        for edge in edges:
+            
+            if filtered.size == 0:
+                filtered = np.append(filtered, edge.reshape(-1,4), axis = 0)
+                continue
+            
+            already_in_filtered = False
+            for temp in filtered:
+                
+                if edge[0] == temp[2] and edge[1] == temp[3] and edge[2] == temp[0] and edge[3] == temp[1]:
+                    already_in_filtered = True
+                    break
 
-        return np.array([start, goal])
+            if not already_in_filtered:
+                filtered = np.append(filtered, edge.reshape(-1,4), axis = 0)
+
+        return filtered
 
     def filter_triangles_leaving_walkable_space(self, triangles, obstacles):
         
