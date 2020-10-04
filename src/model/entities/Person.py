@@ -9,7 +9,6 @@ from ..logic.Panic_Dynamic import Panic_Dynamic
 import random
 import numpy as np
 
-
 class Person(Agent):
 
     def __init__(self, unique_id, model):

@@ -23,7 +23,7 @@ class Model_Controller(Model):
         self.create_exit()
         self.create_agent()
 
-        self.path_finder = Path_Finder(self.obstacles, self.exits)
+        self.path_finder = Path_Finder((width, height), self.obstacles, self.exits)
         self.path_finder.build_mesh()
 
     def create_agent(self):
