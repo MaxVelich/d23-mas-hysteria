@@ -5,7 +5,6 @@ This class is currently empty. Here we intend to provide the logic for how agent
 
 import numpy as np
 
-
 class Panic_Dynamic:
 
     def __init__():
@@ -48,7 +47,3 @@ class Panic_Dynamic:
             speed = 1
 
         return panic, speed
-
-
-
-
