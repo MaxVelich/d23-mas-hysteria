@@ -1,8 +1,13 @@
 
-import math, sys
-import numpy as np
+'''
+This class performs the A* graph path finding algorithm. 
+
+90% of this class is NOT written by us. We took the code straight from the following source. We adjusted it to our needs, and will probably change it a lot more in the future.
+https://leetcode.com/problems/shortest-path-in-binary-matrix/discuss/313347/a-search-in-python
+'''
 
 from queue import PriorityQueue
+
 from src.model.utils.Utilities import Utilities
 
 class A_Star:
@@ -26,7 +31,7 @@ class A_Star:
                 continue
             
             if goal == node[1]:
-                return np.array(self.reconstruct_path(came_from, start, node[1]))
+                return self.reconstruct_path(came_from, start, node[1])
 
             visited.add(node[1])
             successors = self.get_successor(node[1])
@@ -39,8 +44,6 @@ class A_Star:
                 if (successor not in distance or distance[node[1]] + 1 < distance[successor]):
                     distance[successor] = distance[node[1]] + 1
                     came_from[successor] = node[1]
-        
-        return np.array(list(visited))
 
     def get_successor(self, node):
 
@@ -54,6 +57,7 @@ class A_Star:
         return successors
 
     def reconstruct_path(self, came_from, start, end):
+
         reverse_path = [end]
         while end != start:
             end = came_from[end]
