@@ -11,6 +11,7 @@ class Person(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.panic = 0
+        self.next_move = None
 
     def step(self):
         self.move()
@@ -26,20 +27,34 @@ class Person(Agent):
             self.panic = 2
 
     def move(self):
-        speed = 1
 
-        if self.pos[0] < self.model.space.width / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0] + speed, self.pos[1]))
-        if self.pos[1] < self.model.space.height / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0], self.pos[1] + speed))
-        if self.pos[0] > self.model.space.width / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0] - speed, self.pos[1]))
-        if self.pos[1] > self.model.space.height / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0], self.pos[1] - speed))
+        speed = 5
+
+        if self.next_move is None:
+            self.next_move = self.model.path_finder.get_next_step(self.pos)
+
+        if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
+            self.next_move = self.model.path_finder.get_next_step(self.pos)
+        
+        delta_pos_x = self.next_move[0] - self.pos[0]
+        delta_pos_y = self.next_move[1] - self.pos[1]
+        
+        if delta_pos_x < 0:
+            delta_x = -1
+        elif delta_pos_x > 0:
+            delta_x = 1
+        else:
+            delta_x = 0
+
+        if delta_pos_y < 0:
+            delta_y = -1
+        elif delta_pos_y > 0:
+            delta_y = 1
+        else:
+            delta_y = 0
+
+        self.model.space.move_agent(self, (self.pos[0] + delta_x*5, self.pos[1] + delta_y*5))
+
 
     def checkIfAtExit(self):
         threshold = 4

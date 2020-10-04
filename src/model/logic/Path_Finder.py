@@ -25,9 +25,7 @@ class Path_Finder:
 
         points = []
 
-        start = (40, 40)
         goal = (20, 480)
-        points += [start]
         points += [goal]
 
         for x in range(0,20):
@@ -41,13 +39,39 @@ class Path_Finder:
         tri = Delaunay(points)
 
         self.walkable_space = self.filter_triangles_leaving_walkable_space(tri.simplices, self.obstacles)
-        self.path = self.a_star(start, goal)
-        print(self.path)
 
         # plt.triplot(self.points[:,0], self.points[:,1], self.walkable_space)
         # plt.plot(self.points[:,0], self.points[:,1], 'o')
         # plt.plot(self.path[:,0], self.path[:,1], 'o', markersize=15)
         # plt.show()
+
+    def get_next_step(self, agent_position, goal = (20, 480)):
+
+        nearest_point = self.find_nearest_mesh_point(agent_position)
+
+        if nearest_point[0] == goal[0] and nearest_point[1] == goal[1]:
+            return (0,0)
+
+        path = self.a_star((nearest_point[0], nearest_point[1]), goal)
+        
+        first_next_node = path[0]
+        if agent_position[0] == first_next_node[0] and agent_position[1] == first_next_node[1]:
+            next_point = path[1]
+        else:
+            next_point = first_next_node
+        
+        return next_point
+
+    def find_nearest_mesh_point(self, point):
+
+        distances = []
+        for p in self.points:
+            distance = self.heuristic(p, point)
+            distances.append(distance)
+
+        index_nearest_point = np.argmin(distances)
+
+        return self.points[index_nearest_point]
 
     def a_star(self, start, goal):
         

@@ -27,7 +27,7 @@ class Model_Controller(Model):
     def create_agent(self):
         for i in range(self.num_agents):
             a = Person(i, self)
-            self.space.place_agent(a, (40, 40))
+            self.space.place_agent(a, (400, 40)) 
             self.schedule.add(a)
 
     def create_exit(self):
