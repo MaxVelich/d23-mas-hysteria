@@ -5,5 +5,15 @@ This class is currently empty. It will provide a general implementation of an ob
 
 class Obstacle:
 
-    def __init__():
-        pass
+    def __init__(self, center, width, height):
+        self.pos = center
+        self.width = width
+        self.height = height
+
+    def get_corner_points(self):
+        corners = []
+        corners += [(self.pos[0]-(self.width/2),self.pos[1]-(self.height/2))] # top_left
+        corners += [(self.pos[0]+(self.width/2),self.pos[1]-(self.height/2))] # top_right
+        corners += [(self.pos[0]-(self.width/2),self.pos[1]+(self.height/2))] # bottom_left
+        corners += [(self.pos[0]+(self.width/2),self.pos[1]+(self.height/2))] # bottom_right
+        return corners

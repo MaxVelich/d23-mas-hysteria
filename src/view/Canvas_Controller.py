@@ -28,6 +28,10 @@ class Canvas_Controller(VisualizationElement):
             portrayal = self.getAgentPortrayal(model.space, agent)
             space_state.append(portrayal)
 
+        for obstacle in model.obstacles:
+            portrayal = self.getObstaclePortrayal(model.space, obstacle)
+            space_state.append(portrayal)
+
         for exit in model.exits:
             portrayal = self.getExitPortrayal(model.space, exit)
             space_state.append(portrayal)
@@ -42,8 +46,12 @@ class Canvas_Controller(VisualizationElement):
         portrayal = Portrayals.for_Exit()
         return self.placePortrayal(space, portrayal, exit)
 
+    def getObstaclePortrayal(self, space, obstacle):
+        portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height)
+        return self.placePortrayal(space, portrayal, obstacle)
+
     def placePortrayal(self, space, portrayal, element):
         x, y = element.pos
-        portrayal["x"] = ((x - space.x_min) / (space.x_max - space.x_min))
-        portrayal["y"] = ((y - space.y_min) / (space.y_max - space.y_min))
+        portrayal["x"] = x/self.canvas_width
+        portrayal["y"] = y/self.canvas_height
         return portrayal

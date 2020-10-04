@@ -2,7 +2,6 @@
 This class provides the appearance of the entities in the environment via static methods.
 '''
 
-
 class Portrayals:
 
     @staticmethod
@@ -34,7 +33,7 @@ class Portrayals:
         portrayal = {"Shape": "rect",
                         "Color": "green",
                         "Filled": "true",
-                        "Layer": 0,
+                        "Layer": 1,
                         "w": 0.025,
                         "h": 0.025}
 
@@ -75,3 +74,16 @@ class Portrayals:
         This is a simulation built for understanding panic behaviour of people in a crowd evacuation. 
         To run the model, just press Start! 
         '''
+    
+    @staticmethod
+    def for_Obstacle(width, height):
+
+        portrayal = {"Shape": "rect",
+                        "Color": "red",
+                        "Filled": "true",
+                        "Layer": 0,
+                        "w": width/500,
+                        "h": height/500
+                        }
+
+        return portrayal
