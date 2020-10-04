@@ -28,8 +28,8 @@ class Path_Finder:
         goal = (20, 480)
         points += [goal]
 
-        for x in range(0,20):
-            for y in range(0,20):
+        for x in range(0,21):
+            for y in range(0,21):
                 points += [(x * 25, y * 25)]
 
         for obstacle in self.obstacles:
@@ -50,7 +50,7 @@ class Path_Finder:
         nearest_point = self.find_nearest_mesh_point(agent_position)
 
         if nearest_point[0] == goal[0] and nearest_point[1] == goal[1]:
-            return (0,0)
+            return agent_position
 
         path = self.a_star((nearest_point[0], nearest_point[1]), goal)
         

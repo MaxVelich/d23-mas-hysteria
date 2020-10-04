@@ -27,7 +27,7 @@ class Model_Controller(Model):
     def create_agent(self):
         for i in range(self.num_agents):
             a = Person(i, self)
-            self.space.place_agent(a, (400, 40)) 
+            self.space.place_agent(a, (40, 40)) 
             self.schedule.add(a)
 
     def create_exit(self):
@@ -38,35 +38,12 @@ class Model_Controller(Model):
     def create_obstacles(self):
 
         self.obstacles = [
-            Obstacle((50,5), 100, 10),
-            Obstacle((150,5), 100, 10),
-            Obstacle((250,5), 100, 10),
-            Obstacle((350,5), 100, 10),
-            Obstacle((450,5), 100, 10),
-            Obstacle((50,495), 100, 10),
-            Obstacle((150,495), 100, 10),
-            Obstacle((250,495), 100, 10),
-            Obstacle((350,495), 100, 10),
-            Obstacle((450,495), 100, 10),
-            Obstacle((5,50), 10, 100),
-            Obstacle((5,150), 10, 100),
-            Obstacle((5,250), 10, 100),
-            Obstacle((5,350), 10, 100),
-            Obstacle((5,450), 10, 100),
-            Obstacle((495,50), 10, 100),
-            Obstacle((495,150), 10, 100),
-            Obstacle((495,250), 10, 100),
-            Obstacle((495,350), 10, 100),
-            Obstacle((495,450), 10, 100)
-        ]
-
-        self.obstacles += [
-            Obstacle((80,350), 150, 40),
-            Obstacle((230,350), 150, 40),
-            Obstacle((420,250), 150, 40),
-            Obstacle((270,250), 150, 40),
-            Obstacle((80,150), 150, 40),
-            Obstacle((230,150), 150, 40)
+            Obstacle((70,350), 150, 40),
+            Obstacle((220,350), 150, 40),
+            Obstacle((430,250), 150, 40),
+            Obstacle((280,250), 150, 40),
+            Obstacle((70,150), 150, 40),
+            Obstacle((220,150), 150, 40)
         ]
 
     def step(self):
