@@ -6,8 +6,9 @@ This class is currently empty. Here we intend to provide the logic for the agent
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import Delaunay
-from queue import PriorityQueue
-import math, sys
+import sys
+from src.model.logic.A_star import A_Star
+from src.model.utils.Utilities import Utilities
 
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -52,7 +53,7 @@ class Path_Finder:
         if nearest_point[0] == goal[0] and nearest_point[1] == goal[1]:
             return agent_position
 
-        path = self.a_star((nearest_point[0], nearest_point[1]), goal)
+        path = self.find_path((nearest_point[0], nearest_point[1]), goal)
         
         first_next_node = path[0]
         if agent_position[0] == first_next_node[0] and agent_position[1] == first_next_node[1]:
@@ -66,69 +67,17 @@ class Path_Finder:
 
         distances = []
         for p in self.points:
-            distance = self.heuristic(p, point)
+            distance = Utilities.euclidean_distance(p, point)
             distances.append(distance)
 
         index_nearest_point = np.argmin(distances)
 
         return self.points[index_nearest_point]
 
-    def a_star(self, start, goal):
-        
+    def find_path(self, start, goal):
         edges = self.prepare_edges_for_path_finding()
-        
-        visited = set()
-        came_from = dict()
-        distance = { start: 0 }
-        frontier = PriorityQueue()
-        frontier.put((0, start))
-
-        while not frontier.empty():
-            
-            node = frontier.get()
-
-            if node[1] in visited:
-                continue
-            
-            if goal == node[1]:
-                return np.array(self.reconstruct_path(came_from, start, node[1]))
-
-            visited.add(node[1])
-            successors = self.get_successor(edges, node[1])
-            
-            for successor in successors:
-                
-                priority = 1 + self.heuristic(successor, goal) + distance[node[1]]
-                frontier.put((priority, successor))
-
-                if (successor not in distance or distance[node[1]] + 1 < distance[successor]):
-                    distance[successor] = distance[node[1]] + 1
-                    came_from[successor] = node[1]
-        
-        return np.array(list(visited))
-
-    def heuristic(self, node, goal):
-        delta_x = node[0] - goal[0]
-        delta_y = node[1] - goal[1]
-        return math.sqrt(delta_x * delta_x + delta_y * delta_y)
-
-    def get_successor(self, edges, node):
-
-        successors = []
-        for edge in edges:
-            if int(edge[0]) == int(node[0]) and int(edge[1]) == int(node[1]):
-                successors += [(int(edge[2]), int(edge[3]))]
-            elif int(edge[2]) == int(node[0]) and int(edge[3]) == int(node[1]):
-                successors += [(int(edge[0]), int(edge[1]))]
-
-        return successors
-
-    def reconstruct_path(self, came_from, start, end):
-        reverse_path = [end]
-        while end != start:
-            end = came_from[end]
-            reverse_path.append(end)
-        return list(reversed(reverse_path))
+        a_star = A_Star(edges)
+        return a_star.find_path(start, goal)
 
     def prepare_edges_for_path_finding(self):
         edges = np.empty([0,4])
