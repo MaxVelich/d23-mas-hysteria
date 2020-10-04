@@ -78,7 +78,7 @@ class Portrayals:
     def for_Obstacle(width, height):
 
         portrayal = {"Shape": "rect",
-                        "Color": "red",
+                        "Color": "black",
                         "Filled": "true",
                         "Layer": 0,
                         "w": width/500,
