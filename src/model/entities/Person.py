@@ -1,17 +1,15 @@
 
 '''
-This class models the agents, or people in our case. This class is a decendent of the Agent class of MESA.
+This class models the agents, or people in our case. This class is a decendent of the Agent class of MESA. This class lacks quite a lot still.
 '''
 
 from mesa import Agent
-from ..logic.Panic_Dynamic import Panic_Dynamic
-
-import random
-import numpy as np
+from src.model.logic.Panic_Dynamic import Panic_Dynamic
 
 class Person(Agent):
 
     def __init__(self, unique_id, model):
+
         super().__init__(unique_id, model)
         self.panic = 0
         self.velocity = 1
@@ -20,18 +18,22 @@ class Person(Agent):
         self.next_move = None
 
     def step(self):
-        nearbyAgents = self.model.space.get_neighbors(self.pos, self.vision)
+
+        near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
 
         self.move()
 
-        if self.checkIfAtExit():
+        if self.check_if_at_exit():
             self.model.schedule.remove(self)
         else:
-            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(nearbyAgents))
+            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(near_by_agents))
             if self.panic == 2:
-                self.velocity = Panic_Dynamic.cohere(nearbyAgents, self.pos, self) / 2
+                self.velocity = Panic_Dynamic.cohere(near_by_agents, self.pos, self) / 2
 
     def move(self):
+        '''
+        In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
+        '''
 
         if self.next_move is None:
             self.next_move = self.model.path_finder.get_next_step(self.pos)
@@ -58,14 +60,11 @@ class Person(Agent):
 
         self.model.space.move_agent(self, (self.pos[0] + delta_x*5, self.pos[1] + delta_y*5))
 
+    def check_if_at_exit(self):
 
-    def checkIfAtExit(self):
         threshold = 4
         for exit in self.model.exits:
             if abs(self.pos[0] - exit.x) < threshold and abs(self.pos[1] - exit.y) < threshold:
                 if exit.available:
                     return True
         return False
-
-    def check_if_move_possible(in_direction):
-        return True
