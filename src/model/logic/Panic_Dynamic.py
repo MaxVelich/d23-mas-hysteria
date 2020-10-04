@@ -1,6 +1,6 @@
 
 '''
-This class is currently empty. Here we intend to provide the logic for how agents react to the panic. Also, how the panic in general progresses with time.
+Here we intend to provide the logic for how agents react to the panic. Also, how the panic in general progresses with time. This class is very much a work-in-progress at this moment.
 '''
 
 import numpy as np
