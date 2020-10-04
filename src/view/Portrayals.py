@@ -65,7 +65,6 @@ class Portrayals:
                 black;clear: both;background-color:green'></div> <p style="font-size:16px; margin-bottom: 15px"> Exit</p>
               </div>
         '''
-
         return legend
 
     @staticmethod

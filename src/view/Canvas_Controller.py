@@ -1,5 +1,3 @@
-
-
 '''
 This class inherits from VisualizationElement provided by MESA. It's responsibility is to create and draw the environment.
 '''

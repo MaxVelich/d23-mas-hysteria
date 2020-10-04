@@ -1,4 +1,8 @@
 
+'''
+This is a controller class, so many part of the functionality of this program are connected here. Currently, it does not do too much, except creating the environment, populating it and instantiating a bunch of important objects (e.g. Path_Finder).
+'''
+
 from src.model.entities.Person import Person
 from src.model.entities.Exit import Exit
 from src.model.entities.Hazard import Hazard
@@ -9,7 +13,6 @@ from src.model.logic.Path_Finder import Path_Finder
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
-
 
 class Model_Controller(Model):
 
@@ -27,9 +30,10 @@ class Model_Controller(Model):
         self.path_finder.build_mesh()
 
     def create_agent(self):
+
         for i in range(self.num_agents):
             a = Person(i, self)
-            self.space.place_agent(a, (40, 40)) 
+            self.space.place_agent(a, (20*(i+1), 40)) 
             self.schedule.add(a)
 
     def create_exit(self):
