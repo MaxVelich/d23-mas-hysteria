@@ -38,18 +38,19 @@ class Model_Controller(Model):
 
     def create_exit(self):
         self.exits = {
-            Exit(20, 480)
+            Exit(20, 480),
+            Exit(480, 480)
         }
 
     def create_obstacles(self):
 
         self.obstacles = [
-            Obstacle((75,350), 150, 40),
-            Obstacle((225,350), 150, 40),
+            Obstacle((95,350), 190, 40),
+            Obstacle((405,350), 190, 40),
             Obstacle((425,250), 150, 40),
-            Obstacle((275,250), 150, 40),
+            Obstacle((75,250), 150, 40),
             Obstacle((75,150), 150, 40),
-            Obstacle((225,150), 150, 40)
+            Obstacle((425,150), 150, 40)
         ]
 
     def step(self):

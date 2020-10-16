@@ -12,12 +12,12 @@ from src.view.Portrayals import Portrayals
 
 #Uncomment these 2 lines if you get a NotImplementedError for server.launch()
 #(Confirmed to work for windows 10)
-#import asyncio
-#asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 width = 500
 height = 500
-N = 10
+N = 20
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
 
