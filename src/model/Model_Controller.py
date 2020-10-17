@@ -28,14 +28,15 @@ class Model_Controller(Model):
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
-        
+
         self.create_agent()
 
     def create_agent(self):
 
         for i in range(self.num_agents):
             a = Person(i, self)
-            self.space.place_agent(a, (20*(i+1), 40)) 
+            self.space.place_agent(a, (20*(i+1), 40))
+            a.prepare_path_finding()
             self.schedule.add(a)
 
     def create_exit(self):

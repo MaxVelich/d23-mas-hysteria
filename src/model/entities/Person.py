@@ -18,7 +18,10 @@ class Person(Agent):
         self.vision = 40
         self.next_move = None
 
+    def prepare_path_finding(self):
+        
         self.path_finder = Path_Finder(self.model.world_mesh)
+        self.path_finder.set_goal(self.pos, (20,480))
 
     def step(self):
 

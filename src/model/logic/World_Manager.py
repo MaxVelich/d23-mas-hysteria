@@ -33,7 +33,9 @@ class World_Manager:
         # plt.plot(self.nodes[:,0], self.nodes[:,1], 'o')
         # plt.show()
 
-        return (self.nodes, self.walkable_space)
+        edges = self.__prepare_edges_for_path_finding()
+
+        return (self.nodes, edges)
 
     def __prepare_nodes_of_graph(self):
         '''
@@ -89,3 +91,34 @@ class World_Manager:
                 return True
 
         return False
+
+    def __prepare_edges_for_path_finding(self):
+        '''
+        From the Delaunay method, we find triangles. Though, we need to convert these into edges (i.e. [point_1, point_2]). Also, we can remove bidirectional-duplicates, since we we do not have any directed edges (i.e. [point_1,point_2] == [point_2, point_1]).
+        '''
+
+        edges = []
+        for triangle in self.walkable_space:
+            for i in range(0,3):
+                first_node = self.nodes[int(triangle[i])]
+                second_node = self.nodes[int(triangle[(i+1) % 3])]
+                edges += [ [first_node[0], first_node[1], second_node[0], second_node[1] ] ]
+
+        filtered = []
+        for edge in edges:
+            
+            if len(filtered) == 0:
+                filtered += [edge]
+                continue
+            
+            already_in_filtered = False
+            for temp in filtered:
+                
+                if edge[0] == temp[2] and edge[1] == temp[3] and edge[2] == temp[0] and edge[3] == temp[1]:
+                    already_in_filtered = True
+                    break
+
+            if not already_in_filtered:
+                filtered += [edge]
+
+        return filtered

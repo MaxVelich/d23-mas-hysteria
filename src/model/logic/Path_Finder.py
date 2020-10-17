@@ -13,24 +13,27 @@ import numpy as np
 class Path_Finder:
 
     def __init__(self, world_mesh):
-        self.nodes, self.walkable_space = world_mesh
+        self.nodes, self.edges = world_mesh
 
-    def get_next_step(self, agent_position, goal = (20, 480)):
+    def set_goal(self, current_pos, goal):
+
+        print("new goal " + str(goal) + " has been set --- recalculating route...")
+
+        self.plan = self.__find_path(current_pos, goal)
+        print(self.plan)
+
+    def get_next_step(self, agent_position):
         '''
         This will not make it in the final version. It produces the next step an agent should take in order to find an exit. Here, we basically run A* on the graph we generate above. Then we try to match the agent's position to the next nearest node on the graph, then we run A*.
         '''
 
         nearest_point = self.__find_nearest_mesh_point(agent_position)
         print(nearest_point)
-
-        if nearest_point[0] == goal[0] and nearest_point[1] == goal[1]:
-            return agent_position
-
-        path = self.__find_path(nearest_point, goal)
         
-        first_next_node = path[0]
+        first_next_node = self.plan[0]
         if agent_position[0] == first_next_node[0] and agent_position[1] == first_next_node[1]:
-            next_point = path[1]
+            self.plan.pop(0)
+            next_point = self.plan[0]
         else:
             next_point = first_next_node
         
@@ -56,38 +59,8 @@ class Path_Finder:
         '''
         Here we run A* on the graph, though A* itself is in a separate class.
         '''
+        
+        start = self.__find_nearest_mesh_point(start)
 
-        edges = self.__prepare_edges_for_path_finding()
-        a_star = A_Star(edges)
+        a_star = A_Star(self.edges)
         return a_star.find_path(start, goal)
-
-    def __prepare_edges_for_path_finding(self):
-        '''
-        From the Delaunay method, we find triangles. Though, we need to convert these into edges (i.e. [point_1, point_2]). Also, we can remove bidirectional-duplicates, since we we do not have any directed edges (i.e. [point_1,point_2] == [point_2, point_1]).
-        '''
-
-        edges = []
-        for triangle in self.walkable_space:
-            for i in range(0,3):
-                first_node = self.nodes[int(triangle[i])]
-                second_node = self.nodes[int(triangle[(i+1) % 3])]
-                edges += [ [first_node[0], first_node[1], second_node[0], second_node[1] ] ]
-
-        filtered = []
-        for edge in edges:
-            
-            if len(filtered) == 0:
-                filtered += [edge]
-                continue
-            
-            already_in_filtered = False
-            for temp in filtered:
-                
-                if edge[0] == temp[2] and edge[1] == temp[3] and edge[2] == temp[0] and edge[3] == temp[1]:
-                    already_in_filtered = True
-                    break
-
-            if not already_in_filtered:
-                filtered += [edge]
-
-        return filtered
