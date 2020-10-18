@@ -5,6 +5,7 @@ This class models the agents, or people in our case. This class is a decendent o
 
 from mesa import Agent
 from src.model.logic.Panic_Dynamic import Panic_Dynamic
+from src.model.logic.Path_Finder import Path_Finder
 
 class Person(Agent):
 
@@ -16,6 +17,11 @@ class Person(Agent):
         self.speed = 1.0
         self.vision = 40
         self.next_move = None
+
+    def prepare_path_finding(self):
+        
+        self.path_finder = Path_Finder(self.model.world_mesh)
+        self.path_finder.set_goal(self.pos, (20,480))
 
     def step(self):
 
@@ -36,11 +42,13 @@ class Person(Agent):
         '''
 
         if self.next_move is None:
-            self.next_move = self.model.path_finder.get_next_step(self.pos)
+            self.next_move = self.path_finder.get_next_step(self.pos)
 
         if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
-            self.next_move = self.model.path_finder.get_next_step(self.pos)
+            self.next_move = self.path_finder.get_next_step(self.pos)
         
+        print(self.next_move)
+
         delta_pos_x = self.next_move[0] - self.pos[0]
         delta_pos_y = self.next_move[1] - self.pos[1]
         

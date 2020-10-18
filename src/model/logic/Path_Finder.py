@@ -12,32 +12,15 @@ import numpy as np
 
 class Path_Finder:
 
-    def __init__(self, world_dim, obstacles, exits, mesh_size = 25):
-        self.world_dim = world_dim
-        self.obstacles = obstacles
-        self.exits = exits
-        self.mesh_size = mesh_size
+    def __init__(self, world_mesh):
+        self.nodes, self.edges = world_mesh
 
-    ### PUBLIC INTERFACE
+    def set_goal(self, current_pos, goal):
 
-    def build_mesh(self):
-        '''
-        In order to run A* on the world, we need to make state spaces discrete. We use Delaunay's algrithm in order to find triangles across all nodes. Then, we filter those triangle depending on if they fall on walkable space or not.
-        '''
+        print("new goal " + str(goal) + " has been set --- recalculating route...")
 
-        self.nodes = self.__prepare_nodes_of_graph()
-
-        from scipy.spatial import Delaunay
-        triangles = Delaunay(self.nodes)
-
-        self.walkable_space = self.__find_walkable_space(triangles.simplices, self.obstacles)
-
-        # UNCOMMENT IF YOU WANT TO SEE THE MESH OF THE GRAPH
-        # import matplotlib.pyplot as plt
-        # self.nodes = np.array(self.nodes)
-        # plt.triplot(self.nodes[:,0], self.nodes[:,1], self.walkable_space)
-        # plt.plot(self.nodes[:,0], self.nodes[:,1], 'o')
-        # plt.show()
+        self.plan = self.__find_path(current_pos, goal)
+        print(self.plan)
 
     def get_next_step(self, agent_position):
         '''
@@ -45,76 +28,18 @@ class Path_Finder:
         '''
         goal = self.__find_nearest_goal(agent_position)
         nearest_point = self.__find_nearest_mesh_point(agent_position)
-
-        if nearest_point[0] == goal[0] and nearest_point[1] == goal[1]:
-            return agent_position
-
-        path = self.__find_path((nearest_point[0], nearest_point[1]), goal)
+        print(nearest_point)
         
-        first_next_node = path[0]
+        first_next_node = self.plan[0]
         if agent_position[0] == first_next_node[0] and agent_position[1] == first_next_node[1]:
-            next_point = path[1]
+            self.plan.pop(0)
+            next_point = self.plan[0]
         else:
             next_point = first_next_node
         
         return next_point
 
     ### PRIVATE INTERFACE
-
-    def __prepare_nodes_of_graph(self):
-        '''
-        Here we setup all nodes we need for the graph. We use 'artificial' nodes to cover empty space, the corner points of rectangle obstacles, and the exits' positions.
-        '''
-
-        nodes = []
-
-        for x in range(0, int(self.world_dim[0] / self.mesh_size) + 1):
-            for y in range(0, int(self.world_dim[1] / self.mesh_size) + 1):
-                nodes += [(x * self.mesh_size, y * self.mesh_size)]
-
-        for obstacle in self.obstacles:
-            nodes += obstacle.get_corner_points()
-
-        for exit in self.exits:
-            nodes += [ exit.pos ]
-
-        return nodes
-
-    def __find_walkable_space(self, triangles, obstacles):
-        '''
-        If one of the triangles intersects with an obstacle we need to remove it so that the agent can't walk over it -- like a ghost. The two methods following this one are helper functions.
-        '''
-        
-        filtered = np.empty([0,3])
-        for triangle in triangles:
-            if not self.__triangle_intersects_with_any_obstacle(triangle, obstacles):
-                filtered = np.append(filtered, triangle.reshape((-1,3)), axis = 0)
-
-        return filtered
-
-    def __triangle_intersects_with_any_obstacle(self, triangle, obstacles):
-
-        for obstacle in obstacles:
-            if self.__triangle_intersects_with_obstacle(triangle, obstacle):
-                return True
-
-        return False
-
-    def __triangle_intersects_with_obstacle(self, triangle, obstacle):
-
-        for index, point in np.ndenumerate(triangle):
-            
-            corners_of_obstacle = obstacle.get_corner_points()
-            point = self.nodes[point]
-
-            if Geometry.point_lies_within_rectangle(point, corners_of_obstacle):
-                return True
-
-            edge = (point, self.nodes[triangle[(index[0]+1) % 3]])
-            if Geometry.edge_intersects_with_rectangle_edges(edge, corners_of_obstacle):
-                return True
-
-        return False
 
     def __find_nearest_mesh_point(self, point):
         '''
@@ -134,54 +59,7 @@ class Path_Finder:
         '''
         Here we run A* on the graph, though A* itself is in a separate class.
         '''
-
-        edges = self.__prepare_edges_for_path_finding()
-        a_star = A_Star(edges)
+        
+        start = self.__find_nearest_mesh_point(start)
+        a_star = A_Star(self.edges)
         return a_star.find_path(start, goal)
-
-    def __prepare_edges_for_path_finding(self):
-        '''
-        From the Delaunay method, we find triangles. Though, we need to convert these into edges (i.e. [point_1, point_2]). Also, we can remove bidirectional-duplicates, since we we do not have any directed edges (i.e. [point_1,point_2] == [point_2, point_1]).
-        '''
-
-        edges = []
-        for triangle in self.walkable_space:
-            for i in range(0,3):
-                first_node = self.nodes[int(triangle[i])]
-                second_node = self.nodes[int(triangle[(i+1) % 3])]
-                edges += [ [first_node[0], first_node[1], second_node[0], second_node[1] ] ]
-
-        filtered = []
-        for edge in edges:
-            
-            if len(filtered) == 0:
-                filtered += [edge]
-                continue
-            
-            already_in_filtered = False
-            for temp in filtered:
-                
-                if edge[0] == temp[2] and edge[1] == temp[3] and edge[2] == temp[0] and edge[3] == temp[1]:
-                    already_in_filtered = True
-                    break
-
-            if not already_in_filtered:
-                filtered += [edge]
-
-        return filtered
-
-    def __find_nearest_goal(self, agent_position):
-        '''
-        Find the exit that is currently closest to the agent
-        Currently does not take obstacles into account
-        '''
-        distances = []
-        exitpositions = []
-        for exit in self.exits:
-            exitpositions += [exit.pos]
-            distance = Geometry.euclidean_distance(exit.pos, agent_position)
-            distances += [distance]
-
-        index_nearest_point = np.argmin(distances)
-
-        return exitpositions[index_nearest_point]
