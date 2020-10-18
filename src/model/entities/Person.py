@@ -9,7 +9,7 @@ from src.model.logic.Path_Finder import Path_Finder
 
 class Person(Agent):
 
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, tom):
 
         super().__init__(unique_id, model)
         self.panic = 0
@@ -17,11 +17,15 @@ class Person(Agent):
         self.speed = 1.0
         self.vision = 40
         self.next_move = None
+        # 0 = ToM0, 1 = ToM1
+        self.theory_of_mind = tom
 
     def prepare_path_finding(self):
         
         self.path_finder = Path_Finder(self.model.world_mesh)
-        self.path_finder.set_goal(self.pos, (20,480))
+        print("my ToM level is: " + str(self.theory_of_mind))
+        self.goal = self.path_finder.find_nearest_goal(self.pos)
+        self.path_finder.set_goal(self.pos, self.goal)
 
     def step(self):
 

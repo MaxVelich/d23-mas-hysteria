@@ -14,11 +14,15 @@ class Path_Finder:
 
     def __init__(self, world_mesh):
         self.nodes, self.edges = world_mesh
+        self.exits = {
+            (20, 480),
+            #(240, 480),
+            (480, 480)
+        }
 
     def set_goal(self, current_pos, goal):
 
         print("new goal " + str(goal) + " has been set --- recalculating route...")
-
         self.plan = self.__find_path(current_pos, goal)
         print(self.plan)
 
@@ -26,7 +30,7 @@ class Path_Finder:
         '''
         This will not make it in the final version. It produces the next step an agent should take in order to find an exit. Here, we basically run A* on the graph we generate above. Then we try to match the agent's position to the next nearest node on the graph, then we run A*.
         '''
-        goal = self.__find_nearest_goal(agent_position)
+
         nearest_point = self.__find_nearest_mesh_point(agent_position)
         print(nearest_point)
         
@@ -38,6 +42,23 @@ class Path_Finder:
             next_point = first_next_node
         
         return next_point
+
+    def find_nearest_goal(self, agent_position):
+        '''
+        Find the exit that is currently closest to the agent
+        Currently does not take obstacles into account
+        '''
+        distances = []
+        exitpositions = []
+        for exit in self.exits:
+            print(exit)
+            exitpositions += [exit]
+            distance = Geometry.euclidean_distance(exit, agent_position)
+            distances += [distance]
+
+        index_nearest_point = np.argmin(distances)
+
+        return exitpositions[index_nearest_point]
 
     ### PRIVATE INTERFACE
 

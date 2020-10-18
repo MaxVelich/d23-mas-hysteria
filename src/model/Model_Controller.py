@@ -14,6 +14,7 @@ from src.model.logic.World_Manager import World_Manager
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
+import random
 
 class Model_Controller(Model):
 
@@ -34,7 +35,11 @@ class Model_Controller(Model):
     def create_agent(self):
 
         for i in range(self.num_agents):
-            a = Person(i, self)
+            # add theory of mind (or lack thereof) when agent is being created
+            tom = 0
+            if(random.random() <= 0.2):
+                tom = 1
+            a = Person(i, self, tom)
             self.space.place_agent(a, (20*(i+1), 40))
             a.prepare_path_finding()
             self.schedule.add(a)
@@ -42,6 +47,7 @@ class Model_Controller(Model):
     def create_exit(self):
         self.exits = {
             Exit(20, 480),
+            #Exit(240, 480),
             Exit(480, 480)
         }
 

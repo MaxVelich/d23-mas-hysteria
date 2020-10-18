@@ -4,7 +4,7 @@ This class will incorporate the Theory of Mind aspect of the agents
 
 class Theory_Of_Mind:
 
-    def __init__():
+    def __init__(self):
         pass
 
     '''
