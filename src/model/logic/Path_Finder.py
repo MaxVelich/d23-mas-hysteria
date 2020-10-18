@@ -14,11 +14,6 @@ class Path_Finder:
 
     def __init__(self, world_mesh):
         self.nodes, self.edges = world_mesh
-        self.exits = {
-            (20, 480),
-            #(240, 480),
-            (480, 480)
-        }
 
     def set_goal(self, current_pos, goal):
 
@@ -43,15 +38,19 @@ class Path_Finder:
         
         return next_point
 
-    def find_nearest_goal(self, agent_position):
+    def find_nearest_goal(self,agent_position):
         '''
         Find the exit that is currently closest to the agent
         Currently does not take obstacles into account
         '''
+        exits = {
+            (20, 480),
+            #(240, 480),
+            (480, 480)
+        }
         distances = []
         exitpositions = []
-        for exit in self.exits:
-            print(exit)
+        for exit in exits:
             exitpositions += [exit]
             distance = Geometry.euclidean_distance(exit, agent_position)
             distances += [distance]

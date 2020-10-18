@@ -6,6 +6,7 @@ This class models the agents, or people in our case. This class is a decendent o
 from mesa import Agent
 from src.model.logic.Panic_Dynamic import Panic_Dynamic
 from src.model.logic.Path_Finder import Path_Finder
+from src.model.logic.Theory_Of_Mind import Theory_Of_Mind as ToM
 
 class Person(Agent):
 
@@ -23,8 +24,14 @@ class Person(Agent):
     def prepare_path_finding(self):
         
         self.path_finder = Path_Finder(self.model.world_mesh)
-        print("my ToM level is: " + str(self.theory_of_mind))
         self.goal = self.path_finder.find_nearest_goal(self.pos)
+        if(self.theory_of_mind == 1):
+            print("my ToM level is: " + str(self.theory_of_mind))
+            neighbors = self.model.space.get_neighbors(self.pos, self.vision)
+            print("I have " + str(len(neighbors)) + " neighbors")
+            ToM.determine_neighbor_exit_strategy(self.path_finder, neighbors)
+            # TODO: See Theory_Of_Mind
+
         self.path_finder.set_goal(self.pos, self.goal)
 
     def step(self):
