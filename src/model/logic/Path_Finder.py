@@ -38,7 +38,7 @@ class Path_Finder:
         
         return next_point
 
-    def find_nearest_goal(self,agent_position):
+    def find_goal(self,agent_position, current_goal):
         '''
         Find the exit that is currently closest to the agent
         Currently does not take obstacles into account
@@ -48,6 +48,9 @@ class Path_Finder:
             #(240, 480),
             (480, 480)
         }
+        if current_goal:
+            exits.remove(current_goal)
+
         distances = []
         exitpositions = []
         for exit in exits:

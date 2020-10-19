@@ -17,19 +17,23 @@ class Theory_Of_Mind:
     '''
 
     @staticmethod
-    def determine_neighbor_exit_strategy(path_finder, neighbors):
+    def determine_neighbor_exit_strategy(path_finder, agent_position, neighbors, current_goal):
         """
         determine which exits the neighbors of a given agents are most likely to use
         """
         exits = []
+        total_neighbors = len(neighbors)
+        agent_goal = current_goal
         if(neighbors):
             for i in neighbors:
-                print("neighbor at location " + str(i.pos))
-                exit = Path_Finder.find_nearest_goal(path_finder, i.pos)
-                exits += [exit]
-                print("exit for neighbor is " + str(exit))
+                goal = Path_Finder.find_goal(path_finder, i.pos, None)
+                exits += [goal]
 
         print("exit list is: " + str(exits))
-        
-        # TODO: change exit if too many neighbors use exit
-        return exits
+        if agent_goal in exits:
+            if exits.count(current_goal) == total_neighbors:
+                print("changing goal from: " + str(agent_goal))
+                agent_goal = Path_Finder.find_goal(path_finder, agent_position, agent_goal)
+                print("to :" + str(agent_goal))
+
+        return agent_goal
