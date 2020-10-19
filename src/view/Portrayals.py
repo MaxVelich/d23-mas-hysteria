@@ -43,11 +43,11 @@ class Portrayals:
     @staticmethod
     def for_hazard():
         portrayal = {"Shape": "rect",
-                     "Color": "gold",
+                     "Color": "grey",
                      "Filled": "true",
                      "Layer": 0,
-                     "w": 0.025,
-                     "h": 0.025}
+                     "w": 0.15,
+                     "h": 0.15}
 
         return portrayal
 
@@ -64,6 +64,10 @@ class Portrayals:
                 black;clear: both;background-color:red'></div> <p style="font-size:16px; margin-bottom: 15px"> Panic level: High </p>
               <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
                 black;clear: both;background-color:green'></div> <p style="font-size:16px; margin-bottom: 15px"> Exit</p>
+              <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:black'></div> <p style="font-size:16px; margin-bottom: 15px"> Obstacle</p>
+             <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:grey'></div> <p style="font-size:16px; margin-bottom: 15px"> Smoke</p>
               </div>
         '''
 

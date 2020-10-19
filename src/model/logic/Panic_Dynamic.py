@@ -32,16 +32,23 @@ class Panic_Dynamic:
         return velocity.any()
 
     @staticmethod
-    def change_panic_level(neighbourhood):
+    def change_panic_level(neighbourhood, hazards, pos, vision):
         """
         Return the changed panic level, based on nearby agents and vision of hazard
         :param neighbourhood:
         :return:
         """
         panic = 0
-        speed = 1.0
+        speed = 0.8
         if neighbourhood > 3:
             panic = 1
+        else:
+            # Check if a hazard is in vision
+            for h in hazards:
+                if (h.x - pos[0] <= vision) or (h.y - pos[1] <= vision):
+                    panic = 2
+                    speed = 1
+                    break
 
         if neighbourhood > 7:
             panic = 2

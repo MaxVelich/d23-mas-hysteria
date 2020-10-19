@@ -27,27 +27,45 @@ class Person(Agent):
         if self.checkIfAtExit():
             self.model.schedule.remove(self)
         else:
-            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(nearbyAgents))
+
+            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(near_by_agents), self.model.hazards, self.pos, self.vision)
             if self.panic == 2:
                 self.velocity = Panic_Dynamic.cohere(nearbyAgents, self.pos, self) / 2
 
     def move(self):
-        speed = self.speed
 
-        if self.pos[0] < self.model.space.width / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0] + self.velocity * speed, self.pos[1]))
-        if self.pos[1] < self.model.space.height / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0], self.pos[1] + self.velocity * speed))
-        if self.pos[0] > self.model.space.width / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0] - self.velocity * speed, self.pos[1]))
-        if self.pos[1] > self.model.space.height / 2:
-            self.model.space.move_agent(
-                self, (self.pos[0], self.pos[1] - self.velocity * speed))
+        '''
+        In order to move, the agent moves according to a path finding algorithm.
+        This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
+        '''
 
-    def checkIfAtExit(self):
+        if self.next_move is None:
+            self.next_move = self.model.path_finder.get_next_step(self.pos)
+
+        if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
+            self.next_move = self.model.path_finder.get_next_step(self.pos)
+        
+        delta_pos_x = self.next_move[0] - self.pos[0]
+        delta_pos_y = self.next_move[1] - self.pos[1]
+        
+        if delta_pos_x < 0:
+            delta_x = -1
+        elif delta_pos_x > 0:
+            delta_x = 1
+        else:
+            delta_x = 0
+
+        if delta_pos_y < 0:
+            delta_y = -1
+        elif delta_pos_y > 0:
+            delta_y = 1
+        else:
+            delta_y = 0
+
+        self.model.space.move_agent(self, (self.pos[0] + delta_x*5, self.pos[1] + delta_y*5))
+
+    def check_if_at_exit(self):
+
         threshold = 4
         for exit in self.model.exits:
             if abs(self.pos[0] - exit.x) < threshold and abs(self.pos[1] - exit.y) < threshold:
@@ -55,5 +73,4 @@ class Person(Agent):
                     return True
         return False
 
-    def check_if_move_possible(in_direction):
-        return True
+

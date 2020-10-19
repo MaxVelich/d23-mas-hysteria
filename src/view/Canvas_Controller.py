@@ -32,6 +32,10 @@ class Canvas_Controller(VisualizationElement):
             portrayal = self.getExitPortrayal(model.space, exit)
             space_state.append(portrayal)
 
+        for hazard in model.hazards:
+            portrayal = self.getHazardPortrayal(model.space, hazard)
+            space_state.append(portrayal)
+
         return space_state
 
     def getAgentPortrayal(self, space, agent):
@@ -41,6 +45,16 @@ class Canvas_Controller(VisualizationElement):
     def getExitPortrayal(self, space, exit):
         portrayal = Portrayals.for_Exit()
         return self.placePortrayal(space, portrayal, exit)
+
+
+    def getObstaclePortrayal(self, space, obstacle):
+        portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height)
+        return self.placePortrayal(space, portrayal, obstacle)
+
+    def getHazardPortrayal(self, space, hazard):
+        portrayal = Portrayals.for_hazard()
+        return self.placePortrayal(space, portrayal, hazard)
+
 
     def placePortrayal(self, space, portrayal, element):
         x, y = element.pos
