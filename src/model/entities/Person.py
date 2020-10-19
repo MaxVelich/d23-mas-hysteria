@@ -43,11 +43,13 @@ class Person(Agent):
         if self.check_if_at_exit():
             self.model.schedule.remove(self)
         else:
-            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(near_by_agents))
+
+            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(near_by_agents), self.model.hazards, self.pos, self.vision)
             if self.panic == 2:
                 self.velocity = Panic_Dynamic.cohere(near_by_agents, self.pos, self) / 2
 
     def move(self):
+
         '''
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
@@ -59,6 +61,7 @@ class Person(Agent):
             self.next_move = self.path_finder.get_next_step(self.pos)
         
         print(self.next_move)
+
 
         delta_pos_x = self.next_move[0] - self.pos[0]
         delta_pos_y = self.next_move[1] - self.pos[1]
@@ -86,3 +89,4 @@ class Person(Agent):
             if abs(self.pos[0] - exit.x) < threshold and abs(self.pos[1] - exit.y) < threshold:
                 return True
         return False
+

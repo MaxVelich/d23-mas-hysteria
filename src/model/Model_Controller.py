@@ -14,7 +14,16 @@ from src.model.logic.World_Manager import World_Manager
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
+
 import random
+
+from mesa.datacollection import DataCollector
+
+
+def get_count(model):
+    return model.num_agents
+
+
 
 class Model_Controller(Model):
 
@@ -23,12 +32,16 @@ class Model_Controller(Model):
         self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
+        self.count = 0
 
         self.create_obstacles()
         self.create_exit()
+        self.create_hazard()
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
+        self.datacollector = DataCollector(model_reporters={"Gini": get_count})
+
 
         self.create_agent()
 
@@ -54,6 +67,7 @@ class Model_Controller(Model):
     def create_obstacles(self):
 
         self.obstacles = [
+
             Obstacle((95,350), 190, 40),
             Obstacle((405,350), 190, 40),
             Obstacle((425,250), 150, 40),
@@ -62,8 +76,15 @@ class Model_Controller(Model):
             Obstacle((425,150), 150, 40)
         ]
 
+    def create_hazard(self):
+
+        self.hazards = [Hazard(400, 100)]
+
+
     def step(self):
+        self.datacollector.collect(self)
         self.schedule.step()
+        self.count += 1
 
         # Stop the simulation once all agents have exited the building
         if len(self.schedule.agents) == 0:
