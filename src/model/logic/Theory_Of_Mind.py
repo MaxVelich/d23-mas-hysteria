@@ -26,7 +26,10 @@ class Theory_Of_Mind:
             for i in neighbors:
                 print("neighbor at location " + str(i.pos))
                 exit = Path_Finder.find_nearest_goal(path_finder, i.pos)
+                exits += [exit]
                 print("exit for neighbor is " + str(exit))
 
+        print("exit list is: " + str(exits))
+        
         # TODO: change exit if too many neighbors use exit
         return exits
