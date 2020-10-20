@@ -6,6 +6,9 @@ This class models the agents, or people in our case. This class is a decendent o
 from mesa import Agent
 from src.model.logic.Panic_Dynamic import Panic_Dynamic
 from src.model.logic.Path_Finder import Path_Finder
+from src.model.utils.Geometry import Geometry
+
+import random
 
 class Person(Agent):
 
@@ -14,27 +17,27 @@ class Person(Agent):
         super().__init__(unique_id, model)
         self.panic = 0
         self.velocity = 1
-        self.speed = 1.0
+        self.speed = 5
         self.vision = 40
         self.next_move = None
 
     def prepare_path_finding(self):
-        
+
         self.path_finder = Path_Finder(self.model.world_mesh)
         self.path_finder.set_goal(self.pos, (20,480))
 
     def step(self):
 
-        near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
+        self.near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
 
         self.move()
 
         if self.check_if_at_exit():
             self.model.schedule.remove(self)
         else:
-            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(near_by_agents))
+            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents))
             if self.panic == 2:
-                self.velocity = Panic_Dynamic.cohere(near_by_agents, self.pos, self) / 2
+                self.velocity = Panic_Dynamic.cohere(self.near_by_agents, self.pos, self) / 2
 
     def move(self):
         '''
@@ -46,8 +49,6 @@ class Person(Agent):
 
         if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
             self.next_move = self.path_finder.get_next_step(self.pos)
-        
-        print(self.next_move)
 
         delta_pos_x = self.next_move[0] - self.pos[0]
         delta_pos_y = self.next_move[1] - self.pos[1]
@@ -66,7 +67,21 @@ class Person(Agent):
         else:
             delta_y = 0
 
-        self.model.space.move_agent(self, (self.pos[0] + delta_x*5, self.pos[1] + delta_y*5))
+        new_position = (self.pos[0] + delta_x * self.speed, self.pos[1] + delta_y * self.speed)
+        
+        can_move = True
+        for other_agent in self.near_by_agents:
+            if not other_agent == self:
+                distance_to_other_agent = Geometry.euclidean_distance(new_position, other_agent.pos)
+
+                if distance_to_other_agent < 16:
+                    can_move = False
+
+        if can_move:
+            self.model.space.move_agent(self, new_position)
+        else:
+            new_position = (self.pos[0] + delta_x * -1 * self.speed, self.pos[1] + delta_y * -1 * self.speed)
+            self.model.space.move_agent(self, new_position)
 
     def check_if_at_exit(self):
 

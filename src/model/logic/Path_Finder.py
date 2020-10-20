@@ -18,9 +18,7 @@ class Path_Finder:
     def set_goal(self, current_pos, goal):
 
         print("new goal " + str(goal) + " has been set --- recalculating route...")
-
-        self.plan = self.__find_path(current_pos, goal)
-        print(self.plan)
+        self.plan = self.__find_path(current_pos, goal, self.edges)
 
     def get_next_step(self, agent_position):
         '''
@@ -28,7 +26,6 @@ class Path_Finder:
         '''
 
         nearest_point = self.__find_nearest_mesh_point(agent_position)
-        print(nearest_point)
         
         first_next_node = self.plan[0]
         if agent_position[0] == first_next_node[0] and agent_position[1] == first_next_node[1]:
@@ -55,12 +52,14 @@ class Path_Finder:
 
         return self.nodes[index_nearest_point]
 
-    def __find_path(self, start, goal):
+    def __find_path(self, start, goal, edges):
         '''
         Here we run A* on the graph, though A* itself is in a separate class.
         '''
         
         start = self.__find_nearest_mesh_point(start)
 
-        a_star = A_Star(self.edges)
-        return a_star.find_path(start, goal)
+        a_star = A_Star(edges)
+        path = a_star.find_path(start, goal)
+
+        return path

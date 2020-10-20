@@ -11,9 +11,13 @@ from src.model.entities.Obstacle import Obstacle
 from src.model.logic.Path_Finder import Path_Finder
 from src.model.logic.World_Manager import World_Manager
 
+from src.model.utils.Geometry import Geometry
+
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
+
+import random
 
 class Model_Controller(Model):
 
@@ -33,9 +37,34 @@ class Model_Controller(Model):
 
     def create_agent(self):
 
+        random_unique_positions = []
+        not_done = True
+        while not_done:
+            x_pos = random.randint(20, 480)
+            y_pos = random.randint(20, 55)
+            new_point = (x_pos, y_pos)
+
+            not_allowed = False
+            for p in random_unique_positions:
+                dist = Geometry.euclidean_distance(new_point, p)
+                if dist <= 16:
+                    not_allowed = True
+
+            if not not_allowed:
+                random_unique_positions.append(new_point)
+
+            if len(random_unique_positions) == 0:
+                random_unique_positions.append(new_point)
+
+            if len(random_unique_positions) == self.num_agents:
+                not_done = False
+
+
         for i in range(self.num_agents):
             a = Person(i, self)
-            self.space.place_agent(a, (20*(i+1), 40))
+            
+            self.space.place_agent(a, random_unique_positions[i])
+
             a.prepare_path_finding()
             self.schedule.add(a)
 

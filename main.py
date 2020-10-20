@@ -17,7 +17,7 @@ from src.view.Portrayals import Portrayals
 
 width = 500
 height = 500
-N = 1
+N = 10
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
 
