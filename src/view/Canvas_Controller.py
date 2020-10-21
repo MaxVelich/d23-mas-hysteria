@@ -41,7 +41,7 @@ class Canvas_Controller(VisualizationElement):
         return space_state
 
     def getAgentPortrayal(self, space, agent):
-        portrayal = Portrayals.for_Agent(agent.panic)
+        portrayal = Portrayals.for_Agent(agent.panic, agent.theory_of_mind)
         return self.placePortrayal(space, portrayal, agent)
 
     def getExitPortrayal(self, space, exit):
