@@ -26,6 +26,8 @@ class Person(Agent):
         self.path_finder = Path_Finder(self.model.world_mesh)
         self.path_finder.set_goal(self.pos, (20,480))
 
+        self.in_motion = False
+
     def step(self):
 
         self.near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
@@ -44,44 +46,37 @@ class Person(Agent):
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
 
-        if self.next_move is None:
-            self.next_move = self.path_finder.get_next_step(self.pos)
+        if self.in_motion:
 
-        if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
-            self.next_move = self.path_finder.get_next_step(self.pos)
+            
 
-        delta_pos_x = self.next_move[0] - self.pos[0]
-        delta_pos_y = self.next_move[1] - self.pos[1]
-        
-        if delta_pos_x < 0:
-            delta_x = -1
-        elif delta_pos_x > 0:
-            delta_x = 1
         else:
-            delta_x = 0
+            if self.next_move is None:
+                self.next_move = self.path_finder.get_next_step(self.pos)
 
-        if delta_pos_y < 0:
-            delta_y = -1
-        elif delta_pos_y > 0:
-            delta_y = 1
-        else:
-            delta_y = 0
+            if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
+                self.next_move = self.path_finder.get_next_step(self.pos)
 
-        new_position = (self.pos[0] + delta_x * self.speed, self.pos[1] + delta_y * self.speed)
-        
-        can_move = True
-        for other_agent in self.near_by_agents:
-            if not other_agent == self:
-                distance_to_other_agent = Geometry.euclidean_distance(new_position, other_agent.pos)
+            delta_pos_x = self.next_move[0] - self.pos[0]
+            delta_pos_y = self.next_move[1] - self.pos[1]
 
-                if distance_to_other_agent < 16:
-                    can_move = False
+            new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
+            
+            can_move = True
+            for other_agent in self.near_by_agents:
+                if not other_agent == self:
+                    
+                    if new_position == other_agent.pos:
+                        can_move = False
 
-        if can_move:
-            self.model.space.move_agent(self, new_position)
-        else:
-            new_position = (self.pos[0] + delta_x * -1 * self.speed, self.pos[1] + delta_y * -1 * self.speed)
-            self.model.space.move_agent(self, new_position)
+            if can_move:
+                self.model.space.move_agent(self, new_position)
+
+                self.in_motion = True
+
+        # else:
+        #     new_position = (self.pos[0] + delta_pos_x * -1 * self.speed, self.pos[1] + delta_pos_y * -1 * self.speed)
+        #     self.model.space.move_agent(self, new_position)
 
     def check_if_at_exit(self):
 

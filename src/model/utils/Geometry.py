@@ -102,7 +102,7 @@ class Geometry:
         x = point[0]
         y = point[1]
 
-        if (x > bottom_left[0] and x < top_right[0] and y < bottom_left[1] and y > top_right[1]): 
+        if (x >= bottom_left[0] and x <= top_right[0] and y <= bottom_left[1] and y >= top_right[1]): 
             return True
 
         return False

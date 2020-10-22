@@ -40,7 +40,7 @@ class Model_Controller(Model):
         random_unique_positions = []
         not_done = True
         while not_done:
-            x_pos = random.randint(20, 480)
+            x_pos = random.randint(20, 350)
             y_pos = random.randint(20, 55)
             new_point = (x_pos, y_pos)
 
@@ -81,7 +81,10 @@ class Model_Controller(Model):
             Obstacle((425,250), 150, 40),
             Obstacle((275,250), 150, 40),
             Obstacle((75,150), 150, 40),
-            Obstacle((225,150), 150, 40)
+            Obstacle((225,150), 150, 40),
+            Obstacle((450,375), 150, 250),
+            Obstacle((450,125), 150, 250),
+            Obstacle((50,250), 100, 200)
         ]
 
     def step(self):

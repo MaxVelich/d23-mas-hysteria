@@ -5,7 +5,7 @@ import numpy as np
 
 class World_Manager:
 
-    def __init__(self, world_dim, obstacles, exits, mesh_size = 25):
+    def __init__(self, world_dim, obstacles, exits, mesh_size = 12):
 
         print("World Manager instantiated!")
 
@@ -43,18 +43,42 @@ class World_Manager:
         '''
 
         nodes = []
+        offset = self.mesh_size / 2
 
         for x in range(0, int(self.world_dim[0] / self.mesh_size) + 1):
             for y in range(0, int(self.world_dim[1] / self.mesh_size) + 1):
-                nodes += [(x * self.mesh_size, y * self.mesh_size)]
 
+                node_x = x * self.mesh_size
+                node_y = y * self.mesh_size
+
+                nodes += [(node_x, node_y)]
+                
+                if node_x + offset < self.world_dim[0]:
+                    if node_y + offset < self.world_dim[1]:
+                        nodes += [(node_x + offset, node_y + offset)]
+
+        nodes_to_remove = []
         for obstacle in self.obstacles:
-            nodes += obstacle.get_corner_points()
+            for node in nodes:
+                if self.__check_if_node_is_within_obstacle(node, obstacle):
+                    nodes_to_remove += [node]
+
+        for removable_node in nodes_to_remove:
+            if removable_node in nodes:
+                nodes.remove(removable_node)
 
         for exit in self.exits:
             nodes += [ exit.pos ]
 
         return nodes
+
+    def __check_if_node_is_within_obstacle(self, node, obstacle):
+
+        corner_points = obstacle.get_corner_points()
+        if Geometry.point_lies_within_rectangle(node, corner_points):
+            return True
+
+        return False
 
     def __find_walkable_space(self, triangles, obstacles):
         '''

@@ -6,7 +6,7 @@ This class performs the A* graph path finding algorithm.
 https://leetcode.com/problems/shortest-path-in-binary-matrix/discuss/313347/a-search-in-python
 '''
 
-from queue import PriorityQueue
+from heapq import *
 
 from src.model.utils.Geometry import Geometry
 
@@ -20,12 +20,12 @@ class A_Star:
         visited = set()
         came_from = dict()
         distance = { start: 0 }
-        frontier = PriorityQueue()
-        frontier.put((0, start))
+        frontier = []
+        heappush(frontier, (0, start))
 
-        while not frontier.empty():
+        while not len(frontier) == 0:
             
-            node = frontier.get()
+            node = heappop(frontier)
 
             if node[1] in visited:
                 continue
@@ -39,7 +39,7 @@ class A_Star:
             for successor in successors:
                 
                 priority = 1 + Geometry.euclidean_distance(successor, goal) + distance[node[1]]
-                frontier.put((priority, successor))
+                heappush(frontier, (priority, successor))
 
                 if (successor not in distance or distance[node[1]] + 1 < distance[successor]):
                     distance[successor] = distance[node[1]] + 1
@@ -62,4 +62,5 @@ class A_Star:
         while end != start:
             end = came_from[end]
             reverse_path.append(end)
+
         return list(reversed(reverse_path))
