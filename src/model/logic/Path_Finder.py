@@ -17,7 +17,7 @@ class Path_Finder:
 
     def set_goal(self, current_pos, goal):
 
-        print("new goal " + str(goal) + " has been set --- recalculating route...")
+        # print("new goal " + str(goal) + " has been set --- recalculating route...")
         self.plan = self.__find_path(current_pos, goal)
         print(self.plan)
 

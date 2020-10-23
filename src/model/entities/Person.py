@@ -47,6 +47,8 @@ class Person(Agent):
             if self.panic == 2:
                 self.velocity = Panic_Dynamic.cohere(near_by_agents, self.pos, self) / 2
 
+        # TODO: Dynamic goal changing based on Theory of Mind
+
     def move(self):
 
         '''

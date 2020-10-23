@@ -24,16 +24,16 @@ class Theory_Of_Mind:
         exits = []
         total_neighbors = len(neighbors)
         agent_goal = current_goal
-        if(neighbors):
+        if neighbors:
             for i in neighbors:
                 goal = Path_Finder.find_goal(path_finder, i.pos, None)
                 exits += [goal]
 
-        print("exit list is: " + str(exits))
-        if agent_goal in exits:
-            if exits.count(current_goal) == total_neighbors:
-                print("changing goal from: " + str(agent_goal))
-                agent_goal = Path_Finder.find_goal(path_finder, agent_position, agent_goal)
-                print("to :" + str(agent_goal))
+            # print("exit list is: " + str(exits))
+            if agent_goal in exits:
+                if exits.count(current_goal) >= total_neighbors:
+                    # print("changing goal from: " + str(agent_goal))
+                    agent_goal = Path_Finder.find_goal(path_finder, agent_position, agent_goal)
+                    # print("to :" + str(agent_goal))
 
         return agent_goal
