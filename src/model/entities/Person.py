@@ -20,6 +20,7 @@ class Person(Agent):
         self.next_move = None
         # 0 = ToM0, 1 = ToM1
         self.theory_of_mind = tom
+        self.escaped = False
 
     def prepare_path_finding(self):
         
@@ -40,6 +41,7 @@ class Person(Agent):
         self.move()
 
         if self.check_if_at_exit():
+            self.escaped = True
             self.model.schedule.remove(self)
         else:
 

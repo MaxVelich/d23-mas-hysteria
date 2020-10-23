@@ -31,7 +31,7 @@ class Theory_Of_Mind:
 
             # print("exit list is: " + str(exits))
             if agent_goal in exits:
-                if exits.count(current_goal) >= total_neighbors:
+                if exits.count(current_goal) >= total_neighbors/2:
                     # print("changing goal from: " + str(agent_goal))
                     agent_goal = Path_Finder.find_goal(path_finder, agent_position, agent_goal)
                     # print("to :" + str(agent_goal))
