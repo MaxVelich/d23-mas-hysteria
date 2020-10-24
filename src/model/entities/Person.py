@@ -46,14 +46,6 @@ class Person(Agent):
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
 
-        # if self.next_move is not None:
-        #     if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
-
-        #         self.has_not_moved_in_a_while_counter += 1
-        #         if self.has_not_moved_in_a_while_counter > 10:
-        #             self.in_motion = False
-        #             self.has_not_moved_in_a_while_counter = 0
-
         if self.next_move is None:
             self.next_move = self.path_finder.get_next_step(self.pos)
 
@@ -61,50 +53,20 @@ class Person(Agent):
             self.next_move = self.path_finder.get_next_step(self.pos)
             self.in_motion = False
 
-        if self.in_motion:
+        delta_pos_x = self.next_move[0] - self.pos[0]
+        delta_pos_y = self.next_move[1] - self.pos[1]
 
-            delta_pos_x = self.next_move[0] - self.pos[0]
-            delta_pos_y = self.next_move[1] - self.pos[1]
+        new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
+        
+        can_move = True
+        for other_agent in self.near_by_agents:
+            if not other_agent == self:
+                
+                if new_position == other_agent.pos:
+                    can_move = False
 
-            if delta_pos_x < 0:
-                delta_x = -1
-            elif delta_pos_x > 0:
-                delta_x = 1
-            else:
-                delta_x = 0
-
-            if delta_pos_y < 0:
-                delta_y = -1
-            elif delta_pos_y > 0:
-                delta_y = 1
-            else:
-                delta_y = 0
-
-            self.model.space.move_agent(self, (self.pos[0] + delta_x * self.speed, self.pos[1] + delta_y * self.speed))
-            
-            # if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
-            #     self.in_motion = False
-
-        else:
-            
-            delta_pos_x = self.next_move[0] - self.pos[0]
-            delta_pos_y = self.next_move[1] - self.pos[1]
-
-            new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
-            
-            can_move = True
-            for other_agent in self.near_by_agents:
-                if not other_agent == self:
-                    
-                    if new_position == other_agent.pos:
-                        can_move = False
-
-            if can_move:
-                self.in_motion = True
-
-        # else:
-        #     new_position = (self.pos[0] + delta_pos_x * -1 * self.speed, self.pos[1] + delta_pos_y * -1 * self.speed)
-        #     self.model.space.move_agent(self, new_position)
+        if can_move:
+            self.model.space.move_agent(self, new_position)
 
     def check_if_at_exit(self):
 
