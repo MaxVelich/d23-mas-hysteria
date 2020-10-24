@@ -17,8 +17,14 @@ class Path_Finder:
 
     def set_goal(self, current_pos, goal):
 
+<<<<<<< HEAD
         print("new goal " + str(goal) + " has been set --- recalculating route...")
         self.plan = self.__find_path(current_pos, goal, self.edges)
+=======
+        # print("new goal " + str(goal) + " has been set --- recalculating route...")
+        self.plan = self.__find_path(current_pos, goal)
+        print(self.plan)
+>>>>>>> TheoryOfMind
 
     def get_next_step(self, agent_position):
         '''
@@ -37,6 +43,30 @@ class Path_Finder:
             next_point = first_next_node
 
         return (round(next_point[0], 0), round(next_point[1], 0))
+
+    def find_goal(self,agent_position, current_goal):
+        '''
+        Find the exit that is currently closest to the agent
+        Currently does not take obstacles into account
+        '''
+        exits = {
+            (20, 480),
+            #(240, 480),
+            (480, 480)
+        }
+        if current_goal:
+            exits.remove(current_goal)
+
+        distances = []
+        exitpositions = []
+        for exit in exits:
+            exitpositions += [exit]
+            distance = Geometry.euclidean_distance(exit, agent_position)
+            distances += [distance]
+
+        index_nearest_point = np.argmin(distances)
+
+        return exitpositions[index_nearest_point]
 
     ### PRIVATE INTERFACE
 

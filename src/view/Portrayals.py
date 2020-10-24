@@ -5,15 +5,15 @@ This class provides the appearance of the entities in the environment via static
 class Portrayals:
 
     @staticmethod
-    def for_Agent(state):
+    def for_Agent(state, tom):
 
         radius = 8
 
         portrayal = {"Shape": "circle",
-                        "Color": "blue",
-                        "Filled": "true",
-                        "Layer": 0,
-                        "r": radius}
+                     "Color": "blue",
+                     "Filled": "true",
+                     "Layer": 0,
+                     "r": radius}
 
         if state == 1:
             portrayal["Color"] = "orange"
@@ -24,6 +24,13 @@ class Portrayals:
             portrayal["Color"] = "red"
             portrayal["Layer"] = 1
             portrayal["r"] = radius * 1.04
+
+        if tom == 1:
+            # portrayal["Shape"] = "rect"
+            # portrayal["w"] = 0.04
+            # portrayal["h"] = 0.04
+            portrayal["text"] = 'T'
+            portrayal["text_color"] = "b"
 
         return portrayal
 
@@ -42,18 +49,31 @@ class Portrayals:
     @staticmethod
     def for_hazard():
         portrayal = {"Shape": "rect",
-                     "Color": "gold",
+                     "Color": "grey",
                      "Filled": "true",
                      "Layer": 0,
-                     "w": 0.025,
-                     "h": 0.025}
+                     "w": 0.15,
+                     "h": 0.15}
+
+        return portrayal
+
+    @staticmethod
+    def for_Obstacle(width, height):
+
+        portrayal = {"Shape": "rect",
+                     "Color": "black",
+                     "Filled": "true",
+                     "Layer": 0,
+                     "w": width / 500,
+                     "h": height / 500
+                     }
 
         return portrayal
 
     @staticmethod
     def get_legend():
         legend = '''
-              <div style="width=0px;">
+              <div style="width=0px;'">
               <legend style="float:left; font-size:15px; margin-top:5px; width=10px">Model Legend:</legend>
               <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
                 black;clear: both;background-color:blue'></div> <p style="font-size:16px; margin-bottom: 15px">Panic level: Low </p>
@@ -63,6 +83,12 @@ class Portrayals:
                 black;clear: both;background-color:red'></div> <p style="font-size:16px; margin-bottom: 15px"> Panic level: High </p>
               <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
                 black;clear: both;background-color:green'></div> <p style="font-size:16px; margin-bottom: 15px"> Exit</p>
+              <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:black'></div> <p style="font-size:16px; margin-bottom: 15px"> Obstacle</p>
+             <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:grey'></div> <p style="font-size:16px; margin-bottom: 15px"> Smoke</p>
+             <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:Indigo'></div> <p style="font-size:16px; margin-bottom: 15px"> Theory of Mind Agent</p>
               </div>
         '''
         return legend
@@ -74,15 +100,4 @@ class Portrayals:
         To run the model, just press Start! 
         '''
     
-    @staticmethod
-    def for_Obstacle(width, height):
 
-        portrayal = {"Shape": "rect",
-                        "Color": "black",
-                        "Filled": "true",
-                        "Layer": 0,
-                        "w": width/500,
-                        "h": height/500
-                        }
-
-        return portrayal

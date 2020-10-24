@@ -11,14 +11,14 @@ var ContinuousVisualization = function(height, width, context) {
 		for (var i in objects) {
 			var p = objects[i];
 			if (p.Shape == "rect")
-				this.drawRectange(p.x, p.y, p.w, p.h, p.Color, p.Filled);
+				this.drawRectange(p.x, p.y, p.w, p.h, p.Color, p.Filled, p.text);
 			if (p.Shape == "circle")
-				this.drawCircle(p.x, p.y, p.r, p.Color, p.Filled);
+				this.drawCircle(p.x, p.y, p.r, p.Color, p.Filled, p.text);
 		};
-		this.drawCircle(50, 50, 2000, '#FF0000', true);
+		this.drawCircle(50, 50, 2000, '#FF0000', true, '');
 	};
 
-	this.drawCircle = function(x, y, radius, color, fill) {
+	this.drawCircle = function(x, y, radius, color, fill, text) {
 		var cx = x * width;
 		var cy = y * height;
 		var r = radius;
@@ -27,17 +27,23 @@ var ContinuousVisualization = function(height, width, context) {
 		context.arc(cx, cy, r, 0, Math.PI * 2, false);
 		context.closePath();
 
-		context.strokeStyle = color;
-		context.stroke();
-
 		if (fill) {
 			context.fillStyle = color;
 			context.fill();
 		}
 
+        // Add representation for theory of mind agent
+		if (text == 'T') {
+			context.lineWidth = 10;
+            context.strokeStyle = "Indigo";
+            context.stroke();
+            context.fillStyle = color;
+			context.fill();
+		}
+
 	};
 
-	this.drawRectange = function(x, y, w, h, color, fill) {
+	this.drawRectange = function(x, y, w, h, color, fill, text) {
 		context.beginPath();
 		var dx = w * width;
 		var dy = h * height;
@@ -69,7 +75,7 @@ var Simple_Continuous_Module = function(canvas_width, canvas_height) {
                           <canvas id='canvas_id'
                                   width='${canvas_width}'
                                   height='${canvas_height}'
-                                  style='border-width: 3px; border-style: solid; border-radius: 8px;'
+                                  style='border-width: 3px; border-style: solid; border-radius: 8px; position:absolute; left:530px; top:150px'
                           />
                      </div>`
 
