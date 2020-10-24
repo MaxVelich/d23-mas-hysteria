@@ -28,13 +28,15 @@ class Path_Finder:
         nearest_point = self.__find_nearest_mesh_point(agent_position)
         
         first_next_node = self.plan[0]
-        if agent_position[0] == first_next_node[0] and agent_position[1] == first_next_node[1]:
+        rounded = (round(first_next_node[0], 0), round(first_next_node[1], 0))
+
+        if agent_position[0] == rounded[0] and agent_position[1] == rounded[1]:
             self.plan.pop(0)
             next_point = self.plan[0]
         else:
             next_point = first_next_node
-        
-        return next_point
+
+        return (round(next_point[0], 0), round(next_point[1], 0))
 
     ### PRIVATE INTERFACE
 
