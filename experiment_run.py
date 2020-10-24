@@ -3,12 +3,12 @@ from pathlib import Path
 
 from mesa.batchrunner import BatchRunner
 
-from src.model.Model_Controller import Model_Controller, get_count
+from src.model.Model_Controller import Model_Controller
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fire evacuation model ')
-    parser.add_argument('--n_agents', type=int, default=20,
+    parser.add_argument('--n_agents', type=int, default=50,
                         help='Maximum number of agents')
     args = parser.parse_args()
     return args.n_agents
@@ -28,7 +28,10 @@ if __name__ == '__main__':
                             fixed_params,
                             iterations=5,
                             max_steps=10,
-                            model_reporters={"Time step": get_count})
+                            model_reporters={"Escaped Agents": Model_Controller.count_active_agents,
+                                             "Time steps": Model_Controller.get_time}
+
+                            )
     batch_run.run_all()
 
     batch_dir = Path.cwd() / " Experiment_results"

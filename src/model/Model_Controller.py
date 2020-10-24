@@ -24,10 +24,6 @@ from mesa.datacollection import DataCollector
 import matplotlib.pyplot as plt
 import time
 
-def get_count(model):
-    return model.num_agents
-
-
 
 class Model_Controller(Model):
 
@@ -36,7 +32,7 @@ class Model_Controller(Model):
         self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
-        self.count = 0
+        self.time = 0
         self.exits = []
         self.obstacles = []
         self. hazards = []
@@ -47,7 +43,6 @@ class Model_Controller(Model):
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
-        # self.datacollector = DataCollector(model_reporters={"Gini": get_count})
         self.datacollector = DataCollector(
             {
                 "Active": lambda m: self.count_active_agents(m, False),
@@ -134,7 +129,7 @@ class Model_Controller(Model):
     def step(self):
         self.datacollector.collect(self)
         self.schedule.step()
-        self.count += 1
+        self.time += 1
         self.datacollector.get_model_vars_dataframe().plot()
 
         # Stop the simulation once all agents have exited the building
@@ -172,7 +167,7 @@ class Model_Controller(Model):
         plt.close(fig)
 
     @staticmethod
-    def count_active_agents(model, status):
+    def count_active_agents(model, status=False):
         """
         Count how many agents are still active in the model
         """
@@ -196,7 +191,7 @@ class Model_Controller(Model):
         return count
 
     @staticmethod
-    def count_tom(model, tom):
+    def count_tom(model, tom=1):
         """
         Count how many agents have a particular level of Theory of Mind
         """
@@ -206,3 +201,7 @@ class Model_Controller(Model):
                 if agent.theory_of_mind == tom:
                     count += 1
         return count
+
+    @staticmethod
+    def get_time(model):
+        return model.time
