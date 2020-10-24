@@ -51,8 +51,8 @@ class Person(Agent):
         else:
             # self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents))
 
-            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(near_by_agents), self.model.hazards, self.pos, self.vision)
-            
+            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents), self.model.hazards, self.pos, self.vision)
+
             if self.panic == 2:
                 self.velocity = Panic_Dynamic.cohere(self.near_by_agents, self.pos, self) / 2
 
@@ -75,6 +75,7 @@ class Person(Agent):
         delta_pos_x = self.next_move[0] - self.pos[0]
         delta_pos_y = self.next_move[1] - self.pos[1]
 
+        self.speed = 1
         new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
         
         can_move = True

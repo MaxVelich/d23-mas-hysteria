@@ -17,14 +17,8 @@ class Path_Finder:
 
     def set_goal(self, current_pos, goal):
 
-<<<<<<< HEAD
         print("new goal " + str(goal) + " has been set --- recalculating route...")
         self.plan = self.__find_path(current_pos, goal, self.edges)
-=======
-        # print("new goal " + str(goal) + " has been set --- recalculating route...")
-        self.plan = self.__find_path(current_pos, goal)
-        print(self.plan)
->>>>>>> TheoryOfMind
 
     def get_next_step(self, agent_position):
         '''

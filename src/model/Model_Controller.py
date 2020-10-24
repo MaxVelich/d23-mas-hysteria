@@ -122,9 +122,9 @@ class Model_Controller(Model):
             Obstacle((75,250), 150, 40),
             Obstacle((75,150), 150, 40),
             Obstacle((225,150), 150, 40),
-            Obstacle((450,375), 150, 250),
-            Obstacle((450,125), 150, 250),
-            Obstacle((50,250), 100, 200)
+            # Obstacle((450,375), 150, 250),
+            # Obstacle((450,125), 150, 250),
+            # Obstacle((50,250), 100, 200)
         ]
 
     def create_hazard(self):
