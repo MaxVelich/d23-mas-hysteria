@@ -5,7 +5,7 @@ import numpy as np
 
 class World_Manager:
 
-    def __init__(self, world_dim, obstacles, exits, mesh_size = 25):
+    def __init__(self, world_dim, obstacles, exits, mesh_size = 23):
 
         print("World Manager instantiated!")
 
