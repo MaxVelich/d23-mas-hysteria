@@ -25,10 +25,13 @@ class Path_Finder:
         This will not make it in the final version. It produces the next step an agent should take in order to find an exit. Here, we basically run A* on the graph we generate above. Then we try to match the agent's position to the next nearest node on the graph, then we run A*.
         '''
 
+        if self.plan == None:
+            return None
+
         nearest_point = self.__find_nearest_mesh_point(agent_position)
         
         first_next_node = self.plan[0]
-        rounded = (round(first_next_node[0], 0), round(first_next_node[1], 0))
+        rounded = (round(first_next_node[0], 1), round(first_next_node[1], 1))
 
         if agent_position[0] == rounded[0] and agent_position[1] == rounded[1]:
             self.plan.pop(0)
@@ -36,7 +39,7 @@ class Path_Finder:
         else:
             next_point = first_next_node
 
-        return (round(next_point[0], 0), round(next_point[1], 0))
+        return (round(next_point[0], 1), round(next_point[1], 1))
 
     def find_goal(self,agent_position, current_goal):
         '''
@@ -44,9 +47,8 @@ class Path_Finder:
         Currently does not take obstacles into account
         '''
         exits = {
-            (20, 480),
-            #(240, 480),
-            (480, 480)
+            (34.5, 494.5),
+            (448.5, 494.5)
         }
         if current_goal:
             exits.remove(current_goal)
@@ -61,6 +63,23 @@ class Path_Finder:
         index_nearest_point = np.argmin(distances)
 
         return exitpositions[index_nearest_point]
+
+    def closest_node_except_one(self, position, except_one):
+
+        minimum = (0,-1)
+        for index, node in enumerate(self.nodes):
+            if node[0] == except_one[0] and node[1] == except_one[1]:
+                break
+
+            distance = Geometry.euclidean_distance(node, position)
+
+            if minimum[1] == -1:
+                minimum = (index, distance)
+
+            if minimum[1] > distance:
+                minimum = (index, distance)
+            
+        return self.nodes[minimum[0]]
 
     ### PRIVATE INTERFACE
 
@@ -84,7 +103,7 @@ class Path_Finder:
         '''
         
         start = self.__find_nearest_mesh_point(start)
-
+        
         a_star = A_Star(edges)
         path = a_star.find_path(start, goal)
 

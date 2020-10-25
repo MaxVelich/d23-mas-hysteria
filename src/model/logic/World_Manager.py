@@ -67,8 +67,8 @@ class World_Manager:
             if removable_node in nodes:
                 nodes.remove(removable_node)
 
-        for exit in self.exits:
-            nodes += [ exit.pos ]
+        # for exit in self.exits:
+        #     nodes += [ exit.pos ]
 
         return nodes
 
