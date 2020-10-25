@@ -94,9 +94,9 @@ class Model_Controller(Model):
 
     def create_exit(self):
         self.exits = {
-            Exit(20, 480),
+            Exit(34.5, 494.5),
             #Exit(240, 480),
-            Exit(480, 480)
+            Exit(448.5, 494.5)
         }
 
     def create_obstacles(self):

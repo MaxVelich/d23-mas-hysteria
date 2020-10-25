@@ -49,10 +49,10 @@ class A_Star:
 
         successors = []
         for edge in self.graph:
-            if int(edge[0]) == int(node[0]) and int(edge[1]) == int(node[1]):
-                successors += [(int(edge[2]), int(edge[3]))]
-            elif int(edge[2]) == int(node[0]) and int(edge[3]) == int(node[1]):
-                successors += [(int(edge[0]), int(edge[1]))]
+            if round(edge[0], 1) == round(node[0], 1) and round(edge[1], 1) == round(node[1], 1):
+                successors += [(round(edge[2], 1), round(edge[3], 1))]
+            elif round(edge[2], 1) == round(node[0], 1) and round(edge[3], 1) == round(node[1], 1):
+                successors += [(round(edge[0], 1), round(edge[1], 1))]
 
         return successors
 
