@@ -31,9 +31,9 @@ class Person(Agent):
         self.path_finder = Path_Finder(self.model.world_mesh)
         self.goal = self.path_finder.find_goal(self.pos, None)
         if self.theory_of_mind == 1:
-            print("my ToM level is: " + str(self.theory_of_mind))
+            # print("my ToM level is: " + str(self.theory_of_mind))
             neighbors = self.model.space.get_neighbors(self.pos, self.vision)
-            print("I have " + str(len(neighbors)) + " neighbors")
+            # print("I have " + str(len(neighbors)) + " neighbors")
             if len(neighbors) > 2:
                 self.goal = ToM.determine_neighbor_exit_strategy(self.path_finder, self.pos, neighbors, self.goal)
 

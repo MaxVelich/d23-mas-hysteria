@@ -27,7 +27,7 @@ import time
 
 class Model_Controller(Model):
 
-    def __init__(self, N, width, height, theory_of_mind, panic_dynamic):
+    def __init__(self, N, width, height, theory_of_mind, panic_dynamic, save_plots):
         self.num_tom_agents = theory_of_mind
         self.panic_threshold = panic_dynamic
         self.num_agents = N
@@ -38,7 +38,7 @@ class Model_Controller(Model):
         self.exits = []
         self.obstacles = []
         self. hazards = []
-
+        self.images = save_plots
         self.create_obstacles()
         self.create_exit()
         self.create_hazard()
@@ -48,7 +48,7 @@ class Model_Controller(Model):
         self.datacollector = DataCollector(
             {
                 "Active": lambda m: self.count_active_agents(m, False),
-                "Escaped": lambda m: self.count_active_agents(m, True),
+                # "Escaped": lambda m: self.count_active_agents(m, True),
                 "Low Panic": lambda m: self.count_panic(m, 0),
                 "Medium Panic": lambda m: self.count_panic(m, 1),
                 "High Panic": lambda m: self.count_panic(m, 2),
@@ -112,15 +112,15 @@ class Model_Controller(Model):
         # ]
 
         self.obstacles = [
-            Obstacle((95,350), 190, 40),
-            Obstacle((405,350), 190, 40),
-            Obstacle((425,250), 150, 40),
-            Obstacle((75,250), 150, 40),
-            Obstacle((75,150), 150, 40),
-            Obstacle((225,150), 150, 40),
-            # Obstacle((450,375), 150, 250),
-            # Obstacle((450,125), 150, 250),
-            # Obstacle((50,250), 100, 200)
+            Obstacle((95, 350), 190, 40),
+            Obstacle((405, 350), 190, 40),
+            Obstacle((425, 250), 150, 40),
+            Obstacle((75, 250), 150, 40),
+            Obstacle((75, 150), 150, 40),
+            Obstacle((225, 150), 150, 40),
+            # Obstacle((450, 375), 150, 250),
+            # Obstacle((450, 125), 150, 250),
+            # Obstacle((50, 250), 100, 200)
         ]
 
     def create_hazard(self):
@@ -131,33 +131,43 @@ class Model_Controller(Model):
         self.datacollector.collect(self)
         self.schedule.step()
         self.time += 1
-        self.datacollector.get_model_vars_dataframe().plot()
+        if self.images:
+            self.datacollector.get_model_vars_dataframe().plot()
 
         # Stop the simulation once all agents have exited the building
         if len(self.schedule.agents) == 0:
+            if self.images:
+                self.save_figures()
+            print("end time: " + str(self.get_time(self)))
             self.running = False
-            self.save_figures()
 
     def save_figures(self):
+        print("we're plotting")
         results = self.datacollector.get_model_vars_dataframe()
 
         dpi = 100
         fig, axes = plt.subplots(figsize=(1920 / dpi, 1080 / dpi), dpi=dpi, nrows=1, ncols=3)
 
-        status_results = results.loc[:, ['Active', 'Escaped']]
+        status_results = results.loc[:, ['Active']]
         status_plot = status_results.plot(ax=axes[0])
-        status_plot.set_title("Agent Status")
+        status_plot.set_xlim(xmin=0)
+        status_plot.set_ylim(ymin=0)
+        status_plot.set_title("# of agents still in building")
         status_plot.set_xlabel("Simulation Step")
         status_plot.set_ylabel("Count")
 
         panic_results = results.loc[:, ['Low Panic', 'Medium Panic', 'High Panic']]
         panic_plot = panic_results.plot(ax=axes[1])
+        panic_plot.set_xlim(xmin=0)
+        panic_plot.set_ylim(ymin=0)
         panic_plot.set_title("Panic levels")
         panic_plot.set_xlabel("Simulation Step")
         panic_plot.set_ylabel("Count")
 
         tom_results = results.loc[:, ['ToM0', 'ToM1']]
         tom_plot = tom_results.plot(ax=axes[2])
+        tom_plot.set_xlim(xmin=0)
+        tom_plot.set_ylim(ymin=0)
         tom_plot.set_title("ToM levels")
         tom_plot.set_xlabel("Simulation Step")
         tom_plot.set_ylabel("Count")
@@ -165,10 +175,11 @@ class Model_Controller(Model):
         timestr = time.strftime("%Y%m%d-%H%M%S")
         plt.suptitle("Number of Agents: " + str(self.num_agents), fontsize=16)
         plt.savefig(timestr + ".png")
+        plt.cla()
         plt.close(fig)
 
     @staticmethod
-    def count_active_agents(model, status=False):
+    def count_active_agents(model, status):
         """
         Count how many agents are still active in the model
         """

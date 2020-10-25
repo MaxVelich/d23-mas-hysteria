@@ -3,7 +3,8 @@ from pathlib import Path
 
 from mesa.batchrunner import BatchRunner
 
-from src.model.Model_Controller import Model_Controller
+from model import Model_Controller
+from src.model.entities import Person
 
 
 def parse_arguments():
@@ -17,7 +18,10 @@ def parse_arguments():
 if __name__ == '__main__':
     fixed_params = {
         "width": 500,
-        "height": 500
+        "height": 500,
+        "theory_of_mind": 5,
+        "panic_dynamic": [2, 7],
+        "save_plots": False
     }
     variable_params = {
         "N": range(10, parse_arguments(), 10)
@@ -27,9 +31,9 @@ if __name__ == '__main__':
                             variable_params,
                             fixed_params,
                             iterations=5,
-                            max_steps=10,
-                            model_reporters={"Escaped Agents": Model_Controller.count_active_agents,
-                                             "Time steps": Model_Controller.get_time}
+                            max_steps=10000,
+                            model_reporters={"Escaped Agents": lambda m: Model_Controller.count_active_agents(m, True),
+                                             "Time steps": lambda m: Model_Controller.get_time(m)}
 
                             )
     batch_run.run_all()
@@ -38,4 +42,4 @@ if __name__ == '__main__':
     if not batch_dir.exists():
         Path.mkdir(batch_dir)
     run_data = batch_run.get_model_vars_dataframe()
-    run_data.to_csv(path_or_buf=(batch_dir / "results"))
+    run_data.to_csv(path_or_buf=(batch_dir / "results.csv"))
