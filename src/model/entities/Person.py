@@ -29,11 +29,12 @@ class Person(Agent):
 
         self.path_finder = Path_Finder(self.model.world_mesh)
         self.goal = self.path_finder.find_goal(self.pos, None)
-        if(self.theory_of_mind == 1):
-            print("my ToM level is: " + str(self.theory_of_mind))
+        if self.theory_of_mind == 1:
+            # print("my ToM level is: " + str(self.theory_of_mind))
             neighbors = self.model.space.get_neighbors(self.pos, self.vision)
-            print("I have " + str(len(neighbors)) + " neighbors")
-            self.goal = ToM.determine_neighbor_exit_strategy(self.path_finder, self.pos, neighbors, self.goal)
+            # print("I have " + str(len(neighbors)) + " neighbors")
+            if len(neighbors) > 2:
+                self.goal = ToM.determine_neighbor_exit_strategy(self.path_finder, self.pos, neighbors, self.goal)
 
         self.path_finder.set_goal(self.pos, self.goal)
 
@@ -46,12 +47,13 @@ class Person(Agent):
         self.move()
 
         if self.check_if_at_exit():
-            self.escaped = True
             self.model.schedule.remove(self)
+            self.escaped = True
         else:
             # self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents))
 
-            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents), self.model.hazards, self.pos, self.vision)
+            self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents), self.model.hazards,
+                                                                      self.pos, self.vision, self.model.panic_threshold)
 
             if self.panic == 2:
                 self.velocity = Panic_Dynamic.cohere(self.near_by_agents, self.pos, self) / 2

@@ -5,6 +5,7 @@ Here we intend to provide the logic for how agents react to the panic. Also, how
 
 import numpy as np
 
+
 class Panic_Dynamic:
 
     def __init__():
@@ -31,7 +32,7 @@ class Panic_Dynamic:
         return velocity.any()
 
     @staticmethod
-    def change_panic_level(neighbourhood, hazards, pos, vision):
+    def change_panic_level(neighbourhood, hazards, pos, vision, threshold):
         """
         Return the changed panic level, based on nearby agents and vision of hazard
         :param neighbourhood:
@@ -39,7 +40,7 @@ class Panic_Dynamic:
         """
         panic = 0
         speed = 0.8
-        if neighbourhood > 3:
+        if neighbourhood > threshold[0]:
             panic = 1
         else:
             # Check if a hazard is in vision
@@ -49,7 +50,7 @@ class Panic_Dynamic:
                     speed = 1
                     break
 
-        if neighbourhood > 7:
+        if neighbourhood > threshold[1]:
             panic = 2
             speed = 1
 

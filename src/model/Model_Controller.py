@@ -27,7 +27,9 @@ import time
 
 class Model_Controller(Model):
 
-    def __init__(self, N, width, height):
+    def __init__(self, N, width, height, theory_of_mind, panic_dynamic):
+        self.num_tom_agents = theory_of_mind
+        self.panic_threshold = panic_dynamic
         self.num_agents = N
         self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
@@ -81,12 +83,11 @@ class Model_Controller(Model):
             if len(random_unique_positions) == self.num_agents:
                 not_done = False
 
-
+        # add theory of mind (or lack thereof) when agent is being created
+        agent_list = [0] * (self.num_agents - self.num_tom_agents) + [1] * self.num_tom_agents
+        random.shuffle(agent_list)
         for i in range(self.num_agents):
-            # add theory of mind (or lack thereof) when agent is being created
-            tom = 0
-            if random.random() <= 0.2:
-                tom = 1
+            tom = agent_list.pop()
             a = Person(i, self, tom)
             self.space.place_agent(a, (20*(i+1), 40))
             a.prepare_path_finding()

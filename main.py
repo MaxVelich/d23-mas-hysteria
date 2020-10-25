@@ -18,6 +18,8 @@ from src.view.Portrayals import Portrayals
 width = 500
 height = 500
 N = 20
+theory_of_mind = 5  # How many of the agents will apply theory of mind
+panic_dynamic = [2, 7]  # Threshold for number of neighbours before panic sets in
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
 
@@ -26,6 +28,7 @@ server = ModularServer(
         [Canvas_Controller()],
         "Panic Behaviour in Crowd Evacuation",
         {"width": width, "height": height,
+         "theory_of_mind": theory_of_mind, "panic_dynamic": panic_dynamic,
          "N": UserSettableParameter('number', 'Number of Agents', value=N),
          "Legend": UserSettableParameter('static_text', value=legend)}
     )
