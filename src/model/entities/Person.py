@@ -33,10 +33,9 @@ class Person(Agent):
 
         if (self.theory_of_mind == 1):
             print("my ToM level is: " + str(self.theory_of_mind))
-            neighbors = self.model.space.get_neighbors(self.pos, self.vision)
-            print("I have " + str(len(neighbors)) + " neighbors")
+            print("I have " + str(len(self.neighbors())) + " neighbors")
 
-            if ToM.agent_should_switch_goal(exits, self.pos, neighbors, self.goal):
+            if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), self.goal):
                 for other_exit in exits:
                     if not other_exit == self.goal:
                         self.goal = other_exit
@@ -49,14 +48,12 @@ class Person(Agent):
         if self.check_if_at_exit():
             return
 
-        self.near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
-
         self.move()
 
-        self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents), self.model.hazards, self.pos, self.vision)
+        self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.model.hazards, self.pos, self.vision)
 
         if self.panic == 2:
-            self.velocity = Panic_Dynamic.cohere(self.near_by_agents, self.pos, self)
+            self.velocity = Panic_Dynamic.cohere(self.neighbors(), self.pos, self)
 
     def move(self):
 
@@ -88,14 +85,21 @@ class Person(Agent):
             if self.check_if_next_move_is_clear(new_position):
                 self.model.space.move_agent(self, new_position)
 
+    def neighbors(self):
+        
+        neighbors = []
+        for agent in self.model.space.get_neighbors(self.pos, self.vision):
+            if not agent == self:
+                neighbors.append(agent)
+
+        return neighbors
+
     def check_if_next_move_is_clear(self, current_position):
 
         can_move = True
-        for other_agent in self.near_by_agents:
-            if not other_agent == self:
-                
-                if current_position == other_agent.pos:
-                    can_move = False
+        for other_agent in self.neighbors():
+            if current_position == other_agent.pos:
+                can_move = False
         
         return can_move
 
