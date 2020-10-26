@@ -21,19 +21,21 @@ class Person(Agent):
         self.speed = 5
         self.vision = 40
         self.next_move = None
-        # 0 = ToM0, 1 = ToM1
-        self.theory_of_mind = tom
+        self.theory_of_mind = tom # 0 = ToM0, 1 = ToM1
         self.escaped = False
 
     def prepare_path_finding(self):
 
         self.path_finder = Path_Finder(self.model.world_mesh)
-        self.goal = self.path_finder.find_goal(self.pos, None)
-        if(self.theory_of_mind == 1):
+
+        exits = [ exit.pos for exit in self.model.exits ]
+        self.goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
+
+        if (self.theory_of_mind == 1):
             print("my ToM level is: " + str(self.theory_of_mind))
             neighbors = self.model.space.get_neighbors(self.pos, self.vision)
             print("I have " + str(len(neighbors)) + " neighbors")
-            self.goal = ToM.determine_neighbor_exit_strategy(self.path_finder, self.pos, neighbors, self.goal)
+            self.goal = ToM.determine_neighbor_exit_strategy(exits, self.pos, neighbors, self.goal)
 
         self.path_finder.set_goal(self.pos, self.goal)
 

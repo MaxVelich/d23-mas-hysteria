@@ -24,6 +24,7 @@ from mesa.datacollection import DataCollector
 import matplotlib.pyplot as plt
 import time
 
+import numpy as np
 
 class Model_Controller(Model):
 
@@ -93,11 +94,11 @@ class Model_Controller(Model):
             self.schedule.add(a)
 
     def create_exit(self):
-        self.exits = {
+        self.exits = [
             Exit(34.5, 494.5),
             #Exit(240, 480),
             Exit(448.5, 494.5)
-        }
+        ]
 
     def create_obstacles(self):
 

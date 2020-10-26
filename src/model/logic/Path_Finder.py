@@ -41,29 +41,6 @@ class Path_Finder:
 
         return (round(next_point[0], 1), round(next_point[1], 1))
 
-    def find_goal(self,agent_position, current_goal):
-        '''
-        Find the exit that is currently closest to the agent
-        Currently does not take obstacles into account
-        '''
-        exits = {
-            (34.5, 494.5),
-            (448.5, 494.5)
-        }
-        if current_goal:
-            exits.remove(current_goal)
-
-        distances = []
-        exitpositions = []
-        for exit in exits:
-            exitpositions += [exit]
-            distance = Geometry.euclidean_distance(exit, agent_position)
-            distances += [distance]
-
-        index_nearest_point = np.argmin(distances)
-
-        return exitpositions[index_nearest_point]
-
     def closest_node_except_one(self, position, except_one):
 
         minimum = (0,-1)

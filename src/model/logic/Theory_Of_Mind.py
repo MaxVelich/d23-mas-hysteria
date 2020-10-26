@@ -2,7 +2,7 @@
 This class will incorporate the Theory of Mind aspect of the agents
 '''
 
-from src.model.logic.Path_Finder import Path_Finder
+from src.model.utils.Geometry import Geometry
 
 class Theory_Of_Mind:
 
@@ -17,23 +17,23 @@ class Theory_Of_Mind:
     '''
 
     @staticmethod
-    def determine_neighbor_exit_strategy(path_finder, agent_position, neighbors, current_goal):
+    def determine_neighbor_exit_strategy(exits, agent_position, neighbors, current_goal):
         """
         determine which exits the neighbors of a given agents are most likely to use
         """
-        exits = []
+        possible_exits = []
         total_neighbors = len(neighbors)
         agent_goal = current_goal
         if neighbors:
             for i in neighbors:
-                goal = Path_Finder.find_goal(path_finder, i.pos, None)
-                exits += [goal]
+                goal = Geometry.find_closest_point_of_set_of_points(i.pos, exits)
+                possible_exits += [goal]
 
             # print("exit list is: " + str(exits))
-            if agent_goal in exits:
-                if exits.count(current_goal) >= total_neighbors/2:
+            if agent_goal in possible_exits:
+                if possible_exits.count(current_goal) >= total_neighbors/2:
                     # print("changing goal from: " + str(agent_goal))
-                    agent_goal = Path_Finder.find_goal(path_finder, agent_position, agent_goal)
+                    agent_goal = Geometry.find_closest_point_of_set_of_points(agent_position, exits)
                     # print("to :" + str(agent_goal))
 
         return agent_goal
