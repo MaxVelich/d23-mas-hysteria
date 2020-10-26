@@ -48,12 +48,12 @@ class Person(Agent):
         if self.check_if_at_exit():
             return
 
-        self.move()
-
         self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.model.hazards, self.pos, self.vision)
 
         if self.panic == 2:
             self.velocity = Panic_Dynamic.cohere(self.neighbors(), self.pos, self)
+
+        self.move()
 
     def move(self):
 
