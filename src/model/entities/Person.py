@@ -35,7 +35,12 @@ class Person(Agent):
             print("my ToM level is: " + str(self.theory_of_mind))
             neighbors = self.model.space.get_neighbors(self.pos, self.vision)
             print("I have " + str(len(neighbors)) + " neighbors")
-            self.goal = ToM.determine_neighbor_exit_strategy(exits, self.pos, neighbors, self.goal)
+
+            if ToM.agent_should_switch_goal(exits, self.pos, neighbors, self.goal):
+                for other_exit in exits:
+                    if not other_exit == self.goal:
+                        self.goal = other_exit
+                        break
 
         self.path_finder.set_goal(self.pos, self.goal)
 

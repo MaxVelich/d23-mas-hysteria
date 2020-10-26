@@ -17,23 +17,17 @@ class Theory_Of_Mind:
     '''
 
     @staticmethod
-    def determine_neighbor_exit_strategy(exits, agent_position, neighbors, current_goal):
+    def agent_should_switch_goal(exits, agent_position, neighbors, current_goal):
         """
         determine which exits the neighbors of a given agents are most likely to use
         """
-        possible_exits = []
-        total_neighbors = len(neighbors)
-        agent_goal = current_goal
+        goals_of_agents = []
         if neighbors:
             for i in neighbors:
                 goal = Geometry.find_closest_point_of_set_of_points(i.pos, exits)
-                possible_exits += [goal]
+                goals_of_agents += [goal]
 
-            # print("exit list is: " + str(exits))
-            if agent_goal in possible_exits:
-                if possible_exits.count(current_goal) >= total_neighbors/2:
-                    # print("changing goal from: " + str(agent_goal))
-                    agent_goal = Geometry.find_closest_point_of_set_of_points(agent_position, exits)
-                    # print("to :" + str(agent_goal))
+            if goals_of_agents.count(current_goal) >= len(neighbors)/2:
+                return True
 
-        return agent_goal
+        return False
