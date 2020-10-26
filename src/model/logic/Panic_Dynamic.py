@@ -47,8 +47,9 @@ class Panic_Dynamic:
         :param neighbourhood:
         :return:
         """
+
         panic = 0
-        speed = 0.8
+        speed = 1
 
         if neighbourhood > 4:
             return (2, speed)

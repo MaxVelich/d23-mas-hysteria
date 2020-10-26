@@ -62,28 +62,30 @@ class Person(Agent):
         '''
 
         if self.panic == 2:
-            new_position = (self.pos[0] + self.velocity[0], self.pos[1] + self.velocity[1])
-            closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
-
-            if self.check_if_next_move_is_clear(new_position):
-                self.model.space.move_agent(self, closest_node)
-            
+            panic_move = self.make_panic_move()
+            if self.check_if_next_move_is_clear(panic_move):
+                self.model.space.move_agent(self, panic_move)
         else: 
-            if self.next_move is None:
-                self.next_move = self.path_finder.get_next_step(self.pos)
+            normal_move = self.make_normal_move()
+            if self.check_if_next_move_is_clear(normal_move):
+                self.model.space.move_agent(self, normal_move)
 
-            if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
-                self.next_move = self.path_finder.get_next_step(self.pos)
+    def make_panic_move(self):
+        new_position = (self.pos[0] + self.velocity[0], self.pos[1] + self.velocity[1])
+        closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
+        return closest_node
 
+    def make_normal_move(self):
+        if self.next_move is None:
+            self.next_move = self.path_finder.get_next_step(self.pos)
 
-            delta_pos_x = self.next_move[0] - self.pos[0]
-            delta_pos_y = self.next_move[1] - self.pos[1]
+        if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
+            self.next_move = self.path_finder.get_next_step(self.pos)
 
-            self.speed = 1
-            new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
+        delta_pos_x = self.next_move[0] - self.pos[0]
+        delta_pos_y = self.next_move[1] - self.pos[1]
 
-            if self.check_if_next_move_is_clear(new_position):
-                self.model.space.move_agent(self, new_position)
+        return (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
 
     def neighbors(self):
         
