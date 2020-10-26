@@ -39,28 +39,19 @@ class Person(Agent):
 
         self.path_finder.set_goal(self.pos, self.goal)
 
-        self.in_motion = False
-
     def step(self):
 
         if self.check_if_at_exit():
-            self.escaped = True
-            self.model.schedule.remove(self)
-            self.model.space.remove_agent(self)
             return
 
         self.near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
 
         self.move()
 
-        # self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents))
-
         self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents), self.model.hazards, self.pos, self.vision)
 
         if self.panic == 2:
             self.velocity = Panic_Dynamic.cohere(self.near_by_agents, self.pos, self)
-
-        # TODO: Dynamic goal changing based on Theory of Mind
 
     def move(self):
 
@@ -71,15 +62,8 @@ class Person(Agent):
         if self.panic == 2:
             new_position = (self.pos[0] + self.velocity[0], self.pos[1] + self.velocity[1])
             closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
-            
-            can_move = True
-            for other_agent in self.near_by_agents:
-                if not other_agent == self:
-                    
-                    if closest_node == other_agent.pos:
-                        can_move = False
 
-            if can_move:
+            if self.check_if_next_move_is_clear(new_position):
                 self.model.space.move_agent(self, closest_node)
             
         else: 
@@ -88,7 +72,6 @@ class Person(Agent):
 
             if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
                 self.next_move = self.path_finder.get_next_step(self.pos)
-                self.in_motion = False
 
 
             delta_pos_x = self.next_move[0] - self.pos[0]
@@ -96,16 +79,20 @@ class Person(Agent):
 
             self.speed = 1
             new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
-            
-            can_move = True
-            for other_agent in self.near_by_agents:
-                if not other_agent == self:
-                    
-                    if new_position == other_agent.pos:
-                        can_move = False
 
-            if can_move:
+            if self.check_if_next_move_is_clear(new_position):
                 self.model.space.move_agent(self, new_position)
+
+    def check_if_next_move_is_clear(self, current_position):
+
+        can_move = True
+        for other_agent in self.near_by_agents:
+            if not other_agent == self:
+                
+                if current_position == other_agent.pos:
+                    can_move = False
+        
+        return can_move
 
     def check_if_at_exit(self):
 
@@ -114,6 +101,9 @@ class Person(Agent):
             
             distance = Geometry.euclidean_distance(exit.pos, self.pos)
             if distance < threshold:
+                self.escaped = True
+                self.model.schedule.remove(self)
+                self.model.space.remove_agent(self)
                 return True
 
         return False
