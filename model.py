@@ -42,6 +42,8 @@ class Model_Controller(Model):
         self.create_obstacles()
         self.create_exit()
         self.create_hazard()
+        self.regular_times = []
+        self.tom_times = []
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
@@ -217,3 +219,11 @@ class Model_Controller(Model):
     @staticmethod
     def get_time(model):
         return model.time
+
+    @staticmethod
+    def get_tom_times(model):
+        return model.tom_times
+
+    @staticmethod
+    def get_regular_times(model):
+        return model.regular_times

@@ -45,6 +45,10 @@ class Person(Agent):
 
         if self.check_if_at_exit():
             self.escaped = True
+            if self.theory_of_mind == 0:
+                self.model.regular_times.append(self.model.get_time(self.model))
+            else:
+                self.model.tom_times.append(self.model.get_time(self.model))
             self.model.schedule.remove(self)
             self.model.space.remove_agent(self)
             return

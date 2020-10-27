@@ -9,22 +9,24 @@ from src.model.entities import Person
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fire evacuation model ')
-    parser.add_argument('--n_agents', type=int, default=50,
-                        help='Maximum number of agents')
+    parser.add_argument('--tom_agents', type=int, default=15)
+    # parser.add_argument('--n_agents', type=int, default=50,
+    #                    help='Maximum number of agents')
     args = parser.parse_args()
-    return args.n_agents
+    return args.tom_agents
 
 
 if __name__ == '__main__':
     fixed_params = {
+        "N": 20,
         "width": 500,
         "height": 500,
-        "theory_of_mind": 5,
+        # "theory_of_mind": 5,
         "panic_dynamic": [2, 7],
         "save_plots": False
     }
     variable_params = {
-        "N": range(10, parse_arguments(), 10)
+        "theory_of_mind": range(5, parse_arguments(), 1)
     }
 
     batch_run = BatchRunner(Model_Controller,
@@ -32,9 +34,14 @@ if __name__ == '__main__':
                             fixed_params,
                             iterations=5,
                             max_steps=10000,
-                            model_reporters={"Escaped Agents": lambda m: Model_Controller.count_active_agents(m, True),
-                                             "Time steps": lambda m: Model_Controller.get_time(m)}
-
+                            model_reporters={"Time steps": lambda m: Model_Controller.get_time(m),
+                                             "ToM times": lambda m: Model_Controller.get_tom_times(m),
+                                             "ToM average": lambda m: sum(Model_Controller.get_tom_times(m)) /
+                                                                      len(Model_Controller.get_tom_times(m)),
+                                             "Regular times": lambda m: Model_Controller.get_regular_times(m),
+                                             "Regular average": lambda m: sum(Model_Controller.get_regular_times(m)) /
+                                                                          len(Model_Controller.get_regular_times(m))
+                                             }
                             )
     batch_run.run_all()
 
