@@ -65,7 +65,7 @@ class Portrayals:
                      "Filled": "true",
                      "Layer": 0,
                      "w": width / 500,
-                     "h": height / 500
+                     "h": height / 1000
                      }
 
         return portrayal

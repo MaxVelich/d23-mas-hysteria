@@ -16,8 +16,8 @@ from src.view.Portrayals import Portrayals
 # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 width = 500
-height = 500
-N = 20
+height = 1000
+N = 80
 theory_of_mind = 5  # How many of the agents will apply theory of mind
 panic_dynamic = [2, 7]  # Threshold for number of neighbours before panic sets in
 legend = Portrayals.get_legend()
@@ -26,7 +26,7 @@ save_plots = False
 
 server = ModularServer(
         Model_Controller, 
-        [Canvas_Controller()],
+        [Canvas_Controller(height, width)],
         "Panic Behaviour in Crowd Evacuation",
         {"width": width, "height": height, "save_plots": save_plots,
          "theory_of_mind": theory_of_mind, "panic_dynamic": panic_dynamic,

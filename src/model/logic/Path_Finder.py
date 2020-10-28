@@ -56,9 +56,15 @@ class Path_Finder:
         # }
 
         ### VERSION 2 - TWO ROOMS ###
+        # exits = {
+        #     (0,25),
+        #     (500,25)
+        # }
+
+        ### VERSION 3 - SUPERMARKET ###
         exits = {
-            (0,25),
-            (500,25)
+            (0,75),
+            (0,425)
         }
 
         if current_goal:

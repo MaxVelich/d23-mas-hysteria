@@ -31,19 +31,19 @@ class Model_Controller(Model):
         self.num_tom_agents = theory_of_mind
         self.panic_threshold = panic_dynamic
         self.num_agents = N
-        self.space = ContinuousSpace(width, height, True)
+        self.space = ContinuousSpace(height, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
         self.time = 0
         self.exits = []
         self.obstacles = []
-        self. hazards = []
+        self.hazards = []
         self.images = save_plots
         self.create_obstacles()
         self.create_exit()
         self.create_hazard()
 
-        self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
+        self.world_manager = World_Manager((height, width), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
         self.datacollector = DataCollector(
             {
@@ -70,8 +70,12 @@ class Model_Controller(Model):
             # y_pos = random.randint(175, 325)
 
             ### VERSION 2 - TWO ROOMS ###
-            x_pos = random.randint(25, 475)
-            y_pos = random.randint(115, 475)
+            # x_pos = random.randint(25, 475)
+            # y_pos = random.randint(115, 475)
+
+            ### VERSION 3 - SUPERMARKET ###
+            x_pos = random.randint(25, 975)
+            y_pos = random.randint(25, 475)
 
             new_point = (x_pos, y_pos)
 
@@ -115,9 +119,15 @@ class Model_Controller(Model):
         # }
 
         ### VERSION 2 - TWO ROOMS ###
+        # self.exits = {
+        #     Exit(0, 25),
+        #     Exit(500, 25)
+        # }
+
+        ### VERSION 3 - SUPERMARKET ###
         self.exits = {
-            Exit(0, 25),
-            Exit(500, 25)
+            Exit(0, 75),
+            Exit(0, 425)
         }
 
     def create_obstacles(self):
@@ -132,11 +142,22 @@ class Model_Controller(Model):
         # ]
 
         ### VERSION 2 - TWO ROOMS ###
+        # self.obstacles = [
+        #     Obstacle((250,300), 20,400),
+        #     Obstacle((75,90), 150,20),
+        #     Obstacle((250,90), 75,20),
+        #     Obstacle((425,90), 150,20)
+        # ]
+
+        ### VERSION 3 - SUPERMARKET ###
         self.obstacles = [
-            Obstacle((250,300), 20,400),
-            Obstacle((75,90), 150,20),
-            Obstacle((250,90), 75,20),
-            Obstacle((425,90), 150,20)
+            Obstacle((125,20), 250,40),
+            Obstacle((970,125), 60,250),
+            Obstacle((175,470), 350,60),
+            Obstacle((600,125), 400,50),
+            Obstacle((600,250), 400,50),
+            Obstacle((625,375), 350,50),
+            Obstacle((150,250), 200,30)
         ]
 
     def create_hazard(self):
