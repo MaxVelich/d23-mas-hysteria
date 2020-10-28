@@ -68,16 +68,16 @@ class Model_Controller(Model):
         while not_done:
 
             ### VERSION 1 - CONTROL ###
-            # x_pos = random.randint(175, 325)
-            # y_pos = random.randint(175, 325)
+            x_pos = random.randint(175, 325)
+            y_pos = random.randint(175, 325)
 
             ### VERSION 2 - TWO ROOMS ###
             # x_pos = random.randint(25, 475)
             # y_pos = random.randint(115, 475)
 
             ### VERSION 3 - SUPERMARKET ###
-            x_pos = random.randint(25, 975)
-            y_pos = random.randint(25, 475)
+            # x_pos = random.randint(25, 975)
+            # y_pos = random.randint(25, 475)
 
             new_point = (x_pos, y_pos)
 
@@ -113,12 +113,12 @@ class Model_Controller(Model):
     def create_exit(self):
 
         ### VERSION 1 - CONTROL ###
-        # self.exits = {
-        #     Exit(0, 25),
-        #     Exit(0,475),
-        #     Exit(500, 25),
-        #     Exit(500, 475)
-        # }
+        self.exits = {
+            Exit(0, 25),
+            Exit(0,475),
+            Exit(500, 25),
+            Exit(500, 475)
+        }
 
         ### VERSION 2 - TWO ROOMS ###
         # self.exits = {
@@ -127,12 +127,13 @@ class Model_Controller(Model):
         # }
 
         ### VERSION 3 - SUPERMARKET ###
-        self.exits = {
-            Exit(0, 75),
-            Exit(0, 425)
-        }
+        # self.exits = {
+        #     Exit(0, 75),
+        #     Exit(0, 425)
+        # }
 
     def create_obstacles(self):
+        self.obstacles = []
 
         # self.obstacles = [
         #     Obstacle((95,350), 190, 40),
@@ -152,15 +153,15 @@ class Model_Controller(Model):
         # ]
 
         ### VERSION 3 - SUPERMARKET ###
-        self.obstacles = [
-            Obstacle((125,20), 250,40),
-            Obstacle((970,125), 60,250),
-            Obstacle((175,470), 350,60),
-            Obstacle((600,125), 400,50),
-            Obstacle((600,250), 400,50),
-            Obstacle((625,375), 350,50),
-            Obstacle((150,250), 200,30)
-        ]
+        # self.obstacles = [
+        #     Obstacle((125,20), 250,40),
+        #     Obstacle((970,125), 60,250),
+        #     Obstacle((175,470), 350,60),
+        #     Obstacle((600,125), 400,50),
+        #     Obstacle((600,250), 400,50),
+        #     Obstacle((625,375), 350,50),
+        #     Obstacle((150,250), 200,30)
+        # ]
 
     def create_hazard(self):
 

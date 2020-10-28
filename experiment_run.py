@@ -7,9 +7,16 @@ from model import Model_Controller
 from src.model.entities import Person
 
 
+def record_time(times, agents):
+    if agents > 0:
+        return times/agents
+    else:
+        return 0
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fire evacuation model ')
-    parser.add_argument('--tom_agents', type=int, default=15)
+    parser.add_argument('--tom_agents', type=int, default=21)
     # parser.add_argument('--n_agents', type=int, default=50,
     #                    help='Maximum number of agents')
     args = parser.parse_args()
@@ -26,7 +33,7 @@ if __name__ == '__main__':
         "save_plots": False
     }
     variable_params = {
-        "theory_of_mind": range(5, parse_arguments(), 1)
+        "theory_of_mind": range(0, parse_arguments(), 1)
     }
 
     batch_run = BatchRunner(Model_Controller,
@@ -36,11 +43,9 @@ if __name__ == '__main__':
                             max_steps=10000,
                             model_reporters={"Time steps": lambda m: Model_Controller.get_time(m),
                                              "ToM times": lambda m: Model_Controller.get_tom_times(m),
-                                             "ToM average": lambda m: sum(Model_Controller.get_tom_times(m)) /
-                                                                      len(Model_Controller.get_tom_times(m)),
+                                             "ToM average": lambda m: record_time(sum(Model_Controller.get_tom_times(m)),len(Model_Controller.get_tom_times(m))),
                                              "Regular times": lambda m: Model_Controller.get_regular_times(m),
-                                             "Regular average": lambda m: sum(Model_Controller.get_regular_times(m)) /
-                                                                          len(Model_Controller.get_regular_times(m))
+                                             "Regular average": lambda m: record_time(sum(Model_Controller.get_regular_times(m)),len(Model_Controller.get_regular_times(m)))
                                              }
                             )
     batch_run.run_all()

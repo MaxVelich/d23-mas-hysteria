@@ -48,12 +48,12 @@ class Path_Finder:
         '''
 
         ### VERSION 1 - CONTROL ###
-        # exits = {
-        #     (0,25),
-        #     (0,475),
-        #     (500,25),
-        #     (500,475)
-        # }
+        exits = {
+            (0,25),
+            (0,475),
+            (500,25),
+            (500,475)
+        }
 
         ### VERSION 2 - TWO ROOMS ###
         # exits = {
@@ -62,10 +62,10 @@ class Path_Finder:
         # }
 
         ### VERSION 3 - SUPERMARKET ###
-        exits = {
-            (0,75),
-            (0,425)
-        }
+        # exits = {
+        #     (0,75),
+        #     (0,425)
+        # }
 
         if current_goal:
             exits.remove(current_goal)
