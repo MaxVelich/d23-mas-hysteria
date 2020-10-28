@@ -46,10 +46,21 @@ class Path_Finder:
         Find the exit that is currently closest to the agent
         Currently does not take obstacles into account
         '''
+
+        ### VERSION 1 - CONTROL ###
+        # exits = {
+        #     (0,25),
+        #     (0,475),
+        #     (500,25),
+        #     (500,475)
+        # }
+
+        ### VERSION 2 - TWO ROOMS ###
         exits = {
-            (34.5, 494.5),
-            (448.5, 494.5)
+            (0,25),
+            (500,25)
         }
+
         if current_goal:
             exits.remove(current_goal)
 

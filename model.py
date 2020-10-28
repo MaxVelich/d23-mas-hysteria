@@ -62,14 +62,25 @@ class Model_Controller(Model):
         random_unique_positions = []
         not_done = True
         while not_done:
-            x_pos = random.randint(20, 350)
-            y_pos = random.randint(20, 55)
+
+            ### VERSION 1 - CONTROL ###
+            # x_pos = random.randint(175, 325)
+            # y_pos = random.randint(175, 325)
+
+            ### VERSION 2 - TWO ROOMS ###
+            x_pos = random.randint(25, 475)
+            y_pos = random.randint(115, 475)
+
             new_point = (x_pos, y_pos)
 
             not_allowed = False
             for p in random_unique_positions:
                 dist = Geometry.euclidean_distance(new_point, p)
                 if dist <= 16:
+                    not_allowed = True
+
+            for obstacle in self.obstacles:
+                if Geometry.point_lies_within_rectangle(new_point, obstacle.get_corner_points()):
                     not_allowed = True
 
             if not not_allowed:
@@ -88,15 +99,24 @@ class Model_Controller(Model):
             if random.random() <= 0.2:
                 tom = 1
             a = Person(i, self, tom)
-            self.space.place_agent(a, (20*(i+1), 40))
+            self.space.place_agent(a, random_unique_positions[i])
             a.prepare_path_finding()
             self.schedule.add(a)
 
     def create_exit(self):
+
+        ### VERSION 1 - CONTROL ###
+        # self.exits = {
+        #     Exit(0, 25),
+        #     Exit(0,475),
+        #     Exit(500, 25),
+        #     Exit(500, 475)
+        # }
+
+        ### VERSION 2 - TWO ROOMS ###
         self.exits = {
-            Exit(34.5, 494.5),
-            #Exit(240, 480),
-            Exit(448.5, 494.5)
+            Exit(0, 25),
+            Exit(500, 25)
         }
 
     def create_obstacles(self):
@@ -110,21 +130,18 @@ class Model_Controller(Model):
         #     Obstacle((425,150), 150, 40)
         # ]
 
+        ### VERSION 2 - TWO ROOMS ###
         self.obstacles = [
-            Obstacle((95,350), 190, 40),
-            Obstacle((405,350), 190, 40),
-            Obstacle((425,250), 150, 40),
-            Obstacle((75,250), 150, 40),
-            Obstacle((75,150), 150, 40),
-            Obstacle((225,150), 150, 40),
-            # Obstacle((450,375), 150, 250),
-            # Obstacle((450,125), 150, 250),
-            # Obstacle((50,250), 100, 200)
+            Obstacle((250,300), 20,400),
+            Obstacle((75,90), 150,20),
+            Obstacle((250,90), 75,20),
+            Obstacle((425,90), 150,20)
         ]
 
     def create_hazard(self):
 
-        self.hazards = [Hazard(400, 100)]
+        # self.hazards = [ Hazard(400, 100) ]
+        self.hazards = []
 
     def step(self):
         self.datacollector.collect(self)
