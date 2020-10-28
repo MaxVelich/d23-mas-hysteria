@@ -95,7 +95,6 @@ class Person(Agent):
                 self.next_move = self.path_finder.get_next_step(self.pos)
                 self.in_motion = False
 
-
             delta_pos_x = self.next_move[0] - self.pos[0]
             delta_pos_y = self.next_move[1] - self.pos[1]
 
@@ -111,6 +110,25 @@ class Person(Agent):
 
             if can_move:
                 self.model.space.move_agent(self, new_position)
+            else:
+                self.do_sidestep()
+
+    def do_sidestep(self):
+
+        delta_pos_x = self.next_move[0] - self.pos[0]
+        delta_pos_y = self.next_move[1] - self.pos[1]
+        new_position = (self.pos[0] + delta_pos_x * -1, self.pos[1] + delta_pos_y * -1)
+
+        can_move = True
+        for other_agent in self.near_by_agents:
+            if not other_agent == self:
+                
+                if new_position == other_agent.pos:
+                    can_move = False
+
+        if can_move:
+            self.model.space.move_agent(self, new_position)
+
 
     def check_if_at_exit(self):
 

@@ -9,13 +9,13 @@ class Canvas_Controller(VisualizationElement):
 
     local_includes = ["src/view/visualization.js"]
 
-    def __init__(self, canvas_height=500, canvas_width=500):
+    def __init__(self, canvas_height, canvas_width):
 
         self.canvas_height = canvas_height
         self.canvas_width = canvas_width
 
         new_element = ("new Simple_Continuous_Module({}, {})"
-                        .format(self.canvas_width, self.canvas_height))
+                        .format(self.canvas_height, self.canvas_width))
 
         self.js_code = "elements.push(" + new_element + ");"
 
