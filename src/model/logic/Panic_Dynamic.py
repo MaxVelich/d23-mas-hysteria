@@ -5,6 +5,7 @@ Here we intend to provide the logic for how agents react to the panic. Also, how
 
 import math
 
+
 class Panic_Dynamic:
 
     def __init__():
@@ -41,7 +42,7 @@ class Panic_Dynamic:
         return (average_x, average_y)
 
     @staticmethod
-    def change_panic_level(neighbourhood, hazards, pos, vision):
+    def change_panic_level(neighbourhood, hazards, pos, vision, threshold):
         """
         Return the changed panic level, based on nearby agents and vision of hazard
         :param neighbourhood:
