@@ -21,6 +21,28 @@ class Path_Finder:
         print("new goal " + str(goal) + " has been set --- recalculating route...")
         self.plan = self.__find_path(current_pos, goal, self.edges)
 
+    def plan_detour(self, current_pos, goal, except_set_of_nodes):
+
+        filtered_edges = []
+
+        for edge in self.edges:
+
+            include_edge = True
+            for node in except_set_of_nodes:
+
+                edge_point_1 = (edge[0], edge[1])
+                edge_point_2 = (edge[2], edge[3])
+
+                if Utilities.check_if_points_are_approximately_the_same(edge_point_1, node):
+                    include_edge = False
+                elif Utilities.check_if_points_are_approximately_the_same(edge_point_2, node):
+                    include_edge = False
+            
+            if include_edge:
+                filtered_edges += [ edge ]
+
+        self.plan = self.__find_path(current_pos, goal, filtered_edges)
+
     def get_next_step(self, agent_position):
         '''
         This will not make it in the final version. It produces the next step an agent should take in order to find an exit. Here, we basically run A* on the graph we generate above. Then we try to match the agent's position to the next nearest node on the graph, then we run A*.
@@ -42,7 +64,7 @@ class Path_Finder:
 
     def closest_node_except_one(self, position, except_one):
 
-        minimum = (0,-1)
+        minimum = (0, -1)
         for index, node in enumerate(self.nodes):
 
             if Utilities.check_if_points_are_approximately_the_same(node, except_one):
@@ -57,6 +79,21 @@ class Path_Finder:
                 minimum = (index, distance)
             
         return self.nodes[minimum[0]]
+
+    def find_connected_nodes(self, from_position):
+
+        successors = []
+        for edge in self.edges:
+            
+            edge_point_1 = (edge[0], edge[1])
+            edge_point_2 = (edge[2], edge[3])
+
+            if Utilities.check_if_points_are_approximately_the_same(edge_point_1, from_position):
+                successors += [ edge_point_2 ]
+            elif Utilities.check_if_points_are_approximately_the_same(edge_point_2, from_position):
+                successors += [ edge_point_1 ]
+
+        return list(set(successors))
 
     ### PRIVATE INTERFACE
 

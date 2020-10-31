@@ -31,7 +31,7 @@ class Panic_Dynamic:
         average_x = sum(cohere_x) / len(neighbors)
         average_y = sum(cohere_y) / len(neighbors)
         
-        norm = math.sqrt(average_x*average_x + average_y*average_y)
+        norm = math.sqrt(average_x * average_x + average_y * average_y)
         if norm == 0:
             return (0,0)
 

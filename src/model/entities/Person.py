@@ -21,7 +21,7 @@ class Person(Agent):
 
         self.neighbout_radius = 40
         self.escaped = False
-        self.next_move = None
+        # self.next_move = None
         
         self.panic = 0
         
@@ -29,8 +29,24 @@ class Person(Agent):
 
     def prepare_path_finding(self):
 
-        goal = self.determine_goal()
-        self.path_finder.set_goal(self.pos, goal)
+        self.goal = self.determine_goal()
+        self.path_finder.set_goal(self.pos, self.goal)
+
+    def determine_goal(self):
+
+        self.path_finder = Path_Finder(self.model.world_mesh)
+
+        exits = [ exit.pos for exit in self.model.exits ]
+        goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
+
+        if (self.theory_of_mind == 1):
+            if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), goal):
+                for other_exit in exits:
+                    if not other_exit == goal:
+                        goal = other_exit
+                        break
+        
+        return goal
 
     def step(self):
 
@@ -51,45 +67,73 @@ class Person(Agent):
         else:
             move = self.make_normal_move()
 
-        if self.check_if_next_move_is_clear(move):
+        if not move == None:
             self.model.space.move_agent(self, move)
-
-    def determine_goal(self):
-
-        self.path_finder = Path_Finder(self.model.world_mesh)
-
-        exits = [ exit.pos for exit in self.model.exits ]
-        goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
-
-        if (self.theory_of_mind == 1):
-            if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), goal):
-                for other_exit in exits:
-                    if not other_exit == goal:
-                        goal = other_exit
-                        break
         
-        return goal
-
     def make_panic_move(self):
 
         direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
         new_position = (self.pos[0] + direction[0], self.pos[1] + direction[1])
-        closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
+        move = self.path_finder.closest_node_except_one(new_position, self.pos)
 
-        return closest_node
+        if self.check_if_next_move_is_clear(move):
+            return move
+
+        return None
 
     def make_normal_move(self):
 
-        if self.next_move is None:
-            self.next_move = self.path_finder.get_next_step(self.pos)
-
-        if Utilities.check_if_points_are_approximately_the_same(self.next_move, self.pos):
-            self.next_move = self.path_finder.get_next_step(self.pos)
+        next_move = self.path_finder.get_next_step(self.pos)
         
-        delta_pos_x = self.next_move[0] - self.pos[0]
-        delta_pos_y = self.next_move[1] - self.pos[1]
+        if next_move == None or next_move == []:
+            return None
 
-        return (self.pos[0] + delta_pos_x, self.pos[1] + delta_pos_y)
+        delta_pos_x = next_move[0] - self.pos[0]
+        delta_pos_y = next_move[1] - self.pos[1]
+
+        move = (self.pos[0] + delta_pos_x, self.pos[1] + delta_pos_y)
+
+        if self.check_if_next_move_is_clear(move):
+            return move
+        else:
+            side_step = self.try_to_find_side_step_move(move)
+            if not side_step == None:
+                neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+                self.path_finder.plan_detour(side_step, self.goal, neighbors_positions)
+                return side_step
+
+        return None
+
+    def try_to_find_side_step_move(self, denied_next_move):
+
+        successors = self.path_finder.find_connected_nodes(self.pos)
+
+        free_successors = []
+        neighbors = self.neighbors()
+        neighbors_positions = [ neighbor.pos for neighbor in neighbors ]
+
+        for node in successors:
+            if node in neighbors_positions:
+                break
+            else:
+                free_successors += [ node ]
+
+        if free_successors == []:
+            return None
+
+        minimum = (0, -1)
+
+        for index, node in enumerate(free_successors):
+
+            distance = Geometry.euclidean_distance(node, denied_next_move)
+
+            if minimum[1] == -1:
+                minimum = (index, distance)
+
+            if minimum[1] > distance:
+                minimum = (index, distance)
+
+        return free_successors[minimum[0]]
 
     def neighbors(self):
         
@@ -100,11 +144,11 @@ class Person(Agent):
 
         return neighbors
 
-    def check_if_next_move_is_clear(self, current_position):
+    def check_if_next_move_is_clear(self, move):
 
         can_move = True
         for other_agent in self.neighbors():
-            if current_position == other_agent.pos:
+            if move == other_agent.pos:
                 can_move = False
         
         return can_move
