@@ -19,66 +19,65 @@ class Person(Agent):
         super().__init__(unique_id, model)
 
         self.neighbout_radius = 40
-
-        self.next_move = None
-        self.theory_of_mind = tom # 0 = ToM0, 1 = ToM1
         self.escaped = False
+        self.next_move = None
+        
         self.panic = 0
-        self.direction = 1
+        
+        self.theory_of_mind = tom
 
     def prepare_path_finding(self):
 
-        self.path_finder = Path_Finder(self.model.world_mesh)
-
-        exits = [ exit.pos for exit in self.model.exits ]
-        print(exits)
-        self.goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
-
-        if (self.theory_of_mind == 1):
-            print("my ToM level is: " + str(self.theory_of_mind))
-            print("I have " + str(len(self.neighbors())) + " neighbors")
-
-            if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), self.goal):
-                for other_exit in exits:
-                    if not other_exit == self.goal:
-                        self.goal = other_exit
-                        break
-
-        self.path_finder.set_goal(self.pos, self.goal)
+        goal = self.determine_goal()
+        self.path_finder.set_goal(self.pos, goal)
 
     def step(self):
 
         if self.check_if_at_exit():
-            return
-
-        self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.model.hazards, self.pos)
-
-        if self.panic == 2:
-            self.direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
+            return        
 
         self.move()
 
     def move(self):
-
         '''
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
 
+        self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.pos)
+
         if self.panic == 2:
-            panic_move = self.make_panic_move()
-            if self.check_if_next_move_is_clear(panic_move):
-                self.model.space.move_agent(self, panic_move)
-        else: 
-            normal_move = self.make_normal_move()
-            if self.check_if_next_move_is_clear(normal_move):
-                self.model.space.move_agent(self, normal_move)
+            move = self.make_panic_move()
+        else:
+            move = self.make_normal_move()
+
+        if self.check_if_next_move_is_clear(move):
+            self.model.space.move_agent(self, move)
+
+    def determine_goal(self):
+
+        self.path_finder = Path_Finder(self.model.world_mesh)
+
+        exits = [ exit.pos for exit in self.model.exits ]
+        goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
+
+        if (self.theory_of_mind == 1):
+            if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), goal):
+                for other_exit in exits:
+                    if not other_exit == goal:
+                        goal = other_exit
+                        break
+        
+        return goal
 
     def make_panic_move(self):
-        new_position = (self.pos[0] + self.direction[0], self.pos[1] + self.direction[1])
+
+        direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
+        new_position = (self.pos[0] + direction[0], self.pos[1] + direction[1])
         closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
         return closest_node
 
     def make_normal_move(self):
+        
         if self.next_move is None:
             self.next_move = self.path_finder.get_next_step(self.pos)
 

@@ -41,7 +41,7 @@ class Panic_Dynamic:
         return (average_x, average_y)
 
     @staticmethod
-    def change_panic_level(neighbourhood, hazards, pos):
+    def change_panic_level(neighbourhood, pos):
         """
         Return the changed panic level, based on nearby agents and vision of hazard
         :param neighbourhood:
