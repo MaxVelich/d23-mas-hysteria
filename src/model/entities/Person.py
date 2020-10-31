@@ -8,6 +8,7 @@ from mesa import Agent
 from src.model.logic.Panic_Dynamic import Panic_Dynamic
 from src.model.logic.Path_Finder import Path_Finder
 from src.model.utils.Geometry import Geometry
+from src.model.utils.Utilities import Utilities
 
 import random
 from src.model.logic.Theory_Of_Mind import Theory_Of_Mind as ToM
@@ -74,16 +75,17 @@ class Person(Agent):
         direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
         new_position = (self.pos[0] + direction[0], self.pos[1] + direction[1])
         closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
+
         return closest_node
 
     def make_normal_move(self):
-        
+
         if self.next_move is None:
             self.next_move = self.path_finder.get_next_step(self.pos)
 
-        if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
+        if Utilities.check_if_points_are_approximately_the_same(self.next_move, self.pos):
             self.next_move = self.path_finder.get_next_step(self.pos)
-
+        
         delta_pos_x = self.next_move[0] - self.pos[0]
         delta_pos_y = self.next_move[1] - self.pos[1]
 

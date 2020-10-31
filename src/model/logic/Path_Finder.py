@@ -7,6 +7,7 @@ This class still has a long way to go! Currently, we recalculate the route for e
 
 from src.model.logic.A_star import A_Star
 from src.model.utils.Geometry import Geometry
+from src.model.utils.Utilities import Utilities
 
 import numpy as np
 
@@ -29,23 +30,22 @@ class Path_Finder:
             return None
 
         nearest_point = self.__find_nearest_mesh_point(agent_position)
-        
         first_next_node = self.plan[0]
-        rounded = (round(first_next_node[0], 1), round(first_next_node[1], 1))
 
-        if agent_position[0] == rounded[0] and agent_position[1] == rounded[1]:
+        if Utilities.check_if_points_are_approximately_the_same(agent_position, first_next_node):
             self.plan.pop(0)
             next_point = self.plan[0]
         else:
             next_point = first_next_node
 
-        return (round(next_point[0], 1), round(next_point[1], 1))
+        return next_point
 
     def closest_node_except_one(self, position, except_one):
 
         minimum = (0,-1)
         for index, node in enumerate(self.nodes):
-            if node[0] == except_one[0] and node[1] == except_one[1]:
+
+            if Utilities.check_if_points_are_approximately_the_same(node, except_one):
                 break
 
             distance = Geometry.euclidean_distance(node, position)

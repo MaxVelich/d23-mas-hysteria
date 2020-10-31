@@ -13,3 +13,19 @@ class Utilities:
         (a_x, a_y) = point_a
         (b_x, b_y) = point_b
         return (a_x + b_x, a_y + b_y)
+
+    @staticmethod
+    def check_if_points_are_approximately_the_same(point_a, point_b):
+
+        rounding_factor = 1
+
+        a_1 = round(point_a[0], rounding_factor)
+        a_2 = round(point_a[1], rounding_factor)
+        
+        b_1 = round(point_b[0], rounding_factor)
+        b_2 = round(point_b[1], rounding_factor)
+
+        if a_1 == b_1 and a_2 == b_2:
+            return True
+        
+        return False
