@@ -4,6 +4,7 @@ This class models the agents, or people in our case. This class is a decendent o
 '''
 
 from mesa import Agent
+
 from src.model.logic.Panic_Dynamic import Panic_Dynamic
 from src.model.logic.Path_Finder import Path_Finder
 from src.model.utils.Geometry import Geometry
@@ -29,6 +30,7 @@ class Person(Agent):
         self.path_finder = Path_Finder(self.model.world_mesh)
 
         exits = [ exit.pos for exit in self.model.exits ]
+        print(exits)
         self.goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
 
         if (self.theory_of_mind == 1):
