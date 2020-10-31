@@ -131,7 +131,7 @@ class Model_Controller(Model):
         }
 
     def create_obstacles(self):
-
+        pass
         # self.obstacles = [
         #     Obstacle((95,350), 190, 40),
         #     Obstacle((405,350), 190, 40),
