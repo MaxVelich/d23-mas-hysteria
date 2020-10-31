@@ -68,7 +68,13 @@ class Person(Agent):
 
         if not move == None:
             self.model.space.move_agent(self, move)
-        
+        else:
+            self.replan(self.pos)
+
+    def replan(self, from_position):
+        neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+        self.path_finder.plan_detour(from_position, self.goal, neighbors_positions)
+    
     def make_panic_move(self):
 
         direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
@@ -97,12 +103,11 @@ class Person(Agent):
         else:
             side_step = self.try_to_find_side_step_move(move)
             if not side_step == None:
-                neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
-                self.path_finder.plan_detour(side_step, self.goal, neighbors_positions)
                 return side_step
 
         return None
 
+    # This function is a cheap detour function, but is faster than the actual detour function
     def try_to_find_side_step_move(self, denied_next_move):
 
         successors = self.path_finder.find_connected_nodes(self.pos)
