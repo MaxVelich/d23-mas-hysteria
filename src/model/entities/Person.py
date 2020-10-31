@@ -101,32 +101,12 @@ class Person(Agent):
         if self.check_if_next_move_is_clear(move):
             return move
         else:
-            side_step = self.try_to_find_side_step_move(move)
+            neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+            side_step = self.path_finder.try_to_find_side_step_move(self.pos, move, neighbors_positions)
             if not side_step == None:
                 return side_step
 
         return None
-
-    # This function is a cheap detour function, but is faster than the actual detour function
-    def try_to_find_side_step_move(self, denied_next_move):
-
-        successors = self.path_finder.find_connected_nodes(self.pos)
-
-        free_successors = []
-        neighbors = self.neighbors()
-        neighbors_positions = [ neighbor.pos for neighbor in neighbors ]
-
-        for node in successors:
-            if node in neighbors_positions:
-                break
-            else:
-                free_successors += [ node ]
-
-        if free_successors == []:
-            return None
-
-        closest_successor = Utilities.find_closest_point_in_points(denied_next_move, free_successors)
-        return closest_successor
 
     def neighbors(self):
         

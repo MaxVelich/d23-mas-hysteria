@@ -42,6 +42,24 @@ class Path_Finder:
                 filtered_edges += [ edge ]
 
         self.plan = self.__find_path(current_pos, goal, filtered_edges)
+    
+    # This function is a cheap detour function, but is faster than the actual detour function
+    def try_to_find_side_step_move(self, position, denied_next_move, neighbors_positions):
+
+        successors = self.find_connected_nodes(position)
+        free_successors = []
+
+        for node in successors:
+            if node in neighbors_positions:
+                break
+            else:
+                free_successors += [ node ]
+
+        if free_successors == []:
+            return None
+
+        closest_successor = Utilities.find_closest_point_in_points(denied_next_move, free_successors)
+        return closest_successor
 
     def get_next_step(self, agent_position):
         '''
