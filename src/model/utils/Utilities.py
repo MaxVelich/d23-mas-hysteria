@@ -6,6 +6,8 @@ Outside of this class, functions can be called by simply invoking e.g.:
 Utilities.add_two_points(a,b)
 '''
 
+from src.model.utils.Geometry import Geometry
+
 class Utilities:
 
     @staticmethod
@@ -29,3 +31,18 @@ class Utilities:
             return True
         
         return False
+
+    @staticmethod
+    def find_closest_point_in_points(point, points):
+
+        minimum = (0, -1)
+        for index, node in enumerate(points):
+            distance = Geometry.euclidean_distance(node, point)
+
+            if minimum[1] == -1:
+                minimum = (index, distance)
+
+            if minimum[1] > distance:
+                minimum = (index, distance)
+
+        return points[minimum[0]]

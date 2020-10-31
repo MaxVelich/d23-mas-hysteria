@@ -21,7 +21,6 @@ class Person(Agent):
 
         self.neighbout_radius = 40
         self.escaped = False
-        # self.next_move = None
         
         self.panic = 0
         
@@ -121,19 +120,8 @@ class Person(Agent):
         if free_successors == []:
             return None
 
-        minimum = (0, -1)
-
-        for index, node in enumerate(free_successors):
-
-            distance = Geometry.euclidean_distance(node, denied_next_move)
-
-            if minimum[1] == -1:
-                minimum = (index, distance)
-
-            if minimum[1] > distance:
-                minimum = (index, distance)
-
-        return free_successors[minimum[0]]
+        closest_successor = Utilities.find_closest_point_in_points(denied_next_move, free_successors)
+        return closest_successor
 
     def neighbors(self):
         

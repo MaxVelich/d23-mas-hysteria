@@ -64,21 +64,16 @@ class Path_Finder:
 
     def closest_node_except_one(self, position, except_one):
 
-        minimum = (0, -1)
-        for index, node in enumerate(self.nodes):
-
+        filtered_nodes = []
+        for node in self.nodes:
             if Utilities.check_if_points_are_approximately_the_same(node, except_one):
                 break
 
-            distance = Geometry.euclidean_distance(node, position)
+            filtered_nodes += [ node ]
 
-            if minimum[1] == -1:
-                minimum = (index, distance)
+        closest_node = Utilities.find_closest_point_in_points(position, filtered_nodes)
 
-            if minimum[1] > distance:
-                minimum = (index, distance)
-            
-        return self.nodes[minimum[0]]
+        return closest_node
 
     def find_connected_nodes(self, from_position):
 
