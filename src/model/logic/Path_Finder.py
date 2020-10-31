@@ -43,10 +43,10 @@ class Path_Finder:
 
         self.plan = self.__find_path(current_pos, goal, filtered_edges)
     
-    # This function is a cheap detour function, but is faster than the actual detour function
     def try_to_find_side_step_move(self, position, denied_next_move, neighbors_positions):
 
-        successors = self.find_connected_nodes(position)
+        nearest_point = self.__find_nearest_mesh_point(position)
+        successors = self.find_connected_nodes(nearest_point)
         free_successors = []
 
         for node in successors:
@@ -58,7 +58,7 @@ class Path_Finder:
         if free_successors == []:
             return None
 
-        closest_successor = Utilities.find_closest_point_in_points(denied_next_move, free_successors)
+        closest_successor = Utilities.find_closest_point_of_set_of_points(denied_next_move, free_successors)
         return closest_successor
 
     def get_next_step(self, agent_position):
@@ -79,19 +79,6 @@ class Path_Finder:
             next_point = first_next_node
 
         return next_point
-
-    def closest_node_except_one(self, position, except_one):
-
-        filtered_nodes = []
-        for node in self.nodes:
-            if Utilities.check_if_points_are_approximately_the_same(node, except_one):
-                break
-
-            filtered_nodes += [ node ]
-
-        closest_node = Utilities.find_closest_point_in_points(position, filtered_nodes)
-
-        return closest_node
 
     def find_connected_nodes(self, from_position):
 

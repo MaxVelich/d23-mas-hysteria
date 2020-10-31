@@ -106,20 +106,3 @@ class Geometry:
             return True
 
         return False
-
-    @staticmethod
-    def find_closest_point_of_set_of_points(point, points):
-
-        minimum_distance = (0, -1)
-
-        for index, other_point in enumerate(points):
-            distance = Geometry.euclidean_distance(other_point, point)
-
-            if minimum_distance[1] == -1:
-                minimum_distance = (index, distance)
-                break
-
-            if minimum_distance[1] > distance:
-                minimum_distance = (index, distance)
-
-        return points[minimum_distance[0]]

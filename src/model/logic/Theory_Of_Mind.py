@@ -2,7 +2,7 @@
 This class will incorporate the Theory of Mind aspect of the agents
 '''
 
-from src.model.utils.Geometry import Geometry
+from src.model.utils.Utilities import Utilities
 
 class Theory_Of_Mind:
 
@@ -24,7 +24,7 @@ class Theory_Of_Mind:
         goals_of_agents = []
         if neighbors:
             for i in neighbors:
-                goal = Geometry.find_closest_point_of_set_of_points(i.pos, exits)
+                goal = Utilities.find_closest_point_of_set_of_points(i.pos, exits)
                 goals_of_agents += [goal]
 
             if goals_of_agents.count(current_goal) >= len(neighbors)/2:

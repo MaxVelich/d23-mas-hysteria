@@ -36,7 +36,7 @@ class Person(Agent):
         self.path_finder = Path_Finder(self.model.world_mesh)
 
         exits = [ exit.pos for exit in self.model.exits ]
-        goal = Geometry.find_closest_point_of_set_of_points(self.pos, exits)
+        goal = Utilities.find_closest_point_of_set_of_points(self.pos, exits)
 
         if (self.theory_of_mind == 1):
             if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), goal):
@@ -72,6 +72,7 @@ class Person(Agent):
             self.replan(self.pos)
 
     def replan(self, from_position):
+
         neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
         self.path_finder.plan_detour(from_position, self.goal, neighbors_positions)
     
@@ -79,7 +80,9 @@ class Person(Agent):
 
         direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
         new_position = (self.pos[0] + direction[0], self.pos[1] + direction[1])
-        move = self.path_finder.closest_node_except_one(new_position, self.pos)
+
+        neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+        move = self.path_finder.try_to_find_side_step_move(new_position, self.pos, neighbors_positions)
 
         if self.check_if_next_move_is_clear(move):
             return move

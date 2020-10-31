@@ -33,16 +33,20 @@ class Utilities:
         return False
 
     @staticmethod
-    def find_closest_point_in_points(point, points):
+    def find_closest_point_of_set_of_points(point, points):
 
-        minimum = (0, -1)
-        for index, node in enumerate(points):
-            distance = Geometry.euclidean_distance(node, point)
+        if points == []:
+            return None
 
-            if minimum[1] == -1:
-                minimum = (index, distance)
+        minimum_distance = (0, -1)
 
-            if minimum[1] > distance:
-                minimum = (index, distance)
+        for index, other_point in enumerate(points):
+            distance = Geometry.euclidean_distance(other_point, point)
 
-        return points[minimum[0]]
+            if minimum_distance[1] == -1:
+                minimum_distance = (index, distance)
+
+            if minimum_distance[1] > distance:
+                minimum_distance = (index, distance)
+
+        return points[minimum_distance[0]]
