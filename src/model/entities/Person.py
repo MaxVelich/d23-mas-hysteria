@@ -17,13 +17,14 @@ class Person(Agent):
     def __init__(self, unique_id, model, tom):
 
         super().__init__(unique_id, model)
-        self.panic = 0
-        self.velocity = 1
-        self.speed = 5
-        self.vision = 40
+
+        self.neighbout_radius = 40
+
         self.next_move = None
         self.theory_of_mind = tom # 0 = ToM0, 1 = ToM1
         self.escaped = False
+        self.panic = 0
+        self.direction = 1
 
     def prepare_path_finding(self):
 
@@ -50,10 +51,10 @@ class Person(Agent):
         if self.check_if_at_exit():
             return
 
-        self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.model.hazards, self.pos, self.vision)
+        self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.model.hazards, self.pos)
 
         if self.panic == 2:
-            self.velocity = Panic_Dynamic.cohere(self.neighbors(), self.pos, self)
+            self.direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
 
         self.move()
 
@@ -73,7 +74,7 @@ class Person(Agent):
                 self.model.space.move_agent(self, normal_move)
 
     def make_panic_move(self):
-        new_position = (self.pos[0] + self.velocity[0], self.pos[1] + self.velocity[1])
+        new_position = (self.pos[0] + self.direction[0], self.pos[1] + self.direction[1])
         closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
         return closest_node
 
@@ -87,12 +88,12 @@ class Person(Agent):
         delta_pos_x = self.next_move[0] - self.pos[0]
         delta_pos_y = self.next_move[1] - self.pos[1]
 
-        return (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
+        return (self.pos[0] + delta_pos_x, self.pos[1] + delta_pos_y)
 
     def neighbors(self):
         
         neighbors = []
-        for agent in self.model.space.get_neighbors(self.pos, self.vision):
+        for agent in self.model.space.get_neighbors(self.pos, self.neighbout_radius):
             if not agent == self:
                 neighbors.append(agent)
 

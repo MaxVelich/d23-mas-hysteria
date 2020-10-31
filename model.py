@@ -173,7 +173,7 @@ class Model_Controller(Model):
         # Stop the simulation once all agents have exited the building
         if len(self.schedule.agents) == 0:
             self.running = False
-            self.save_figures()
+            # self.save_figures()
 
     def save_figures(self):
         results = self.datacollector.get_model_vars_dataframe()
