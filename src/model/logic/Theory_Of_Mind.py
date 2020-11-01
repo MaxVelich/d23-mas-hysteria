@@ -6,9 +6,6 @@ from src.model.utils.Utilities import Utilities
 
 class Theory_Of_Mind:
 
-    def __init__(self):
-        pass
-
     '''
     Plan:
     use something similar to the cohere function in the Panic_Dynamic
