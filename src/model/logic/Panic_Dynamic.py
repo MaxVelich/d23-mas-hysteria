@@ -12,7 +12,7 @@ class Panic_Dynamic:
         pass
 
     @staticmethod
-    def cohere(neighbors, pos, agent):
+    def average_direction_of_crowd(neighbors, pos, agent):
         """
         Return the vector toward the center of mass of the local neighbors.
         Reference: https://github.com/projectmesa/mesa/blob/master/examples/boid_flockers/boid_flockers/boid.py
@@ -32,7 +32,7 @@ class Panic_Dynamic:
         average_x = sum(cohere_x) / len(neighbors)
         average_y = sum(cohere_y) / len(neighbors)
         
-        norm = math.sqrt(average_x*average_x + average_y*average_y)
+        norm = math.sqrt(average_x * average_x + average_y * average_y)
         if norm == 0:
             return (0,0)
 
@@ -42,17 +42,17 @@ class Panic_Dynamic:
         return (average_x, average_y)
 
     @staticmethod
-    def change_panic_level(neighbourhood, hazards, pos, vision, threshold):
+    def change_panic_level(neighbourhood, pos):
         """
         Return the changed panic level, based on nearby agents and vision of hazard
         :param neighbourhood:
         :return:
         """
+
         panic = 0
-        speed = 0.8
 
         if neighbourhood > 4:
-            return (2, speed)
+            return 2
 
         if neighbourhood > 3:
             panic = 1
@@ -64,4 +64,4 @@ class Panic_Dynamic:
         #             speed = 1
         #             break
 
-        return panic, speed
+        return panic

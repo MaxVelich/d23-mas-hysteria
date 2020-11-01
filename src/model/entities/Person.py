@@ -4,9 +4,11 @@ This class models the agents, or people in our case. This class is a decendent o
 '''
 
 from mesa import Agent
+
 from src.model.logic.Panic_Dynamic import Panic_Dynamic
 from src.model.logic.Path_Finder import Path_Finder
 from src.model.utils.Geometry import Geometry
+from src.model.utils.Utilities import Utilities
 
 import random
 from src.model.logic.Theory_Of_Mind import Theory_Of_Mind as ToM
@@ -16,115 +18,116 @@ class Person(Agent):
     def __init__(self, unique_id, model, tom):
 
         super().__init__(unique_id, model)
-        self.panic = 0
-        self.velocity = 1
-        self.speed = 5
-        self.vision = 40
-        self.next_move = None
-        # 0 = ToM0, 1 = ToM1
-        self.theory_of_mind = tom
+
+        self.neighbout_radius = 40
         self.escaped = False
-        self.threshold = model.panic_threshold
+        
+        self.panic = 0
+        
+        self.theory_of_mind = tom
 
     def prepare_path_finding(self):
 
-        self.path_finder = Path_Finder(self.model.world_mesh)
-        self.goal = self.path_finder.find_goal(self.pos, None)
-        if self.theory_of_mind == 1:
-            # print("my ToM level is: " + str(self.theory_of_mind))
-            neighbors = self.model.space.get_neighbors(self.pos, self.vision)
-            # print("I have " + str(len(neighbors)) + " neighbors")
-            if len(neighbors) > 2:
-                self.goal = ToM.determine_neighbor_exit_strategy(self.path_finder, self.pos, neighbors, self.goal)
-
+        self.goal = self.determine_goal()
         self.path_finder.set_goal(self.pos, self.goal)
 
-        self.in_motion = False
+    def determine_goal(self):
+
+        self.path_finder = Path_Finder(self.model.world_mesh)
+
+        exits = [ exit.pos for exit in self.model.exits ]
+        goal = Utilities.find_closest_point_of_set_of_points(self.pos, exits)
+
+        if (self.theory_of_mind == 1):
+            if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), goal):
+                for other_exit in exits:
+                    if not other_exit == goal:
+                        goal = other_exit
+                        break
+        
+        return goal
 
     def step(self):
 
         if self.check_if_at_exit():
-            self.escaped = True
-            self.model.schedule.remove(self)
-            self.model.space.remove_agent(self)
-            return
-
-        self.near_by_agents = self.model.space.get_neighbors(self.pos, self.vision)
+            return        
 
         self.move()
 
-
-        # self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents))
-
-        self.panic, self.speed = Panic_Dynamic.change_panic_level(len(self.near_by_agents), self.model.hazards, self.pos, self.vision, self.threshold)
-
-        if self.panic == 2:
-            self.velocity = Panic_Dynamic.cohere(self.near_by_agents, self.pos, self)
-
-        # TODO: Dynamic goal changing based on Theory of Mind
-
     def move(self):
-
         '''
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
 
+        self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.pos)
+
         if self.panic == 2:
-            new_position = (self.pos[0] + self.velocity[0], self.pos[1] + self.velocity[1])
-            closest_node = self.path_finder.closest_node_except_one(new_position, self.pos)
-            
-            can_move = True
-            for other_agent in self.near_by_agents:
-                if not other_agent == self:
-                    
-                    if closest_node == other_agent.pos:
-                        can_move = False
+            move = self.make_panic_move()
+        else:
+            move = self.make_normal_move()
 
-            if can_move:
-                self.model.space.move_agent(self, closest_node)
-            
-        else: 
-            if self.next_move is None:
-                self.next_move = self.path_finder.get_next_step(self.pos)
+        if not move == None:
+            self.model.space.move_agent(self, move)
+        else:
+            self.replan(self.pos)
 
-            if self.next_move[0] == self.pos[0] and self.next_move[1] == self.pos[1]:
-                self.next_move = self.path_finder.get_next_step(self.pos)
-                self.in_motion = False
+    def replan(self, from_position):
 
-            delta_pos_x = self.next_move[0] - self.pos[0]
-            delta_pos_y = self.next_move[1] - self.pos[1]
+        neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+        self.path_finder.plan_detour(from_position, self.goal, neighbors_positions)
+    
+    def make_panic_move(self):
 
-            self.speed = 1
-            new_position = (self.pos[0] + delta_pos_x * self.speed, self.pos[1] + delta_pos_y * self.speed)
-            
-            can_move = True
-            for other_agent in self.near_by_agents:
-                if not other_agent == self:
-                    
-                    if new_position == other_agent.pos:
-                        can_move = False
+        direction = Panic_Dynamic.average_direction_of_crowd(self.neighbors(), self.pos, self)
+        new_position = (self.pos[0] + direction[0], self.pos[1] + direction[1])
 
-            if can_move:
-                self.model.space.move_agent(self, new_position)
-            else:
-                self.do_sidestep()
+        neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+        move = self.path_finder.try_to_find_side_step_move(new_position, self.pos, neighbors_positions)
 
-    def do_sidestep(self):
+        if self.check_if_next_move_is_clear(move):
+            return move
 
-        delta_pos_x = self.next_move[0] - self.pos[0]
-        delta_pos_y = self.next_move[1] - self.pos[1]
-        new_position = (self.pos[0] + delta_pos_x * -1, self.pos[1] + delta_pos_y * -1)
+        return None
+
+    def make_normal_move(self):
+
+        next_move = self.path_finder.get_next_step(self.pos)
+        
+        if next_move == None or next_move == []:
+            return None
+
+        delta_pos_x = next_move[0] - self.pos[0]
+        delta_pos_y = next_move[1] - self.pos[1]
+
+        move = (self.pos[0] + delta_pos_x, self.pos[1] + delta_pos_y)
+
+        if self.check_if_next_move_is_clear(move):
+            return move
+        else:
+            neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
+            side_step = self.path_finder.try_to_find_side_step_move(self.pos, move, neighbors_positions)
+            if not side_step == None:
+                return side_step
+
+        return None
+
+    def neighbors(self):
+        
+        neighbors = []
+        for agent in self.model.space.get_neighbors(self.pos, self.neighbout_radius):
+            if not agent == self:
+                neighbors.append(agent)
+
+        return neighbors
+
+    def check_if_next_move_is_clear(self, move):
 
         can_move = True
-        for other_agent in self.near_by_agents:
-            if not other_agent == self:
-                
-                if new_position == other_agent.pos:
-                    can_move = False
-
-        if can_move:
-            self.model.space.move_agent(self, new_position)
-
+        for other_agent in self.neighbors():
+            if move == other_agent.pos:
+                can_move = False
+        
+        return can_move
 
     def check_if_at_exit(self):
 
@@ -133,6 +136,9 @@ class Person(Agent):
             
             distance = Geometry.euclidean_distance(exit.pos, self.pos)
             if distance < threshold:
+                self.escaped = True
+                self.model.schedule.remove(self)
+                self.model.space.remove_agent(self)
                 return True
 
         return False

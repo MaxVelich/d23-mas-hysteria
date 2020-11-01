@@ -25,17 +25,17 @@ class World_Manager:
         triangles = Delaunay(self.nodes)
 
         self.walkable_space = self.__find_walkable_space(triangles.simplices, self.obstacles)
-
-        # UNCOMMENT IF YOU WANT TO SEE THE MESH OF THE GRAPH
-        # import matplotlib.pyplot as plt
-        # self.nodes = np.array(self.nodes)
-        # plt.triplot(self.nodes[:,0], self.nodes[:,1], self.walkable_space)
-        # plt.plot(self.nodes[:,0], self.nodes[:,1], 'o')
-        # plt.show()
-
         edges = self.__prepare_edges_for_path_finding()
 
         return (self.nodes, edges)
+
+    def visualize_mesh(self):
+
+        import matplotlib.pyplot as plt
+        self.nodes = np.array(self.nodes)
+        plt.triplot(self.nodes[:,0], self.nodes[:,1], self.walkable_space)
+        plt.plot(self.nodes[:,0], self.nodes[:,1], 'o')
+        plt.show()
 
     def __prepare_nodes_of_graph(self):
         '''
@@ -66,9 +66,6 @@ class World_Manager:
         for removable_node in nodes_to_remove:
             if removable_node in nodes:
                 nodes.remove(removable_node)
-
-        # for exit in self.exits:
-        #     nodes += [ exit.pos ]
 
         return nodes
 

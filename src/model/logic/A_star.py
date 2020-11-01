@@ -9,6 +9,7 @@ https://leetcode.com/problems/shortest-path-in-binary-matrix/discuss/313347/a-se
 from heapq import *
 
 from src.model.utils.Geometry import Geometry
+from src.model.utils.Utilities import Utilities
 
 class A_Star:
 
@@ -49,10 +50,14 @@ class A_Star:
 
         successors = []
         for edge in self.graph:
-            if round(edge[0], 1) == round(node[0], 1) and round(edge[1], 1) == round(node[1], 1):
-                successors += [(round(edge[2], 1), round(edge[3], 1))]
-            elif round(edge[2], 1) == round(node[0], 1) and round(edge[3], 1) == round(node[1], 1):
-                successors += [(round(edge[0], 1), round(edge[1], 1))]
+
+            edge_point_1 = (edge[0], edge[1])
+            edge_point_2 = (edge[2], edge[3])
+
+            if Utilities.check_if_points_are_approximately_the_same(edge_point_1, node):
+                successors += [ edge_point_2 ]
+            elif Utilities.check_if_points_are_approximately_the_same(edge_point_2, node):
+                successors += [ edge_point_1 ]
 
         return successors
 
