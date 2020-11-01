@@ -4,25 +4,16 @@ This is a controller class, so many part of the functionality of this program ar
 '''
 
 from src.model.entities.Person import Person
-from src.model.entities.Exit import Exit
-from src.model.entities.Hazard import Hazard
-from src.model.entities.Obstacle import Obstacle
-
-from src.model.logic.Path_Finder import Path_Finder
 from src.model.logic.World_Manager import World_Manager
-
 from src.model.utils.Data_Collector_Helper import Data_Collector_Helper
 from src.model.utils.Geometry import Geometry
 
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import ContinuousSpace
-
-import random
-
 from mesa.datacollection import DataCollector
 
-import numpy as np
+import random
 
 class Model_Controller(Model):
 
