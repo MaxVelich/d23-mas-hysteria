@@ -28,23 +28,22 @@ import numpy as np
 
 class Model_Controller(Model):
 
-    def __init__(self, N, width, height, theory_of_mind, panic_dynamic, save_plots):
-        self.num_tom_agents = theory_of_mind
-        self.panic_threshold = panic_dynamic
-        self.num_agents = N
-        self.space = ContinuousSpace(height, height, True)
+    def __init__(self, N, width, height, configuration, save_plots):
+        self.num_tom_agents = configuration["theory_of_mind"]
+        self.panic_threshold = configuration["panic_dynamic"]
+        self.agent_boundaries = configuration["agent_boundaries"]
+        self.obstacles = configuration["obstacles"]
+        self.exits = configuration["exits"]
+        self.hazards = configuration["hazards"]
+        self.num_agents = configuration["num_agents"]
+
+        self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
         self.time = 0
-        self.exits = []
-        self.obstacles = []
-        self.hazards = []
         self.images = save_plots
-        self.create_obstacles()
-        self.create_exit()
-        self.create_hazard()
 
-        self.world_manager = World_Manager((height, width), self.obstacles, self.exits)
+        self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
         self.datacollector = DataCollector(
             {
@@ -66,17 +65,8 @@ class Model_Controller(Model):
         not_done = True
         while not_done:
 
-            ### VERSION 1 - CONTROL ###
-            x_pos = random.randint(175, 325)
-            y_pos = random.randint(175, 325)
-
-            ### VERSION 2 - TWO ROOMS ###
-            # x_pos = random.randint(25, 475)
-            # y_pos = random.randint(115, 475)
-
-            ### VERSION 3 - SUPERMARKET ###
-            # x_pos = random.randint(25, 975)
-            # y_pos = random.randint(25, 475)
+            x_pos = random.randint(self.agent_boundaries[0], self.agent_boundaries[1])
+            y_pos = random.randint(self.agent_boundaries[2], self.agent_boundaries[3])
 
             new_point = (x_pos, y_pos)
 
@@ -108,61 +98,6 @@ class Model_Controller(Model):
             self.space.place_agent(a, random_unique_positions[i])
             a.prepare_path_finding()
             self.schedule.add(a)
-
-    def create_exit(self):
-        ### VERSION 1 - CONTROL ###
-        self.exits = {
-            Exit(0, 25),
-            Exit(0,475),
-            Exit(500, 25),
-            Exit(500, 475)
-        }
-
-        ### VERSION 2 - TWO ROOMS ###
-        # self.exits = {
-        #     Exit(0, 25),
-        #     Exit(500, 25)
-        # }
-
-        ### VERSION 3 - SUPERMARKET ###
-        # self.exits = {
-        #     Exit(0, 75),
-        #     Exit(0, 425)
-        # }
-
-    def create_obstacles(self):
-        pass
-        # self.obstacles = [
-        #     Obstacle((95,350), 190, 40),
-        #     Obstacle((405,350), 190, 40),
-        #     Obstacle((425,250), 150, 40),
-        #     Obstacle((75,250), 150, 40),
-        #     Obstacle((75,150), 150, 40),
-        #     Obstacle((425,150), 150, 40)
-        # ]
-
-        ### VERSION 2 - TWO ROOMS ###
-        # self.obstacles = [
-        #     Obstacle((250,300), 20,400),
-        #     Obstacle((75,90), 150,20),
-        #     Obstacle((250,90), 75,20),
-        #     Obstacle((425,90), 150,20)
-        # ]
-
-        ### VERSION 3 - SUPERMARKET ###
-        # self.obstacles = [
-        #     Obstacle((125,20), 250,40),
-        #     Obstacle((970,125), 60,250),
-        #     Obstacle((175,470), 350,60),
-        #     Obstacle((600,125), 400,50),
-        #     Obstacle((600,250), 400,50),
-        #     Obstacle((625,375), 350,50),
-        #     Obstacle((150,250), 200,30)
-        # ]
-
-    def create_hazard(self):
-        pass
-        # self.hazards = [Hazard(400, 100)]
 
     def step(self):
         self.datacollector.collect(self)

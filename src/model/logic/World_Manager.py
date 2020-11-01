@@ -25,6 +25,7 @@ class World_Manager:
         triangles = Delaunay(self.nodes)
 
         self.walkable_space = self.__find_walkable_space(triangles.simplices, self.obstacles)
+        # self.visualize_mesh()
         edges = self.__prepare_edges_for_path_finding()
 
         return (self.nodes, edges)
