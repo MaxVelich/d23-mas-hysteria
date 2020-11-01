@@ -7,3 +7,5 @@
 .idea/
 .idea
 **/*.png
+**/*.RData
+**/*.Rhistory

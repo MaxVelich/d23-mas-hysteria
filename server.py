@@ -18,11 +18,11 @@ asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 width = 500
 height = 500
 N = 20
-theory_of_mind = 5  # How many of the agents will apply theory of mind
+theory_of_mind = 10  # How many of the agents will apply theory of mind
 panic_dynamic = [2, 7]  # Threshold for number of neighbours before panic sets in
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
-save_plots = False
+save_plots = True
 
 server = ModularServer(
         Model_Controller, 
