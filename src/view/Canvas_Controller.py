@@ -9,10 +9,9 @@ class Canvas_Controller(VisualizationElement):
 
     local_includes = ["src/view/visualization.js"]
 
-    def __init__(self, canvas_height, canvas_width):
+    def __init__(self, dimensions):
 
-        self.canvas_height = canvas_height
-        self.canvas_width = canvas_width
+        self.canvas_height, self.canvas_width = dimensions
 
         new_element = ("new Simple_Continuous_Module({}, {})"
                         .format(self.canvas_height, self.canvas_width))
@@ -49,7 +48,7 @@ class Canvas_Controller(VisualizationElement):
         return self.placePortrayal(space, portrayal, exit)
 
     def getObstaclePortrayal(self, space, obstacle):
-        portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height)
+        portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height, (self.canvas_width, self.canvas_height))
         return self.placePortrayal(space, portrayal, obstacle)
 
     def getHazardPortrayal(self, space, hazard):

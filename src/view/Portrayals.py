@@ -58,14 +58,14 @@ class Portrayals:
         return portrayal
 
     @staticmethod
-    def for_Obstacle(width, height):
+    def for_Obstacle(width, height, dimensions):
 
         portrayal = {"Shape": "rect",
                      "Color": "black",
                      "Filled": "true",
                      "Layer": 0,
-                     "w": width / 500,
-                     "h": height / 1000
+                     "w": width / dimensions[0],
+                     "h": height / dimensions[1]
                      }
 
         return portrayal
