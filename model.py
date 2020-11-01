@@ -11,6 +11,7 @@ from src.model.entities.Obstacle import Obstacle
 from src.model.logic.Path_Finder import Path_Finder
 from src.model.logic.World_Manager import World_Manager
 
+from src.model.utils.Data_Collector_Helper import Data_Collector_Helper
 from src.model.utils.Geometry import Geometry
 
 from mesa import Model
@@ -20,9 +21,6 @@ from mesa.space import ContinuousSpace
 import random
 
 from mesa.datacollection import DataCollector
-
-import matplotlib.pyplot as plt
-import time
 
 import numpy as np
 
@@ -45,21 +43,27 @@ class Model_Controller(Model):
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
-        self.datacollector = DataCollector(
-            {
-                "Active": lambda m: self.count_active_agents(m, False),
-                # "Escaped": lambda m: self.count_active_agents(m, True),
-                "Low Panic": lambda m: self.count_panic(m, 0),
-                "Medium Panic": lambda m: self.count_panic(m, 1),
-                "High Panic": lambda m: self.count_panic(m, 2),
-                "ToM0": lambda m: self.count_tom(m, 0),
-                "ToM1": lambda m: self.count_tom(m, 1)
-            }
-        )
+
+        self.data_collector_helper = Data_Collector_Helper()
+        self.datacollector = DataCollector(self.data_collector_helper.get_collectors())
 
         self.create_agent()
 
     def create_agent(self):
+
+        random_unique_positions = self.find_random_agent_positions()
+
+        # add theory of mind (or lack thereof) when agent is being created
+        agent_list = [0] * (self.num_agents - self.num_tom_agents) + [1] * self.num_tom_agents
+        random.shuffle(agent_list)
+        for i in range(self.num_agents):
+            tom = agent_list.pop()
+            a = Person(i, self, tom)
+            self.space.place_agent(a, random_unique_positions[i])
+            a.prepare_path_finding()
+            self.schedule.add(a)
+
+    def find_random_agent_positions(self):
 
         random_unique_positions = []
         not_done = True
@@ -88,21 +92,16 @@ class Model_Controller(Model):
 
             if len(random_unique_positions) == self.num_agents:
                 not_done = False
-
-        # add theory of mind (or lack thereof) when agent is being created
-        agent_list = [0] * (self.num_agents - self.num_tom_agents) + [1] * self.num_tom_agents
-        random.shuffle(agent_list)
-        for i in range(self.num_agents):
-            tom = agent_list.pop()
-            a = Person(i, self, tom)
-            self.space.place_agent(a, random_unique_positions[i])
-            a.prepare_path_finding()
-            self.schedule.add(a)
+        
+        return random_unique_positions
 
     def step(self):
+
         self.datacollector.collect(self)
+
         self.schedule.step()
         self.time += 1
+
         if self.images:
             self.datacollector.get_model_vars_dataframe().plot()
 
@@ -110,83 +109,8 @@ class Model_Controller(Model):
         if len(self.schedule.agents) == 0:
             if self.images:
                 self.save_figures()
-            print("end time: " + str(self.get_time(self)))
+            print("end time: " + str(self.data_collector_helper.get_time(self)))
             self.running = False
-            # self.save_figures()
 
-    def save_figures(self):
-        print("we're plotting")
-        results = self.datacollector.get_model_vars_dataframe()
-
-        dpi = 100
-        fig, axes = plt.subplots(figsize=(1920 / dpi, 1080 / dpi), dpi=dpi, nrows=1, ncols=3)
-
-        status_results = results.loc[:, ['Active']]
-        status_plot = status_results.plot(ax=axes[0])
-        status_plot.set_xlim(xmin=0)
-        status_plot.set_ylim(ymin=0)
-        status_plot.set_title("# of agents still in building")
-        status_plot.set_xlabel("Simulation Step")
-        status_plot.set_ylabel("Count")
-
-        panic_results = results.loc[:, ['Low Panic', 'Medium Panic', 'High Panic']]
-        panic_plot = panic_results.plot(ax=axes[1])
-        panic_plot.set_xlim(xmin=0)
-        panic_plot.set_ylim(ymin=0)
-        panic_plot.set_title("Panic levels")
-        panic_plot.set_xlabel("Simulation Step")
-        panic_plot.set_ylabel("Count")
-
-        tom_results = results.loc[:, ['ToM0', 'ToM1']]
-        tom_plot = tom_results.plot(ax=axes[2])
-        tom_plot.set_xlim(xmin=0)
-        tom_plot.set_ylim(ymin=0)
-        tom_plot.set_title("ToM levels")
-        tom_plot.set_xlabel("Simulation Step")
-        tom_plot.set_ylabel("Count")
-
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        plt.suptitle("Number of Agents: " + str(self.num_agents), fontsize=16)
-        plt.savefig(timestr + ".png")
-        plt.cla()
-        plt.close(fig)
-
-    @staticmethod
-    def count_active_agents(model, status):
-        """
-        Count how many agents are still active in the model
-        """
-        count = 0
-        for agent in model.schedule.agents:
-            if isinstance(agent, Person):
-                if agent.escaped == status:
-                    count += 1
-        return count
-
-    @staticmethod
-    def count_panic(model, panic):
-        """
-        Count how many agents have a particular panic level
-        """
-        count = 0
-        for agent in model.schedule.agents:
-            if isinstance(agent, Person):
-                if agent.panic == panic:
-                    count += 1
-        return count
-
-    @staticmethod
-    def count_tom(model, tom=1):
-        """
-        Count how many agents have a particular level of Theory of Mind
-        """
-        count = 0
-        for agent in model.schedule.agents:
-            if isinstance(agent, Person):
-                if agent.theory_of_mind == tom:
-                    count += 1
-        return count
-
-    @staticmethod
-    def get_time(model):
-        return model.time
+            results = self.datacollector.get_model_vars_dataframe()
+            self.data_collector_helper.save_figures(results, self.num_agents)
