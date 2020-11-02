@@ -39,7 +39,7 @@ config_two_rooms = { "dimensions": (500, 500),
                                     Obstacle((250,90), 75,20),
                                     Obstacle((425,90), 150,20) ],
                      "exits": [ Exit(0, 25), Exit(500, 25) ],
-                     "hazards" : []
+                     "hazard" : None
                    }
 
 config_supermarket = { "dimensions": (1000, 500),
@@ -55,7 +55,7 @@ config_supermarket = { "dimensions": (1000, 500),
                                       Obstacle((625,375), 350,50),
                                       Obstacle((150,250), 200,30) ],
                        "exits": [ Exit(0, 75), Exit(0, 425) ],
-                       "hazards" : []
+                       "hazard" : None
                    }
 
 # Change this variable here for a different setting
