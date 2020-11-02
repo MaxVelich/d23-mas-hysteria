@@ -50,6 +50,10 @@ class Person(Agent):
     def step(self):
 
         if self.check_if_at_exit():
+            if self.theory_of_mind == 0:
+                self.model.regular_times.append(self.model.time)
+            else:
+                self.model.tom_times.append(self.model.time)
             return        
 
         self.move()

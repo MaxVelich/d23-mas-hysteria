@@ -95,3 +95,11 @@ class Data_Collector_Helper():
     @staticmethod
     def get_time(model):
         return model.time
+
+    @staticmethod
+    def get_tom_times(model):
+        return model.tom_times
+
+    @staticmethod
+    def get_regular_times(model):
+        return model.regular_times

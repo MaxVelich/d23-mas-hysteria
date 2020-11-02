@@ -15,9 +15,10 @@ from mesa.datacollection import DataCollector
 
 import random
 
+
 class Model_Controller(Model):
 
-    def __init__(self, N, width, height, configuration, save_plots):
+    def __init__(self, N, width, height, configuration, save_plots, batch_run, batch_tom, batch_panic):
         self.num_tom_agents = configuration["theory_of_mind"]
         self.panic_threshold = configuration["panic_dynamic"]
         self.agent_boundaries = configuration["agent_boundaries"]
@@ -26,11 +27,20 @@ class Model_Controller(Model):
         self.hazard = configuration["hazard"]
         self.num_agents = configuration["num_agents"]
 
+        if batch_run:
+            self.num_tom_agents = batch_tom
+            self.panic_threshold = batch_panic
+
         self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
         self.time = 0
+        self.regular_times = []
+        self.tom_times = []
         self.images = save_plots
+
+        print("Threshold is: " + str(self.panic_threshold))
+        print("agents: " + str(self.num_agents) + " of which " + str(self.num_tom_agents) + " have ToM")
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()

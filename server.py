@@ -16,17 +16,17 @@ from src.view.Portrayals import Portrayals
 
 #Uncomment these 2 lines if you get a NotImplementedError for server.launch()
 #(Confirmed to work for windows 10)
-# import asyncio
-# asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
                       "theory_of_mind": 5, 
-                      "panic_dynamic": [2, 7],
+                      "panic_dynamic": [0, 0],
                       "agent_boundaries": [175, 325, 175, 325],
                       "obstacles": [],
-                      "exits": [ Exit(0, 25), Exit(0, 475), Exit(500, 25), Exit(500, 475) ],
-                      "hazard" : Hazard(50,100)
+                      "exits": [Exit(0, 25), Exit(0, 475), Exit(500, 25), Exit(500, 475)],
+                      "hazard": Hazard(50, 100)
                     }
 
 config_two_rooms = { "dimensions": (500, 500),
@@ -34,11 +34,11 @@ config_two_rooms = { "dimensions": (500, 500),
                      "theory_of_mind": 5, 
                      "panic_dynamic": [2, 7],
                      "agent_boundaries": [25, 475, 115, 475],
-                     "obstacles": [ Obstacle((250,300), 20,400),
-                                    Obstacle((75,90), 150,20),
-                                    Obstacle((250,90), 75,20),
-                                    Obstacle((425,90), 150,20) ],
-                     "exits": [ Exit(0, 25), Exit(500, 25) ],
+                     "obstacles": [ Obstacle((250, 300), 20, 400),
+                                    Obstacle((75, 90), 150, 20),
+                                    Obstacle((250, 90), 75, 20),
+                                    Obstacle((425, 90), 150, 20)],
+                     "exits": [Exit(0, 25), Exit(500, 25)],
                      "hazard" : None
                    }
 
@@ -64,6 +64,9 @@ current_configuration = config_free_space
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
 save_plots = False
+batch_run = False
+batch_tom = 0
+batch_panic = [0, 0]
 
 width, height = current_configuration["dimensions"]
 num_agents = current_configuration["num_agents"]
@@ -72,6 +75,8 @@ server = ModularServer(
         Model_Controller, 
         [Canvas_Controller(current_configuration["dimensions"])],
         "Panic Behaviour in Crowd Evacuation",
-        {"width": width, "height": height, "save_plots": save_plots,
-         "configuration": current_configuration, "N": UserSettableParameter('number', 'Number of Agents', value = num_agents), "Legend": UserSettableParameter('static_text', value=legend)}
+        {"width": width, "height": height, "save_plots": save_plots, "batch_run": batch_run,
+         "batch_tom": batch_tom, "batch_panic": batch_panic, "configuration": current_configuration,
+         "N": UserSettableParameter('number', 'Number of Agents', value= num_agents),
+         "Legend": UserSettableParameter('static_text', value=legend)}
     )
