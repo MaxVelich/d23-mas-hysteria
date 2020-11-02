@@ -52,7 +52,7 @@ class Portrayals:
                      "Color": "red",
                      "Filled": "false",
                      "Layer": 0,
-                     "r": 10}
+                     "r": 20}
 
         return portrayal
 

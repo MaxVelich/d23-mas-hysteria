@@ -49,8 +49,7 @@ class Path_Finder:
 
         filtered_nodes = []
         for node in self.nodes:
-
-            if not Geometry.point_lies_in_circle(node, hazard.pos, danger_radius):
+            if Geometry.point_lies_in_circle(node, hazard.pos, danger_radius):
                 filtered_nodes += [ node ]
 
         self.plan_detour(agent_position, goal, filtered_nodes)
