@@ -26,7 +26,7 @@ config_free_space = { "dimensions": (500, 500),
                       "agent_boundaries": [175, 325, 175, 325],
                       "obstacles": [],
                       "exits": [ Exit(0, 25), Exit(0, 475), Exit(500, 25), Exit(500, 475) ],
-                      "hazards" : []
+                      "hazard" : Hazard(50,50)
                     }
 
 config_two_rooms = { "dimensions": (500, 500),

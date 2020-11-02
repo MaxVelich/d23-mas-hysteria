@@ -48,12 +48,11 @@ class Portrayals:
 
     @staticmethod
     def for_hazard():
-        portrayal = {"Shape": "rect",
-                     "Color": "grey",
-                     "Filled": "true",
+        portrayal = {"Shape": "circle",
+                     "Color": "red",
+                     "Filled": "false",
                      "Layer": 0,
-                     "w": 0.15,
-                     "h": 0.15}
+                     "r": 10}
 
         return portrayal
 

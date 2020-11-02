@@ -42,6 +42,18 @@ class Path_Finder:
                 filtered_edges += [ edge ]
 
         self.plan = self.__find_path(current_pos, goal, filtered_edges)
+
+    def replan_around_hazard(self, agent_position, goal, hazard):
+        
+        danger_radius = hazard.danger_radius()
+
+        filtered_nodes = []
+        for node in self.nodes:
+
+            if not Geometry.point_lies_in_circle(node, hazard.pos, danger_radius):
+                filtered_nodes += [ node ]
+
+        self.plan_detour(agent_position, goal, filtered_nodes)
     
     def try_to_find_side_step_move(self, position, denied_next_move, neighbors_positions):
 

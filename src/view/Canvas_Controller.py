@@ -33,9 +33,9 @@ class Canvas_Controller(VisualizationElement):
             portrayal = self.getExitPortrayal(model.space, exit)
             space_state.append(portrayal)
 
-        for hazard in model.hazards:
-            portrayal = self.getHazardPortrayal(model.space, hazard)
-            space_state.append(portrayal)
+        # for hazard in model.hazards:
+        portrayal = self.getHazardPortrayal(model.space, model.hazard)
+        space_state.append(portrayal)
 
         return space_state
 

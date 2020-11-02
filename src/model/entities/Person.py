@@ -59,6 +59,13 @@ class Person(Agent):
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
 
+        if self.check_if_hazard_is_nearby():
+            if self.check_if_hazard_blocks_goal():
+                self.goal = self.select_different_goal(self.goal)
+                self.replan(self.pos)
+            else:
+                self.path_finder.replan_around_hazard(self.pos, self.goal, self.model.hazard)
+
         self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.pos)
 
         if self.panic == 2:
@@ -110,6 +117,24 @@ class Person(Agent):
                 return side_step
 
         return None
+
+    def check_if_hazard_is_nearby(self):
+
+        hazard = self.model.hazard
+        danger_radius = hazard.danger_radius()
+        return Geometry.point_lies_in_circle(self.pos, hazard.pos, danger_radius)
+
+    def check_if_hazard_blocks_goal(self):
+
+        hazard = self.model.hazard
+        danger_radius = hazard.danger_radius()
+        return Geometry.point_lies_in_circle(self.goal, hazard.pos, danger_radius)
+
+    def select_different_goal(self, without_other_goal):
+
+        for exit in self.model.exits:
+            if not exit.pos == without_other_goal:
+                return exit.pos
 
     def neighbors(self):
         

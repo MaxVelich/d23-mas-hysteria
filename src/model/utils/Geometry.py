@@ -106,3 +106,12 @@ class Geometry:
             return True
 
         return False
+
+    @staticmethod
+    def point_lies_in_circle(point, center, radius):
+
+        distance = Geometry.euclidean_distance(point, center)
+        if distance <= radius:
+            return True
+        
+        return False

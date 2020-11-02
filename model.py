@@ -23,7 +23,7 @@ class Model_Controller(Model):
         self.agent_boundaries = configuration["agent_boundaries"]
         self.obstacles = configuration["obstacles"]
         self.exits = configuration["exits"]
-        self.hazards = configuration["hazards"]
+        self.hazard = configuration["hazard"]
         self.num_agents = configuration["num_agents"]
 
         self.space = ContinuousSpace(width, height, True)
