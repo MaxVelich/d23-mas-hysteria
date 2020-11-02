@@ -75,6 +75,10 @@ class Model_Controller(Model):
                 if Geometry.point_lies_within_rectangle(new_point, obstacle.get_corner_points()):
                     not_allowed = True
 
+            danger_radius = self.hazard.danger_radius()
+            if Geometry.point_lies_in_circle(new_point, self.hazard.pos, danger_radius):
+                not_allowed = True
+
             if not not_allowed:
                 random_unique_positions.append(new_point)
 
