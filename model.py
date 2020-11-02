@@ -29,7 +29,7 @@ class Model_Controller(Model):
 
         if batch_run:
             self.num_tom_agents = batch_tom
-            self.panic_threshold = batch_panic
+            self.panic_thresholds = batch_panic
 
         self.space = ContinuousSpace(width, height, True)
         self.schedule = RandomActivation(self)
