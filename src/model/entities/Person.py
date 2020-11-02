@@ -27,6 +27,8 @@ class Person(Agent):
         self.theory_of_mind = tom
         self.panic_thresholds = panic_thresholds
 
+        self.stuck_counter = 0
+
     def prepare_path_finding(self):
 
         self.goal = self.determine_goal()
@@ -84,6 +86,16 @@ class Person(Agent):
         else:
             self.replan(self.pos)
 
+        if move == None:
+            self.stuck_counter += 1
+        else:
+            self.stuck_counter = 0
+
+        if self.stuck_counter > 5:
+            self.goal = self.select_different_goal(self.goal, True)
+            self.path_finder.set_goal(self.pos, self.goal)
+            self.stuck_counter = 0
+
     def replan(self, from_position):
 
         neighbors_positions = [ neighbor.pos for neighbor in self.neighbors() ]
@@ -136,13 +148,17 @@ class Person(Agent):
         danger_radius = hazard.danger_radius()
         return Geometry.point_lies_in_circle(self.goal, hazard.pos, danger_radius)
 
-    def select_different_goal(self, without_other_goal):
+    def select_different_goal(self, without_other_goal, chaotic = False):
 
         exit_positions = [ exit.pos for exit in self.model.exits ]
         filtered_exits = [ exit for exit in exit_positions if not exit == without_other_goal ]
 
-        closest_exit = Utilities.find_closest_point_of_set_of_points(self.pos, filtered_exits)
-        return closest_exit
+        if chaotic:
+            chosen_exit = random.choice(filtered_exits)
+        else:
+            chosen_exit = Utilities.find_closest_point_of_set_of_points(self.pos, filtered_exits)
+
+        return chosen_exit
 
     def neighbors(self):
         
