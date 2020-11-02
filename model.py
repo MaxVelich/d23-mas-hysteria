@@ -19,7 +19,7 @@ class Model_Controller(Model):
 
     def __init__(self, N, width, height, configuration, save_plots):
         self.num_tom_agents = configuration["theory_of_mind"]
-        self.panic_threshold = configuration["panic_dynamic"]
+        self.panic_thresholds = configuration["panic_dynamic"]
         self.agent_boundaries = configuration["agent_boundaries"]
         self.obstacles = configuration["obstacles"]
         self.exits = configuration["exits"]
@@ -49,7 +49,7 @@ class Model_Controller(Model):
         random.shuffle(agent_list)
         for i in range(self.num_agents):
             tom = agent_list.pop()
-            a = Person(i, self, tom)
+            a = Person(i, self, tom, self.panic_thresholds)
             self.space.place_agent(a, random_unique_positions[i])
             a.prepare_path_finding()
             self.schedule.add(a)
