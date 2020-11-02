@@ -15,16 +15,17 @@ from src.model.logic.Theory_Of_Mind import Theory_Of_Mind as ToM
 
 class Person(Agent):
 
-    def __init__(self, unique_id, model, tom):
+    def __init__(self, unique_id, model, tom, panic_thresholds):
 
         super().__init__(unique_id, model)
 
-        self.neighbout_radius = 40
+        self.neighbour_radius = 40
         self.escaped = False
         
         self.panic = 0
         
         self.theory_of_mind = tom
+        self.panic_thresholds = panic_thresholds
 
     def prepare_path_finding(self):
 
@@ -63,7 +64,7 @@ class Person(Agent):
         In order to move, the agent moves according to a path finding algorithm. This method is not finished yet, since it is very inefficient and unrealistic at this moment, though it makes for a demo.
         '''
 
-        self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.pos)
+        self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.pos, self.panic_thresholds)
 
         if self.panic == 2:
             move = self.make_panic_move()
@@ -146,7 +147,7 @@ class Person(Agent):
     def neighbors(self):
         
         neighbors = []
-        for agent in self.model.space.get_neighbors(self.pos, self.neighbout_radius):
+        for agent in self.model.space.get_neighbors(self.pos, self.neighbour_radius):
             if not agent == self:
                 neighbors.append(agent)
 

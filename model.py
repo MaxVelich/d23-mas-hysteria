@@ -20,7 +20,7 @@ class Model_Controller(Model):
 
     def __init__(self, N, width, height, configuration, save_plots, batch_run, batch_tom, batch_panic):
         self.num_tom_agents = configuration["theory_of_mind"]
-        self.panic_threshold = configuration["panic_dynamic"]
+        self.panic_thresholds = configuration["panic_dynamic"]
         self.agent_boundaries = configuration["agent_boundaries"]
         self.obstacles = configuration["obstacles"]
         self.exits = configuration["exits"]
@@ -39,7 +39,7 @@ class Model_Controller(Model):
         self.tom_times = []
         self.images = save_plots
 
-        print("Threshold is: " + str(self.panic_threshold))
+        print("Threshold is: " + str(self.panic_thresholds))
         print("agents: " + str(self.num_agents) + " of which " + str(self.num_tom_agents) + " have ToM")
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
@@ -59,7 +59,7 @@ class Model_Controller(Model):
         random.shuffle(agent_list)
         for i in range(self.num_agents):
             tom = agent_list.pop()
-            a = Person(i, self, tom)
+            a = Person(i, self, tom, self.panic_thresholds)
             self.space.place_agent(a, random_unique_positions[i])
             a.prepare_path_finding()
             self.schedule.add(a)
@@ -84,6 +84,10 @@ class Model_Controller(Model):
             for obstacle in self.obstacles:
                 if Geometry.point_lies_within_rectangle(new_point, obstacle.get_corner_points()):
                     not_allowed = True
+
+            danger_radius = self.hazard.danger_radius()
+            if Geometry.point_lies_in_circle(new_point, self.hazard.pos, danger_radius):
+                not_allowed = True
 
             if not not_allowed:
                 random_unique_positions.append(new_point)

@@ -42,7 +42,7 @@ class Panic_Dynamic:
         return (average_x, average_y)
 
     @staticmethod
-    def change_panic_level(neighbourhood, pos):
+    def change_panic_level(neighbourhood, pos, parameters):
         """
         Return the changed panic level, based on nearby agents and vision of hazard
         :param neighbourhood:
@@ -51,17 +51,13 @@ class Panic_Dynamic:
 
         panic = 0
 
-        if neighbourhood > 4:
+        if parameters == [0, 0]:
+            return 0
+
+        if neighbourhood > parameters[1]:
             return 2
 
-        if neighbourhood > 3:
+        if neighbourhood > parameters[0]:
             panic = 1
-        # else:
-        #     # Check if a hazard is in vision
-        #     for h in hazards:
-        #         if (h.x - pos[0] <= vision) or (h.y - pos[1] <= vision):
-        #             panic = 2
-        #             speed = 1
-        #             break
 
         return panic

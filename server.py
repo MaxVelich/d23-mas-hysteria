@@ -21,8 +21,8 @@ asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
-                      "theory_of_mind": 5, 
-                      "panic_dynamic": [0, 0],
+                      "theory_of_mind": 10, 
+                      "panic_dynamic": [3, 4],
                       "agent_boundaries": [175, 325, 175, 325],
                       "obstacles": [],
                       "exits": [Exit(0, 25), Exit(0, 475), Exit(500, 25), Exit(500, 475)],
@@ -32,20 +32,20 @@ config_free_space = { "dimensions": (500, 500),
 config_two_rooms = { "dimensions": (500, 500),
                      "num_agents": 20,
                      "theory_of_mind": 5, 
-                     "panic_dynamic": [2, 7],
+                     "panic_dynamic": [3, 4],
                      "agent_boundaries": [25, 475, 115, 475],
-                     "obstacles": [ Obstacle((250, 300), 20, 400),
-                                    Obstacle((75, 90), 150, 20),
-                                    Obstacle((250, 90), 75, 20),
-                                    Obstacle((425, 90), 150, 20)],
-                     "exits": [Exit(0, 25), Exit(500, 25)],
-                     "hazard" : None
+                     "obstacles": [ Obstacle((250,300), 20,400),
+                                    Obstacle((75,90), 150,20),
+                                    Obstacle((250,90), 75,20),
+                                    Obstacle((425,90), 150,20) ],
+                     "exits": [ Exit(0, 25), Exit(500, 25) ],
+                     "hazard" : Hazard(30,30)
                    }
 
 config_supermarket = { "dimensions": (1000, 500),
                        "num_agents": 60,
                        "theory_of_mind": 5, 
-                       "panic_dynamic": [2, 7],
+                       "panic_dynamic": [3, 4],
                        "agent_boundaries": [25, 975, 25, 475],
                        "obstacles": [ Obstacle((125,20), 250,40),
                                       Obstacle((970,125), 60,250),
@@ -55,7 +55,7 @@ config_supermarket = { "dimensions": (1000, 500),
                                       Obstacle((625,375), 350,50),
                                       Obstacle((150,250), 200,30) ],
                        "exits": [ Exit(0, 75), Exit(0, 425) ],
-                       "hazard" : None
+                       "hazard" : Hazard(550,200)
                    }
 
 # Change this variable here for a different setting
