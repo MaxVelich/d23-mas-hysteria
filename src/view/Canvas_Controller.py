@@ -52,7 +52,7 @@ class Canvas_Controller(VisualizationElement):
         return self.placePortrayal(space, portrayal, obstacle)
 
     def getHazardPortrayal(self, space, hazard):
-        portrayal = Portrayals.for_hazard()
+        portrayal = Portrayals.for_hazard(hazard.danger_radius())
         return self.placePortrayal(space, portrayal, hazard)
 
     def placePortrayal(self, space, portrayal, element):

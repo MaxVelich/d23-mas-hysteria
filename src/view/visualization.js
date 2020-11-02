@@ -13,12 +13,12 @@ var ContinuousVisualization = function(height, width, context) {
 			if (p.Shape == "rect")
 				this.drawRectange(p.x, p.y, p.w, p.h, p.Color, p.Filled, p.text);
 			if (p.Shape == "circle")
-				this.drawCircle(p.x, p.y, p.r, p.Color, p.Filled, p.text);
+				this.drawCircle(p.x, p.y, p.r, p.Color, p.Filled, p.text, p.border, p.border_color);
 		};
 		this.drawCircle(50, 50, 2000, '#FF0000', true, '');
 	};
 
-	this.drawCircle = function(x, y, radius, color, fill, text) {
+	this.drawCircle = function(x, y, radius, color, fill, text, border, border_color) {
 		var cx = x * width;
 		var cy = y * height;
 		var r = radius;
@@ -32,14 +32,15 @@ var ContinuousVisualization = function(height, width, context) {
 			context.fill();
 		}
 
-        // Add representation for theory of mind agent
-		if (text == 'T') {
-			context.lineWidth = 10;
-            context.strokeStyle = "Indigo";
+
+		// Add representation for theory of mind agent and for hazard
+		if (border > 0){
+            context.lineWidth = border ;
+            context.strokeStyle = border_color;
             context.stroke();
             context.fillStyle = color;
-			context.fill();
-		}
+            context.fill();
+       }
 
 	};
 
@@ -75,7 +76,7 @@ var Simple_Continuous_Module = function(canvas_width, canvas_height) {
                           <canvas id='canvas_id'
                                   width='${canvas_width}'
                                   height='${canvas_height}'
-                                  style='border-width: 3px; border-style: solid; border-radius: 8px; position:absolute; left:530px; top:150px'
+                                  style='border-width: 3px; border-style: solid; border-radius: 8px; position:absolute; left:600px; top:150px'
                           />
                      </div>`
 
