@@ -16,8 +16,8 @@ from src.view.Portrayals import Portrayals
 
 #Uncomment these 2 lines if you get a NotImplementedError for server.launch()
 #(Confirmed to work for windows 10)
-# import asyncio
-# asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
@@ -59,7 +59,7 @@ config_supermarket = { "dimensions": (1000, 500),
                    }
 
 # Change this variable here for a different setting
-current_configuration = config_free_space
+current_configuration = config_two_rooms
 
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
