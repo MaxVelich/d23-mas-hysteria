@@ -13,7 +13,9 @@ class Portrayals:
                      "Color": "blue",
                      "Filled": "true",
                      "Layer": 0,
-                     "r": radius}
+                     "r": radius,
+                     "border": 0,
+                     "border_color": None}
 
         if state == 1:
             portrayal["Color"] = "orange"
@@ -26,11 +28,8 @@ class Portrayals:
             portrayal["r"] = radius * 1.04
 
         if tom == 1:
-            # portrayal["Shape"] = "rect"
-            # portrayal["w"] = 0.04
-            # portrayal["h"] = 0.04
-            portrayal["text"] = 'T'
-            portrayal["text_color"] = "b"
+            portrayal["border"] = 10
+            portrayal["border_color"] = "Indigo"
 
         return portrayal
 
@@ -38,21 +37,23 @@ class Portrayals:
     def for_Exit():
 
         portrayal = {"Shape": "rect",
-                        "Color": "green",
-                        "Filled": "true",
-                        "Layer": 1,
-                        "w": 0.025,
-                        "h": 0.025}
+                     "Color": "green",
+                     "Filled": "true",
+                     "Layer": 1,
+                     "w": 0.025,
+                     "h": 0.025}
 
         return portrayal
 
     @staticmethod
-    def for_hazard():
+    def for_hazard(danger_radius):
         portrayal = {"Shape": "circle",
-                     "Color": "red",
+                     "Color": "FireBrick",
                      "Filled": "false",
                      "Layer": 0,
-                     "r": 20}
+                     "r": 20,
+                     "border": danger_radius,
+                     "border_color": "Gainsboro"}
 
         return portrayal
 
@@ -80,14 +81,16 @@ class Portrayals:
                 black;clear: both;background-color:orange'></div> <p style="font-size:16px; margin-bottom: 15px"> Panic level: Medium </p>
               <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
                 black;clear: both;background-color:red'></div> <p style="font-size:16px; margin-bottom: 15px"> Panic level: High </p>
+             <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:Indigo'></div> <p style="font-size:16px; margin-bottom: 15px"> Theory of Mind Agent</p>
               <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
                 black;clear: both;background-color:green'></div> <p style="font-size:16px; margin-bottom: 15px"> Exit</p>
               <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
                 black;clear: both;background-color:black'></div> <p style="font-size:16px; margin-bottom: 15px"> Obstacle</p>
              <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
-                black;clear: both;background-color:grey'></div> <p style="font-size:16px; margin-bottom: 15px"> Smoke</p>
-             <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
-                black;clear: both;background-color:Indigo'></div> <p style="font-size:16px; margin-bottom: 15px"> Theory of Mind Agent</p>
+                black;clear: both;background-color:FireBrick'></div> <p style="font-size:16px; margin-bottom: 15px"> Hazard </p>
+            <div style='float: left;height: 15px;width: 15px;margin-bottom: 15px;margin-right: 5px;border: 1px solid
+                black;clear: both;background-color:Gainsboro'></div> <p style="font-size:16px; margin-bottom: 15px"> Danger zone </p>
               </div>
         '''
         return legend
