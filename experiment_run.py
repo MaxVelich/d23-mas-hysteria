@@ -63,7 +63,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Fire evacuation model ')
     # parser.add_argument('--n_agents', type=int, default=50,
     #                    help='Maximum number of agents')
-    parser.add_argument('--tom_agents', type=int, default=61, help='Maximum number of ToM agents')
+    parser.add_argument('--tom_agents', type=int, default=21, help='Maximum number of ToM agents')
     args = parser.parse_args()
     return args.tom_agents
 

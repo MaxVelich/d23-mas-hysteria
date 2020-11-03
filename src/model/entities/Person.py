@@ -28,6 +28,7 @@ class Person(Agent):
         self.panic_thresholds = panic_thresholds
 
         self.stuck_counter = 0
+        self.panic_fatigue = 0
 
     def prepare_path_finding(self):
 
@@ -70,9 +71,17 @@ class Person(Agent):
         self.panic = Panic_Dynamic.change_panic_level(len(self.neighbors()), self.pos, self.panic_thresholds)
 
         if self.panic == 2:
-            move = self.make_panic_move()
+            self.panic_fatigue += 1
+
+            if self.panic_fatigue < 5:
+                move = self.make_panic_move()
+            else:
+                move = self.make_normal_move()
         else:
             move = self.make_normal_move()
+
+        if self.panic_fatigue > 8:
+            self.panic_fatigue = 0
 
         if not move == None:
             if self.check_if_hazard_is_nearby(move):
