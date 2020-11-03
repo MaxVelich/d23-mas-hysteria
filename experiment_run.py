@@ -69,14 +69,14 @@ def parse_arguments():
 
 
 if __name__ == '__main__':
-    current_configuration = config_supermarket
+    current_configuration = config_free_space
     width, height = current_configuration["dimensions"]
 
     fixed_params = {
         "configuration": current_configuration,
         "save_plots": False,
         "batch_run": True,
-        "batch_panic": [0, 0],
+        "batch_panic": [3, 4],
         "width": width,
         "height": height,
         "N": current_configuration["num_agents"]
@@ -89,7 +89,7 @@ if __name__ == '__main__':
                             variable_params,
                             fixed_params,
                             iterations=5,
-                            max_steps=200,
+                            max_steps=120,
                             model_reporters={"Time steps": lambda m: Data_Collector_Helper.get_time(m),
                                              "ToM times": lambda m: Data_Collector_Helper.get_tom_times(m),
                                              "ToM average": lambda m: record_time(sum(Data_Collector_Helper.get_tom_times(m)),len(Data_Collector_Helper.get_tom_times(m))),
@@ -105,3 +105,28 @@ if __name__ == '__main__':
         Path.mkdir(batch_dir)
     run_data = batch_run.get_model_vars_dataframe()
     run_data.to_csv(path_or_buf=(batch_dir / "results.csv"))
+
+'''
+Still need to run: 
+two_rooms with panic (3,4) -> only need to adjust line 72 to current_configuration = config_two_rooms
+                              adjust line 79 to "batch_panic": [3, 4],
+supermarket with panic (3,4) -> adjust line 66 to amount of ToM agents you want to test to +1 (max = 61)
+                                adjust line 72 to current_configuration = config_supermarket
+                                adjust line 79 to "batch_panic": [3, 4],
+
+(optional extra)
+free_space without hazard (with and without panic) -> adjust line 22 to "hazard": Hazard()
+                                                      adjust line 72 to current_configuration = config_free_space
+                                                      adjust line 79 to either "batch_panic": [3, 4],
+                                                                        or     "batch_panic": [0, 0],
+two_rooms without hazard (with and without panic) ->  adjust line 35 to "hazard": Hazard()
+                                                      adjust line 72 to current_configuration = config_two_rooms
+                                                      adjust line 79 to either "batch_panic": [3, 4],
+                                                                        or     "batch_panic": [0, 0],
+supermarket without hazard (with and without panic) ->adjust line 51 to "hazard": Hazard()
+                                                      adjust line 66 to amount of ToM agents you want to test to +1 (max = 61)
+                                                      adjust line 72 to current_configuration = config_supermarket
+                                                      adjust line 79 to either "batch_panic": [3, 4],
+                                                                        or     "batch_panic": [0, 0],
+
+'''

@@ -42,6 +42,7 @@ class Person(Agent):
         goal = Utilities.find_closest_point_of_set_of_points(self.pos, exits)
 
         if (self.theory_of_mind == 1):
+            print()
             if ToM.agent_should_switch_goal(exits, self.pos, self.neighbors(), goal):
                 for other_exit in exits:
                     if not other_exit == goal:

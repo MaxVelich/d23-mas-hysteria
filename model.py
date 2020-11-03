@@ -116,6 +116,6 @@ class Model_Controller(Model):
                 self.save_figures()
             print("end time: " + str(self.data_collector_helper.get_time(self)))
             self.running = False
-
-            results = self.datacollector.get_model_vars_dataframe()
-            self.data_collector_helper.save_figures(results, self.num_agents)
+            if self.images:
+                results = self.datacollector.get_model_vars_dataframe()
+                self.data_collector_helper.save_figures(results, self.num_agents)

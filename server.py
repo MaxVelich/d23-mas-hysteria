@@ -59,7 +59,7 @@ config_supermarket = { "dimensions": (1000, 500),
                    }
 
 # Change this variable here for a different setting
-current_configuration = config_two_rooms
+current_configuration = config_free_space
 
 legend = Portrayals.get_legend()
 introduction = Portrayals.get_introduction()
