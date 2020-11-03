@@ -16,8 +16,8 @@ from src.view.Portrayals import Portrayals
 
 #Uncomment these 2 lines if you get a NotImplementedError for server.launch()
 #(Confirmed to work for windows 10)
-# import asyncio
-# asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
