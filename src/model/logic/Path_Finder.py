@@ -19,7 +19,6 @@ class Path_Finder:
         When a goal is set, the agent plans the route. This function can also be used to replan a route with a new goal.
         '''
 
-        print("Goal was set " + str(goal) + " --- Route is being planned ...")
         self.plan = self.__find_path(current_pos, goal, self.edges)
 
     def plan_detour(self, current_pos, goal, except_set_of_nodes):

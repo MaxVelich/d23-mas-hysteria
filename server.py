@@ -63,7 +63,7 @@ config_supermarket = { "dimensions": (1000, 500),
                    }
 
 # Change this variable here for a different setting
-current_configuration = config_supermarket
+current_configuration = config_empty_room
 
 save_plots = False
 batch_run = False

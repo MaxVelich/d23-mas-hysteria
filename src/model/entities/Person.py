@@ -39,6 +39,7 @@ class Person(Agent):
         '''
 
         self.goal = self.__determine_goal()
+        print("Agent " + str(self.unique_id) + "'s goal was set " + str(self.goal) + " --- Route is being planned ...")
         self.path_finder.set_goal(self.pos, self.goal)
 
     def step(self):
