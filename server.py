@@ -47,8 +47,8 @@ config_two_rooms = { "dimensions": (500, 500),
                    }
 
 config_supermarket = { "dimensions": (1000, 500),
-                       "num_agents": 1,
-                       "theory_of_mind": 1, 
+                       "num_agents": 60,
+                       "theory_of_mind": 30, 
                        "panic_dynamic": [3, 4],
                        "agent_boundaries": [25, 975, 25, 475],
                        "obstacles": [ Obstacle((125,20), 250,40),

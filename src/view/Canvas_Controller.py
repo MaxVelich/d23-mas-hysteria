@@ -73,6 +73,6 @@ class Canvas_Controller(VisualizationElement):
 
     def __placePortrayal(self, space, portrayal, element):
         x, y = element.pos
-        portrayal["x"] = x / self.canvas_width
-        portrayal["y"] = y / self.canvas_height
+        portrayal["x"] = x / self.canvas_height
+        portrayal["y"] = y / self.canvas_width
         return portrayal

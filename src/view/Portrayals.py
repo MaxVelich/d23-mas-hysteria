@@ -59,8 +59,6 @@ class Portrayals:
     @staticmethod
     def for_Obstacle(width, height, dimensions):
 
-        print(width, height, dimensions)
-
         portrayal = {"Shape": "rect",
                      "Color": "black",
                      "Filled": "true",
