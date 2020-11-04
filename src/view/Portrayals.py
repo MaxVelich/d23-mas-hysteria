@@ -37,9 +37,9 @@ class Portrayals:
         portrayal = {"Shape": "rect",
                      "Color": "green",
                      "Filled": "true",
-                     "Layer": 1,
-                     "w": width / dimensions[0],
-                     "h": height / dimensions[1]
+                     "Layer": 0,
+                     "w": width / dimensions[1],
+                     "h": height / dimensions[0]
                      }
 
         return portrayal
@@ -59,15 +59,14 @@ class Portrayals:
     @staticmethod
     def for_Obstacle(width, height, dimensions):
 
-        print(width, height)
-        print(dimensions)
+        print(width, height, dimensions)
 
         portrayal = {"Shape": "rect",
                      "Color": "black",
                      "Filled": "true",
                      "Layer": 0,
-                     "w": width / dimensions[0],
-                     "h": height / dimensions[1]
+                     "w": width / dimensions[1],
+                     "h": height / dimensions[0]
                      }
 
         return portrayal
