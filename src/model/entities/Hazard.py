@@ -1,6 +1,6 @@
 
 '''
-Here we model the Hazard object. It doesn't do much at this point...
+Here we model the Hazard object. It has a danger radius that prohibits agents to walk into. 
 '''
 
 class Hazard():

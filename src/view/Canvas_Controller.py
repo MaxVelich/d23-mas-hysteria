@@ -14,13 +14,14 @@ class Canvas_Controller(VisualizationElement):
         Via JavaScript the visualation is created. We first create the HTML code for the canvas, and for the legend, and then pass it over to the JavaScript part.
         '''
 
-        self.canvas_height, self.canvas_width = dimensions
+        self.dimensions = dimensions
+        self.canvas_width, self.canvas_height = dimensions
 
         canvas = Portrayals.for_canvas(self.canvas_width, self.canvas_height)
         legend = Portrayals.for_legend()
 
         new_element = ("new Simple_Continuous_Module({}, {}, `{}`, `{}`)"
-                        .format(self.canvas_height, self.canvas_width, canvas, legend))
+                        .format(self.canvas_width, self.canvas_height, canvas, legend))
 
         self.js_code = "elements.push(" + new_element + ");"
 
@@ -59,11 +60,11 @@ class Canvas_Controller(VisualizationElement):
         return self.__placePortrayal(space, portrayal, agent)
 
     def __get_exit_portrayal(self, space, exit):
-        portrayal = Portrayals.for_Exit()
+        portrayal = Portrayals.for_Exit(exit.width(), exit.height(), self.dimensions)
         return self.__placePortrayal(space, portrayal, exit)
 
     def __get_obstacle_portrayal(self, space, obstacle):
-        portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height, (self.canvas_width, self.canvas_height))
+        portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height, self.dimensions)
         return self.__placePortrayal(space, portrayal, obstacle)
 
     def __get_hazard_portrayal(self, space, hazard):

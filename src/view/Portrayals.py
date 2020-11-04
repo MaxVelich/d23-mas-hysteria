@@ -32,14 +32,15 @@ class Portrayals:
         return portrayal
 
     @staticmethod
-    def for_Exit():
+    def for_Exit(width, height, dimensions):
 
         portrayal = {"Shape": "rect",
                      "Color": "green",
                      "Filled": "true",
                      "Layer": 1,
-                     "w": 0.025,
-                     "h": 0.025}
+                     "w": width / dimensions[0],
+                     "h": height / dimensions[1]
+                     }
 
         return portrayal
 

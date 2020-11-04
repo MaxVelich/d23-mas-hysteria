@@ -9,4 +9,9 @@ class Exit:
         self.x = x
         self.y = y
         self.pos = (x, y)
-        self.available = True
+
+    def height(self):
+        return 30
+
+    def width(self):
+        return 15
