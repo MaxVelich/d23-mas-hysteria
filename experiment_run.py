@@ -1,3 +1,8 @@
+
+'''
+This script is used for running batches and recording their results into a csv file
+'''
+
 import argparse
 from pathlib import Path
 
@@ -9,8 +14,10 @@ from src.model.entities.Exit import Exit
 
 from model import Model_Controller
 from src.model.utils.Data_Collector_Helper import Data_Collector_Helper
-from src.model.entities import Person
 
+'''
+Similar to server.py, here we have the three different scenarios: free space, two rooms with a connecting corridor and a supermarket-like one. One can simply overwrite the variable current_configuration on line 79 to select one of them. 
+'''
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
@@ -52,6 +59,7 @@ config_supermarket = { "dimensions": (1000, 500),
                    }
 
 
+# helper function for getting average time it takes for each agent type to exit
 def record_time(times, agents):
     if agents > 0:
         return times/agents
@@ -61,17 +69,17 @@ def record_time(times, agents):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Fire evacuation model ')
-    # parser.add_argument('--n_agents', type=int, default=50,
-    #                    help='Maximum number of agents')
     parser.add_argument('--tom_agents', type=int, default=61, help='Maximum number of ToM agents')
     args = parser.parse_args()
     return args.tom_agents
 
 
 if __name__ == '__main__':
+    # adjust this variable to change the environment that is being experimented in
     current_configuration = config_supermarket
     width, height = current_configuration["dimensions"]
 
+    # parameters that stay the same for all iterations
     fixed_params = {
         "configuration": current_configuration,
         "save_plots": False,
@@ -79,8 +87,10 @@ if __name__ == '__main__':
         "batch_panic": [3, 4],
         "width": width,
         "height": height,
-        "N": current_configuration["num_agents"]
+        "N": current_configuration["num_agents"],
+        "num_tom": current_configuration["theory_of_mind"]
     }
+    # parameters that we change during our batch run
     variable_params = {
         "batch_tom": range(0, parse_arguments(), 1)
     }
@@ -100,33 +110,9 @@ if __name__ == '__main__':
                             )
     batch_run.run_all()
 
+    # save the collected data to a csv file and place it in the Experiment_results folder
     batch_dir = Path.cwd() / " Experiment_results"
     if not batch_dir.exists():
         Path.mkdir(batch_dir)
     run_data = batch_run.get_model_vars_dataframe()
     run_data.to_csv(path_or_buf=(batch_dir / "results.csv"))
-
-'''
-Still need to run: 
-two_rooms with panic (3,4) -> only need to adjust line 72 to current_configuration = config_two_rooms
-                              adjust line 79 to "batch_panic": [3, 4],
-supermarket with panic (3,4) -> adjust line 66 to amount of ToM agents you want to test to +1 (max = 61)
-                                adjust line 72 to current_configuration = config_supermarket
-                                adjust line 79 to "batch_panic": [3, 4],
-
-(optional extra)
-free_space without hazard (with and without panic) -> adjust line 22 to "hazard": Hazard()
-                                                      adjust line 72 to current_configuration = config_free_space
-                                                      adjust line 79 to either "batch_panic": [3, 4],
-                                                                        or     "batch_panic": [0, 0],
-two_rooms without hazard (with and without panic) ->  adjust line 35 to "hazard": Hazard()
-                                                      adjust line 72 to current_configuration = config_two_rooms
-                                                      adjust line 79 to either "batch_panic": [3, 4],
-                                                                        or     "batch_panic": [0, 0],
-supermarket without hazard (with and without panic) ->adjust line 51 to "hazard": Hazard()
-                                                      adjust line 66 to amount of ToM agents you want to test to +1 (max = 61)
-                                                      adjust line 72 to current_configuration = config_supermarket
-                                                      adjust line 79 to either "batch_panic": [3, 4],
-                                                                        or     "batch_panic": [0, 0],
-
-'''
