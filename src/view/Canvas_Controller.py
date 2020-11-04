@@ -37,6 +37,10 @@ class Canvas_Controller(VisualizationElement):
             portrayal = self.__get_agent_portrayal(model.space, agent)
             space_state.append(portrayal)
 
+        # Portrayals for the hazard
+        portrayal = self.__get_hazard_portrayal(model.space, model.hazard)
+        space_state.append(portrayal)
+
         # Portrayals for the obstacles
         for obstacle in model.obstacles:
             portrayal = self.__get_obstacle_portrayal(model.space, obstacle)
@@ -46,10 +50,6 @@ class Canvas_Controller(VisualizationElement):
         for exit in model.exits:
             portrayal = self.__get_exit_portrayal(model.space, exit)
             space_state.append(portrayal)
-
-        # Portrayals for the hazard
-        portrayal = self.__get_hazard_portrayal(model.space, model.hazard)
-        space_state.append(portrayal)
 
         return space_state
 

@@ -15,7 +15,7 @@ In order to run the program, first install all requirements by running the follo
 pip install -r requirements.txt
 ```
 
-To start a normal (single) simulation, first select the configuration you want in `server.py` (the free space one is the default) and then run
+To start a normal (single) simulation, first select the configuration you want in `server.py` (the empty room one is the default) and then run
 ```
 mesa runserver
 ```

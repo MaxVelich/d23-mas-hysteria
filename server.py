@@ -23,7 +23,7 @@ from src.view.Portrayals import Portrayals
 What follows are our three different scenarios: free space, two rooms with a connecting corridor and a supermarket-like one. One can simply overwrite the variable current_configuration on line 66 to select one of them. 
 '''
 
-config_free_space = { "dimensions": (500, 500),
+config_empty_room = { "dimensions": (500, 500),
                       "num_agents": 20,
                       "theory_of_mind": 10, 
                       "panic_dynamic": [3, 4],
@@ -47,8 +47,8 @@ config_two_rooms = { "dimensions": (500, 500),
                    }
 
 config_supermarket = { "dimensions": (1000, 500),
-                       "num_agents": 60,
-                       "theory_of_mind": 30, 
+                       "num_agents": 1,
+                       "theory_of_mind": 1, 
                        "panic_dynamic": [3, 4],
                        "agent_boundaries": [25, 975, 25, 475],
                        "obstacles": [ Obstacle((125,20), 250,40),
@@ -63,7 +63,7 @@ config_supermarket = { "dimensions": (1000, 500),
                    }
 
 # Change this variable here for a different setting
-current_configuration = config_free_space
+current_configuration = config_supermarket
 
 save_plots = False
 batch_run = False
