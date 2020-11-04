@@ -1,9 +1,11 @@
 
 # MAS Hysteria
 
-This is the beta version of our project. The implementation is not done at this point. When you run the program, you can see a square environment with 10 agents (blue dots) -- imagine a top down view of a room. The black bars are obstacles, or walls. The green square represents an exit. When you start the simulation, the agents will try to find their way to the exit. Currently, there is no collision detection to the agents will overlap. Also, the implementation of the path finding is not optimized yet, so it runs very sluggish -- we will fix that later.
+This is a simulation in order to analyze how agents behave in case of a panic in a building-like environment. Each agent has a plan in order to leave the building. This plan is calculated using A* over the discretized space in the environment. If agents come close to one another, their panic level increase and they start to act less 'rational'. They will follow the nearby agents by adapting to their average direction. On the other hand, some other agents implement a weak form of Theory of Mind. This results in the agents to see what the goal of the nearby agents is, and to follow a different goal, since that might mean that the exit everyone else is going for will be blocked. This results in a group-following behaviour -- form the sides of the panicked agents; and a group-avoiding behaviour -- from the sides of the Theory of Mind agents. 
 
-The agents change color depending on their panic level. The dynamic behind this mechanism is also still in beta. One can see the levels in the legend.
+The environment consists of obstacles (black, e.g. walls), exits (green) and a hazard (dark red, with a danger radius around it -- agents avoid it). Agents are blue circles when they are initialized; the change color depending on their panic level. Theory of Mind agents have a purple extra circle around them; they appear bigger.
+
+Agents cannot collide with one another, they have to stop if their next step is occupied. However, they can replan the route if they deem it neccessary. For that reason, the simulation is not smooth, as replanning can take a second or two. You can adjust the frames per second with the included slider. 
 
 ## How to run?
 
@@ -23,6 +25,17 @@ If you want to run experiments, you can call the script for that by using
 python experiment_run.py
 ```
 
+## Code Structure
+
+The root level consists of mainly four files: 
+- `run.py` which launches the server
+- `server.py` which configures the setting and spins up the `Model_Controller`
+- `model.py` which implements the `Model_Controller`
+- `experiment_run.py` which handles the batches and records the results for multiple runs (without visuals)
+
+In the `src` folder one can find two subfolder: `model` and `view`.
+- `view` includes all necessary files to display the simulation. One can find the `Canvas_Controller` here that handles the proper setup, as well as the `Portrayals.py` that describe how each entitiy looks like. Also, there is a HTML version of the legends together with a Java Script file `visualization.js` to handle the layout of the website.
+- `model` includes all the logic and entities of our model. Here you can find all entities: `Exit`, `Hazard`, `Obstacle` and `Person`, especially the latter one does some heavy lifting. In the `logic` folder we bury all necessary logic and we separate it into the five classes `A_star`, `Panic_Dynamic`, `Path_Finder`, `Theory_Of_Mind` and `World_Manager`. These classes each handle separate parts of the model; they are fairly self-explanatory. Laslty, we have three helper files in the `utils` folder with a bunch of static functions that are commonly used throughout the code base.
 
 ## Authors
 
