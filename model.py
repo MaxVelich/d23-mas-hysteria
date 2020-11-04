@@ -36,7 +36,7 @@ class Model_Controller(Model):
 
         self.world_manager = World_Manager((width, height), self.obstacles, self.exits)
         self.world_mesh = self.world_manager.build_mesh()
-        self.create_agents()
+        self.__create_agents()
 
         self.time = 0
         self.running = True
@@ -46,18 +46,46 @@ class Model_Controller(Model):
         self.datacollector = DataCollector(self.data_collector_helper.get_collectors())
         self.images = save_plots
 
-        self.report_status()
+        self.__report_status()
 
-    def report_status(self):
+    def step(self):
+        '''
+        At each step, the scheduler needs to perform a step (hence all the agents as well). Here, we also deal with collecting the time information of the simulation, and create figures.
+        '''
+
+        self.datacollector.collect(self)
+
+        self.schedule.step()
+        self.time += 1
+
+        if self.images:
+            self.datacollector.get_model_vars_dataframe().plot()
+
+        # Stop the simulation once all agents have exited the building
+        if len(self.schedule.agents) == 0:
+
+            if self.images:
+                self.data_collector_helper.save_figures()
+
+            print("end time: " + str(self.data_collector_helper.get_time(self)))
+            self.running = False
+
+            if self.images:
+                results = self.datacollector.get_model_vars_dataframe()
+                self.data_collector_helper.save_figures(results, self.num_agents)
+
+    ### PRIVATE INTERFACE 
+
+    def __report_status(self):
         print("There are " + str(self.num_agents) + " agents of which " + str(self.num_tom_agents) + " have Theory of Mind")
         print("Agents' panic thresholds are " + str(self.panic_thresholds))
 
-    def create_agents(self):
+    def __create_agents(self):
         '''
         Create the agents, and place them at random spots on the canvas. Also, here the theory of mind is set.
         '''
 
-        random_unique_positions = self.find_random_agent_positions()
+        random_unique_positions = self.__find_random_agent_positions()
 
         # add theory of mind (or lack thereof) when agent is being created
         agent_list = [0] * (self.num_agents - self.num_tom_agents) + [1] * self.num_tom_agents
@@ -69,7 +97,7 @@ class Model_Controller(Model):
             a.prepare_path_finding()
             self.schedule.add(a)
 
-    def find_random_agent_positions(self):
+    def __find_random_agent_positions(self):
         '''
         Find a position that is random, but also doesn't fall in an obstructed are, or in a hazard area, or just not onto another agent.
         '''
@@ -113,29 +141,3 @@ class Model_Controller(Model):
                 not_done = False
         
         return random_unique_positions
-
-    def step(self):
-        '''
-        At each step, the scheduler needs to perform a step (hence all the agents as well). Here, we also deal with collecting the time information of the simulation, and create figures.
-        '''
-
-        self.datacollector.collect(self)
-
-        self.schedule.step()
-        self.time += 1
-
-        if self.images:
-            self.datacollector.get_model_vars_dataframe().plot()
-
-        # Stop the simulation once all agents have exited the building
-        if len(self.schedule.agents) == 0:
-
-            if self.images:
-                self.data_collector_helper.save_figures()
-
-            print("end time: " + str(self.data_collector_helper.get_time(self)))
-            self.running = False
-
-            if self.images:
-                results = self.datacollector.get_model_vars_dataframe()
-                self.data_collector_helper.save_figures(results, self.num_agents)

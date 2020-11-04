@@ -30,6 +30,9 @@ class Person(Agent):
         self.stuck_counter = 0
         self.panic_fatigue = 0
 
+    def radius(self):
+        return 8
+
     def prepare_path_finding(self):
 
         self.goal = self.determine_goal()

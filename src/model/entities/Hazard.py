@@ -10,5 +10,8 @@ class Hazard():
         self.y = y
         self.pos = (x, y)
 
+    def radius(self):
+        return 20
+
     def danger_radius(self):
         return 100

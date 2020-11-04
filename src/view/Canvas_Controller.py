@@ -1,5 +1,5 @@
 '''
-This class inherits from VisualizationElement provided by MESA. It's responsibility is to create and draw the environment.
+This class inherits from VisualizationElement provided by MESA. It's responsibility is to create and draw the environment. Here, we also handle the layout of the website to a certain degree: we create the legend as a static html div, and also adjust the layout.
 '''
 
 from mesa.visualization.ModularVisualization import VisualizationElement
@@ -10,57 +10,68 @@ class Canvas_Controller(VisualizationElement):
     local_includes = ["src/view/visualization.js"]
 
     def __init__(self, dimensions):
+        '''
+        Via JavaScript the visualation is created. We first create the HTML code for the canvas, and for the legend, and then pass it over to the JavaScript part.
+        '''
 
         self.canvas_height, self.canvas_width = dimensions
 
-        legend_file = open("src/view/legend.html", "rt")
-        legend = legend_file.read()
-        legend_file.close()
+        canvas = Portrayals.for_canvas(self.canvas_width, self.canvas_height)
+        legend = Portrayals.for_legend()
 
-        new_element = ("new Simple_Continuous_Module({}, {}, `{}`)"
-                        .format(self.canvas_height, self.canvas_width, legend))
+        new_element = ("new Simple_Continuous_Module({}, {}, `{}`, `{}`)"
+                        .format(self.canvas_height, self.canvas_width, canvas, legend))
 
         self.js_code = "elements.push(" + new_element + ");"
 
     def render(self, model):
+        '''
+        This function is called by MESA, and is responsible for providing the protrayals for all elements in the simulation.
+        '''
+
         space_state = []
 
+        # Portrayals for the agents
         for agent in model.schedule.agents:
-            portrayal = self.getAgentPortrayal(model.space, agent)
+            portrayal = self.__get_agent_portrayal(model.space, agent)
             space_state.append(portrayal)
 
+        # Portrayals for the obstacles
         for obstacle in model.obstacles:
-            portrayal = self.getObstaclePortrayal(model.space, obstacle)
+            portrayal = self.__get_obstacle_portrayal(model.space, obstacle)
             space_state.append(portrayal)
 
+        # Portrayals for the exits
         for exit in model.exits:
-            portrayal = self.getExitPortrayal(model.space, exit)
+            portrayal = self.__get_exit_portrayal(model.space, exit)
             space_state.append(portrayal)
 
-        # for hazard in model.hazards:
-        portrayal = self.getHazardPortrayal(model.space, model.hazard)
+        # Portrayals for the hazard
+        portrayal = self.__get_hazard_portrayal(model.space, model.hazard)
         space_state.append(portrayal)
 
         return space_state
 
-    def getAgentPortrayal(self, space, agent):
-        portrayal = Portrayals.for_Agent(agent.panic, agent.theory_of_mind)
-        return self.placePortrayal(space, portrayal, agent)
+    ### PRIVATE INTERFACE 
 
-    def getExitPortrayal(self, space, exit):
+    def __get_agent_portrayal(self, space, agent):
+        portrayal = Portrayals.for_Agent(agent.panic, agent.theory_of_mind, agent.radius())
+        return self.__placePortrayal(space, portrayal, agent)
+
+    def __get_exit_portrayal(self, space, exit):
         portrayal = Portrayals.for_Exit()
-        return self.placePortrayal(space, portrayal, exit)
+        return self.__placePortrayal(space, portrayal, exit)
 
-    def getObstaclePortrayal(self, space, obstacle):
+    def __get_obstacle_portrayal(self, space, obstacle):
         portrayal = Portrayals.for_Obstacle(obstacle.width, obstacle.height, (self.canvas_width, self.canvas_height))
-        return self.placePortrayal(space, portrayal, obstacle)
+        return self.__placePortrayal(space, portrayal, obstacle)
 
-    def getHazardPortrayal(self, space, hazard):
-        portrayal = Portrayals.for_hazard(hazard.danger_radius())
-        return self.placePortrayal(space, portrayal, hazard)
+    def __get_hazard_portrayal(self, space, hazard):
+        portrayal = Portrayals.for_hazard(hazard.radius(), hazard.danger_radius())
+        return self.__placePortrayal(space, portrayal, hazard)
 
-    def placePortrayal(self, space, portrayal, element):
+    def __placePortrayal(self, space, portrayal, element):
         x, y = element.pos
-        portrayal["x"] = x/self.canvas_width
-        portrayal["y"] = y/self.canvas_height
+        portrayal["x"] = x / self.canvas_width
+        portrayal["y"] = y / self.canvas_height
         return portrayal

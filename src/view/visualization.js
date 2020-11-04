@@ -1,7 +1,9 @@
 /*
-https://github.com/projectmesa/mesa-examples/blob/master/examples/Flockers/flockers/simple_continuous_canvas.js
+This file contains some rendering specifics for the canvas and most draw functions for the individual parts of the simulation. We adjusted the code taken from the source below to our needs.
+
+Source: https://github.com/projectmesa/mesa-examples/blob/master/examples/Flockers/flockers/simple_continuous_canvas.js
 */
-// Modified by D23 
+
 var ContinuousVisualization = function(height, width, context) {
 	var height = height;
 	var width = width;
@@ -67,15 +69,10 @@ var ContinuousVisualization = function(height, width, context) {
 	};
 };
 
-var Simple_Continuous_Module = function(canvas_width, canvas_height, legend_tag) {
-
-    var div_tag = `	<div id='canvas_site' style='margin: 0px; padding: 0px; border-width: 0px; width:100%; text-align: center;'>
-                          <canvas id='canvas_id' width='${canvas_width}' height='${canvas_height}' style='border-width: 3px; border-style: solid; border-radius: 8px' />
-					</div>
-				  `;
+var Simple_Continuous_Module = function(canvas_width, canvas_height, canvas_tag, legend_tag) {
 
 	// Append it to body:
-	var div = $(div_tag)[0];
+	var div = $(canvas_tag)[0];
 	var div_legend = $(legend_tag)[0];
 	$("body").append(div);
 	$("body").append(div_legend);
