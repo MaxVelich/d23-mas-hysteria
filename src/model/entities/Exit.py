@@ -15,3 +15,8 @@ class Exit:
 
     def width(self):
         return 15
+
+    def leavable_radius(self):
+
+        # The radius in which agents can leave the environment
+        return 30
