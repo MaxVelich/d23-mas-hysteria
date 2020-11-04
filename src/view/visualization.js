@@ -67,27 +67,19 @@ var ContinuousVisualization = function(height, width, context) {
 	};
 };
 
-var Simple_Continuous_Module = function(canvas_width, canvas_height) {
-	// Create the element
-	// ------------------
-	// Create the tag:
-    var div_tag = `<div id='canvas_site'
-                           style='margin: 0px; padding: 0px; border-width: 0px; width:100%; text-align: center;'>
-                          <canvas id='canvas_id'
-                                  width='${canvas_width}'
-                                  height='${canvas_height}'
-                                  style='border-width: 3px; border-style: solid; border-radius: 8px; position:absolute; left:600px; top:150px'
-                          />
-                     </div>`
+var Simple_Continuous_Module = function(canvas_width, canvas_height, legend_tag) {
+
+    var div_tag = `	<div id='canvas_site' style='margin: 0px; padding: 0px; border-width: 0px; width:100%; text-align: center;'>
+                          <canvas id='canvas_id' width='${canvas_width}' height='${canvas_height}' style='border-width: 3px; border-style: solid; border-radius: 8px' />
+					</div>
+				  `;
 
 	// Append it to body:
 	var div = $(div_tag)[0];
+	var div_legend = $(legend_tag)[0];
 	$("body").append(div);
+	$("body").append(div_legend);
 	var canvas = $(canvas_id)[0];
-	
-	// To change attributes directly
-	// Concatenate empty string to "cast"
-	//$(canvas_id).attr("width",""+canvas_width);
 	
 	// Create the context and the drawing controller:
 	var context = canvas.getContext("2d");

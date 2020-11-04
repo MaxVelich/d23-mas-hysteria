@@ -13,8 +13,12 @@ class Canvas_Controller(VisualizationElement):
 
         self.canvas_height, self.canvas_width = dimensions
 
-        new_element = ("new Simple_Continuous_Module({}, {})"
-                        .format(self.canvas_height, self.canvas_width))
+        legend_file = open("src/view/legend.html", "rt")
+        legend = legend_file.read()
+        legend_file.close()
+
+        new_element = ("new Simple_Continuous_Module({}, {}, `{}`)"
+                        .format(self.canvas_height, self.canvas_width, legend))
 
         self.js_code = "elements.push(" + new_element + ");"
 

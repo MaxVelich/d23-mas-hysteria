@@ -25,7 +25,7 @@ class Model_Controller(Model):
         self.obstacles = configuration["obstacles"]
         self.exits = configuration["exits"]
         self.hazard = configuration["hazard"]
-        self.num_agents = configuration["num_agents"]
+        self.num_agents = N
 
         if batch_run:
             self.num_tom_agents = batch_tom

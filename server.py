@@ -3,6 +3,11 @@
 This script serves as a temporary starting point for our development journey. Here we initialize the model, the canvas and start up the server.
 '''
 
+#Uncomment these 2 lines if you get a NotImplementedError for server.launch()
+#(Confirmed to work for windows 10)
+# import asyncio
+# asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
@@ -13,11 +18,6 @@ from src.model.entities.Exit import Exit
 from model import Model_Controller
 from src.view.Canvas_Controller import Canvas_Controller
 from src.view.Portrayals import Portrayals
-
-#Uncomment these 2 lines if you get a NotImplementedError for server.launch()
-#(Confirmed to work for windows 10)
-# import asyncio
-# asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
@@ -61,8 +61,6 @@ config_supermarket = { "dimensions": (1000, 500),
 # Change this variable here for a different setting
 current_configuration = config_free_space
 
-legend = Portrayals.get_legend()
-introduction = Portrayals.get_introduction()
 save_plots = False
 batch_run = False
 batch_tom = 0
@@ -76,7 +74,5 @@ server = ModularServer(
         [Canvas_Controller(current_configuration["dimensions"])],
         "Panic Behaviour in Crowd Evacuation",
         {"width": width, "height": height, "save_plots": save_plots, "batch_run": batch_run,
-         "batch_tom": batch_tom, "batch_panic": batch_panic, "configuration": current_configuration,
-         "N": UserSettableParameter('number', 'Number of Agents', value= num_agents),
-         "Legend": UserSettableParameter('static_text', value=legend)}
+         "batch_tom": batch_tom, "batch_panic": batch_panic, "configuration": current_configuration, "N": UserSettableParameter('number', 'Number of Agents', value=num_agents)}
     )
