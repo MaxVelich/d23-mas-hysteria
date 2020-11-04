@@ -1,3 +1,6 @@
+'''
+This class is responsible for generating the world and our internal representation. We discretize the space to find nodes and edges which are used to move the agents aroud and to find a goal. All necessary details to the path finding are in the class called Path_Finding, but the setup and world construction are in here.
+'''
 
 from src.model.utils.Geometry import Geometry
 
@@ -7,7 +10,7 @@ class World_Manager:
 
     def __init__(self, world_dim, obstacles, exits, mesh_size = 25):
 
-        print("World Manager instantiated!")
+        print("World Manager instantiated")
 
         self.world_dim = world_dim
         self.obstacles = obstacles
@@ -28,6 +31,8 @@ class World_Manager:
         # self.visualize_mesh()
         edges = self.__prepare_edges_for_path_finding()
 
+        print("World Mesh is constructed")
+
         return (self.nodes, edges)
 
     def visualize_mesh(self):
@@ -37,6 +42,8 @@ class World_Manager:
         plt.triplot(self.nodes[:,0], self.nodes[:,1], self.walkable_space)
         plt.plot(self.nodes[:,0], self.nodes[:,1], 'o')
         plt.show()
+
+    ### PRIVATE INTERFACE
 
     def __prepare_nodes_of_graph(self):
         '''
@@ -116,7 +123,7 @@ class World_Manager:
 
     def __prepare_edges_for_path_finding(self):
         '''
-        From the Delaunay method, we find triangles. Though, we need to convert these into edges (i.e. [point_1, point_2]). Also, we can remove bidirectional-duplicates, since we we do not have any directed edges (i.e. [point_1,point_2] == [point_2, point_1]).
+        From the Delaunay method, we find triangles. Though, we need to convert these into edges (i.e. [point_1, point_2]). Also, we can remove bidirectional-duplicates, since we we do not have any directed edges (i.e. [point_1, point_2] == [point_2, point_1]).
         '''
 
         edges = []

@@ -5,16 +5,12 @@ Here we intend to provide the logic for how agents react to the panic. Also, how
 
 import math
 
-
 class Panic_Dynamic:
-
-    def __init__():
-        pass
 
     @staticmethod
     def average_direction_of_crowd(neighbors, pos, agent):
         """
-        Return the vector toward the center of mass of the local neighbors.
+        Return the vector toward the center of mass of the local neighbors. We took inspiration from the source below, but we rewrote the whole code.
         Reference: https://github.com/projectmesa/mesa/blob/master/examples/boid_flockers/boid_flockers/boid.py
         """
 
@@ -44,9 +40,7 @@ class Panic_Dynamic:
     @staticmethod
     def change_panic_level(neighbourhood, pos, parameters):
         """
-        Return the changed panic level, based on nearby agents and vision of hazard
-        :param neighbourhood:
-        :return:
+        Return the changed panic level, based on agents' neighbourhood 
         """
 
         panic = 0

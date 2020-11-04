@@ -2,7 +2,7 @@
 '''
 This class performs the A* graph path finding algorithm. 
 
-90% of this class is NOT written by us. We took the code straight from the following source. We adjusted it to our needs, and will probably change it a lot more in the future.
+80% of this class is NOT written by us. We took the code from the following source. We adjusted it to our needs.
 https://leetcode.com/problems/shortest-path-in-binary-matrix/discuss/313347/a-search-in-python
 '''
 
@@ -32,10 +32,10 @@ class A_Star:
                 continue
             
             if goal == node[1]:
-                return self.reconstruct_path(came_from, start, node[1])
+                return self.__reconstruct_path(came_from, start, node[1])
 
             visited.add(node[1])
-            successors = self.get_successor(node[1])
+            successors = self.__get_successor(node[1])
             
             for successor in successors:
                 
@@ -46,7 +46,7 @@ class A_Star:
                     distance[successor] = distance[node[1]] + 1
                     came_from[successor] = node[1]
 
-    def get_successor(self, node):
+    def __get_successor(self, node):
 
         successors = []
         for edge in self.graph:
@@ -61,7 +61,7 @@ class A_Star:
 
         return successors
 
-    def reconstruct_path(self, came_from, start, end):
+    def __reconstruct_path(self, came_from, start, end):
 
         reverse_path = [end]
         while end != start:

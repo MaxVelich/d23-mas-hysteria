@@ -1,8 +1,6 @@
 
 '''
-This class is responsible for managing the path finding of the agents. We discretize/quantize the continuous space here, and then run A* on the resulting walkable (since we have obstacles) graph.
-
-This class still has a long way to go! Currently, we recalculate the route for each agent after each step -> Very bad for performance
+This class is responsible for managing the path finding of the agents. We discretize/quantize the continuous space here, and then run A* on the resulting walkable (since we have obstacles) graph. This class also offers different ways to find alternative routes around obstacles, hazards and other agents. It also offers panick-y side-step ways to quickly get out of a stuck situation. 
 '''
 
 from src.model.logic.A_star import A_Star
@@ -17,11 +15,17 @@ class Path_Finder:
         self.nodes, self.edges = world_mesh
 
     def set_goal(self, current_pos, goal):
+        '''
+        When a goal is set, the agent plans the route. This function can also be used to replan a route with a new goal.
+        '''
 
-        # print("new goal " + str(goal) + " has been set --- recalculating route...")
+        print("Goal was set " + str(goal) + " --- Route is being planned ...")
         self.plan = self.__find_path(current_pos, goal, self.edges)
 
     def plan_detour(self, current_pos, goal, except_set_of_nodes):
+        '''
+        This function acts similar to the above, however it first removes a set of nodes (and their edges) from the set of possible nodes. This way, the agent can plan around e.g. other agents.
+        '''
 
         filtered_edges = []
 
@@ -44,6 +48,9 @@ class Path_Finder:
         self.plan = self.__find_path(current_pos, goal, filtered_edges)
 
     def replan_around_hazard(self, agent_position, goal, hazard):
+        '''
+        Also, similar to the above function, but this method removes the nodes and edges that lie within the danger radius of the hazard first, and then calculates the route.
+        '''
         
         danger_radius = hazard.danger_radius()
 
@@ -55,9 +62,12 @@ class Path_Finder:
         self.plan_detour(agent_position, goal, filtered_nodes)
     
     def try_to_find_side_step_move(self, position, denied_next_move, neighbors_positions):
+        '''
+        This function represents a quick detour alternative. The agent does not plan a new router, instead it just makes a side step if one is possible, and then persues its original plan. 
+        '''
 
         nearest_point = self.__find_nearest_mesh_point(position)
-        successors = self.find_connected_nodes(nearest_point)
+        successors = self.__find_connected_nodes(nearest_point)
         free_successors = []
 
         for node in successors:
@@ -91,7 +101,12 @@ class Path_Finder:
 
         return next_point
 
-    def find_connected_nodes(self, from_position):
+    ### PRIVATE INTERFACE
+
+    def __find_connected_nodes(self, from_position):
+        '''
+        Find all nodes that are connected to the position (from_position).
+        '''
 
         successors = []
         for edge in self.edges:
@@ -106,11 +121,9 @@ class Path_Finder:
 
         return list(set(successors))
 
-    ### PRIVATE INTERFACE
-
     def __find_nearest_mesh_point(self, point):
         '''
-        We need to first let the agent 'get on the grid'. Therefore, we find the nearest node on the graph here.
+        We need to let the agents 'get on the grid'. Therefore, we find the nearest node on the graph here.
         '''
 
         distances = []
