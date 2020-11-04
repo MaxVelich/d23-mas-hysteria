@@ -1,10 +1,10 @@
 
 '''
-This script serves as a temporary starting point for our development journey. Here we initialize the model, the canvas and start up the server.
+Here, the server is created. We configure the setting, and create the Model_Controller instance, and then start the server here. The most important variables are set here.
 '''
 
-#Uncomment these 2 lines if you get a NotImplementedError for server.launch()
-#(Confirmed to work for windows 10)
+# Uncomment these 2 lines if you get a NotImplementedError for server.launch()
+# (Confirmed to work for windows 10)
 # import asyncio
 # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
@@ -18,6 +18,10 @@ from src.model.entities.Exit import Exit
 from model import Model_Controller
 from src.view.Canvas_Controller import Canvas_Controller
 from src.view.Portrayals import Portrayals
+
+'''
+What follows are our three different scenarios: free space, two rooms with a connecting corridor and a supermarket-like one. One can simply overwrite the variable current_configuration on line 66 to select one of them. 
+'''
 
 config_free_space = { "dimensions": (500, 500),
                       "num_agents": 20,
@@ -67,12 +71,21 @@ batch_tom = 0
 batch_panic = [0, 0]
 
 width, height = current_configuration["dimensions"]
-num_agents = current_configuration["num_agents"]
+num_agents_param = UserSettableParameter('number', 'Number of Agents', value=current_configuration["num_agents"])
+num_tom_param = UserSettableParameter('number', 'Number of ToM Agents', value=current_configuration["theory_of_mind"])
 
 server = ModularServer(
         Model_Controller, 
         [Canvas_Controller(current_configuration["dimensions"])],
-        "Panic Behaviour in Crowd Evacuation",
-        {"width": width, "height": height, "save_plots": save_plots, "batch_run": batch_run,
-         "batch_tom": batch_tom, "batch_panic": batch_panic, "configuration": current_configuration, "N": UserSettableParameter('number', 'Number of Agents', value=num_agents)}
+        "Panic Behaviour in Crowd Evacuation", {
+          "width": current_configuration["dimensions"][0], 
+          "height": current_configuration["dimensions"][1], 
+          "save_plots": save_plots, 
+          "batch_run": batch_run,
+          "batch_tom": batch_tom, 
+          "batch_panic": batch_panic, 
+          "configuration": current_configuration, 
+          "N": num_agents_param, 
+          "num_tom": num_tom_param
+        }
     )
