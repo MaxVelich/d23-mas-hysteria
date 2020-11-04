@@ -25,6 +25,8 @@ If you want to run experiments, you can call the script for that by using
 python experiment_run.py
 ```
 
+If you are running Windows, you might run into an issue which can be resolved by uncommenting the first few lines in `server.py`.
+
 ## Code Structure
 
 The root level consists of mainly four files: 
