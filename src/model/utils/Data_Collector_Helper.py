@@ -1,4 +1,8 @@
 
+'''
+This class provides helper functions for the data collection. It also generates the figures and saves them.
+'''
+
 from src.model.entities.Person import Person
 
 import matplotlib.pyplot as plt
@@ -7,7 +11,10 @@ import time
 class Data_Collector_Helper():
 
     def get_collectors(self):
-
+        '''
+        We define the different collectors we want to observer. The values are stored in the instance properties of this class, e.g. self.count_panic 
+        '''
+        
         collectors = {
             "Active": lambda m: self.count_active_agents(m, False),
             # "Escaped": lambda m: self.count_active_agents(m, True),
@@ -21,6 +28,7 @@ class Data_Collector_Helper():
         return collectors
 
     def save_figures(self, results, num_agents):
+
         print("we're plotting")
 
         dpi = 100

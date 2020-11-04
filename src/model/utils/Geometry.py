@@ -1,6 +1,6 @@
 
 '''
-This class is a static helper class for everything generally geometrical. The functions below should be self-explanatory. 
+This class is a static helper class for everything generally geometrical. The functions below should be self-explanatory. These functions are used on many different places throughout the program.
 '''
 
 import math

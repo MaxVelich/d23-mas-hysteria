@@ -1,9 +1,6 @@
 
 '''
-This is a static Utilitiy class for all sorts of helper functions that might come up during development. Make sure to use the flag @staticmethod for readability.
-
-Outside of this class, functions can be called by simply invoking e.g.:
-Utilities.add_two_points(a,b)
+This is a static Utilitiy class for all sorts of helper functions that might come up during development. This class is similar to Geometry, but then a catch-all for all other commonly used functions.
 '''
 
 from src.model.utils.Geometry import Geometry
