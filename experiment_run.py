@@ -32,7 +32,7 @@ config_two_rooms = { "dimensions": (500, 500),
                                     Obstacle((250,90), 75,20),
                                     Obstacle((425,90), 150,20) ],
                      "exits": [ Exit(0, 25), Exit(500, 25) ],
-                     "hazard" : Hazard(30,30)
+                     "hazard" : Hazard()
                    }
 
 config_supermarket = { "dimensions": (1000, 500),
@@ -63,13 +63,13 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Fire evacuation model ')
     # parser.add_argument('--n_agents', type=int, default=50,
     #                    help='Maximum number of agents')
-    parser.add_argument('--tom_agents', type=int, default=21, help='Maximum number of ToM agents')
+    parser.add_argument('--tom_agents', type=int, default=61, help='Maximum number of ToM agents')
     args = parser.parse_args()
     return args.tom_agents
 
 
 if __name__ == '__main__':
-    current_configuration = config_free_space
+    current_configuration = config_supermarket
     width, height = current_configuration["dimensions"]
 
     fixed_params = {
